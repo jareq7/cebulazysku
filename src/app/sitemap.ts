@@ -3,7 +3,7 @@ import { bankOffers } from "@/data/banks";
 import { blogPosts } from "@/data/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://bankpremie.pl";
+  const baseUrl = "https://cebulazysku.pl";
 
   const offerPages = bankOffers.map((offer) => ({
     url: `${baseUrl}/oferta/${offer.slug}`,

@@ -17,17 +17,17 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://bankpremie.pl"),
+  metadataBase: new URL("https://cebulazysku.pl"),
   title: {
-    default: "BankPremie – Porównaj promocje bankowe i odbieraj premie",
-    template: "%s | BankPremie",
+    default: "CebulaZysku – Obierz premie bankowe warstwa po warstwie",
+    template: "%s | CebulaZysku",
   },
   description:
-    "Porównaj promocje bankowe i odbieraj premie za założenie konta. Śledź postępy spełniania warunków w jednym miejscu. Nawet 2100 zł w premiach!",
+    "Obierz kolejne warstwy zysku z promocji bankowych. Porównuj oferty, śledź warunki i zbieraj premie. Łupimy banki legalnie!",
   openGraph: {
-    title: "BankPremie – Porównaj promocje bankowe i odbieraj premie",
+    title: "CebulaZysku – Obierz premie bankowe warstwa po warstwie",
     description:
-      "Porównaj promocje bankowe i odbieraj premie za założenie konta. Nawet 2100 zł w premiach!",
+      "Obierz kolejne warstwy zysku z promocji bankowych. Porównuj oferty i zbieraj premie. Łupimy banki legalnie!",
     type: "website",
     locale: "pl_PL",
   },

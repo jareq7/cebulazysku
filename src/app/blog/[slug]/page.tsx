@@ -32,7 +32,7 @@ export function generateMetadata({
       publishedTime: post.publishedAt,
     },
     alternates: {
-      canonical: `https://bankpremie.pl/blog/${post.slug}`,
+      canonical: `https://cebulazysku.pl/blog/${post.slug}`,
     },
   };
 }
@@ -61,8 +61,8 @@ export default async function BlogPostPage({
     datePublished: post.publishedAt,
     publisher: {
       "@type": "Organization",
-      name: "BankPremie",
-      url: "https://bankpremie.pl",
+      name: "CebulaZysku",
+      url: "https://cebulazysku.pl",
     },
   };
 
@@ -74,19 +74,19 @@ export default async function BlogPostPage({
         "@type": "ListItem",
         position: 1,
         name: "Strona główna",
-        item: "https://bankpremie.pl",
+        item: "https://cebulazysku.pl",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Blog",
-        item: "https://bankpremie.pl/blog",
+        item: "https://cebulazysku.pl/blog",
       },
       {
         "@type": "ListItem",
         position: 3,
         name: post.title,
-        item: `https://bankpremie.pl/blog/${post.slug}`,
+        item: `https://cebulazysku.pl/blog/${post.slug}`,
       },
     ],
   };

@@ -101,10 +101,10 @@ export default function ContactPage() {
                 <div>
                   <p className="font-medium text-sm">E-mail</p>
                   <a
-                    href="mailto:kontakt@bankpremie.pl"
+                    href="mailto:kontakt@cebulazysku.pl"
                     className="text-sm text-muted-foreground hover:text-primary transition-colors"
                   >
-                    kontakt@bankpremie.pl
+                    kontakt@cebulazysku.pl
                   </a>
                 </div>
               </div>

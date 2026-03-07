@@ -48,8 +48,8 @@ export default function RegisterPage() {
     <div className="flex min-h-[calc(100vh-12rem)] items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-green-100">
-            <Landmark className="h-6 w-6 text-green-600" />
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100">
+            <Landmark className="h-6 w-6 text-amber-600" />
           </div>
           <CardTitle className="text-2xl">Załóż konto</CardTitle>
           <CardDescription>
@@ -107,11 +107,11 @@ export default function RegisterPage() {
               />
               <Label htmlFor="consent" className="text-xs text-muted-foreground leading-relaxed font-normal">
                 Akceptuję{" "}
-                <Link href="/regulamin" className="text-green-600 underline" target="_blank">
+                <Link href="/regulamin" className="text-amber-600 underline" target="_blank">
                   Regulamin
                 </Link>{" "}
                 oraz{" "}
-                <Link href="/polityka-prywatnosci" className="text-green-600 underline" target="_blank">
+                <Link href="/polityka-prywatnosci" className="text-amber-600 underline" target="_blank">
                   Politykę prywatności
                 </Link>
               </Label>
@@ -124,7 +124,7 @@ export default function RegisterPage() {
             </Button>
             <p className="text-sm text-muted-foreground">
               Masz już konto?{" "}
-              <Link href="/logowanie" className="text-green-600 font-medium hover:underline">
+              <Link href="/logowanie" className="text-amber-600 font-medium hover:underline">
                 Zaloguj się
               </Link>
             </p>

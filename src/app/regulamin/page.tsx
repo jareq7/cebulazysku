@@ -4,7 +4,7 @@ import { FileText } from "lucide-react";
 export const metadata: Metadata = {
   title: "Regulamin serwisu",
   description:
-    "Regulamin serwisu BankPremie – zasady korzystania z porównywarki promocji bankowych.",
+    "Regulamin serwisu CebulaZysku – zasady korzystania z porównywarki promocji bankowych.",
 };
 
 export default function TermsPage() {
@@ -26,8 +26,8 @@ export default function TermsPage() {
           <ol className="list-decimal pl-6 space-y-2">
             <li>
               Niniejszy regulamin (dalej: „Regulamin") określa zasady
-              korzystania z serwisu internetowego BankPremie (dalej: „Serwis")
-              dostępnego pod adresem bankpremie.pl.
+              korzystania z serwisu internetowego CebulaZysku (dalej: „Serwis")
+              dostępnego pod adresem cebulazysku.pl.
             </li>
             <li>
               Właścicielem i operatorem Serwisu jest Administrator wskazany w
@@ -50,8 +50,8 @@ export default function TermsPage() {
           </h2>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong>Serwis</strong> – strona internetowa BankPremie dostępna
-              pod adresem bankpremie.pl wraz ze wszystkimi podstronami.
+              <strong>Serwis</strong> – strona internetowa CebulaZysku dostępna
+              pod adresem cebulazysku.pl wraz ze wszystkimi podstronami.
             </li>
             <li>
               <strong>Użytkownik</strong> – osoba fizyczna korzystająca z

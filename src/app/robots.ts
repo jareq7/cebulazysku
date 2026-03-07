@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: "/",
       disallow: ["/dashboard"],
     },
-    sitemap: "https://bankpremie.pl/sitemap.xml",
+    sitemap: "https://cebulazysku.pl/sitemap.xml",
   };
 }

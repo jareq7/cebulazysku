@@ -7,11 +7,11 @@ export function DisclaimerBanner() {
         <div className="flex items-center gap-2 text-xs text-amber-800">
           <Info className="h-4 w-4 shrink-0" />
           <p>
-            <strong>Informacja:</strong> Serwis ma charakter informacyjny i nie
+            <strong>Informacja:</strong> CebulaZysku ma charakter informacyjny i nie
             stanowi doradztwa finansowego. Przedstawione oferty mogą ulec
             zmianie – szczegóły na stronach banków.{" "}
             <a href="/o-nas" className="underline hover:text-amber-900">
-              Dowiedz się więcej
+              Kim jesteśmy?
             </a>
           </p>
         </div>

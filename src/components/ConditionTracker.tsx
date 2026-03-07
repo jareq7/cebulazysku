@@ -105,7 +105,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
   const isComplete = progressPercent === 100;
 
   return (
-    <Card className={`transition-all ${isComplete ? "border-green-300 bg-green-50/50" : ""}`}>
+    <Card className={`transition-all ${isComplete ? "border-amber-300 bg-amber-50/50" : ""}`}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -123,7 +123,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
 
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block">
-              <p className="text-2xl font-bold text-green-600">
+              <p className="text-2xl font-bold text-amber-600">
                 {offer.reward} zł
               </p>
               <p className="text-xs text-muted-foreground">
@@ -159,11 +159,11 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
 
         {/* Mobile reward display */}
         <div className="sm:hidden mt-2 flex items-center justify-between">
-          <span className="text-xl font-bold text-green-600">
+          <span className="text-xl font-bold text-amber-600">
             {offer.reward} zł
           </span>
           {isComplete && (
-            <Badge className="bg-green-100 text-green-800">
+            <Badge className="bg-amber-100 text-amber-800">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Ukończone
             </Badge>
@@ -241,14 +241,14 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
                 <div
                   key={condition.id}
                   className={`rounded-lg border p-4 transition-all ${
-                    isDone ? "border-green-300 bg-green-50/50" : ""
+                    isDone ? "border-amber-300 bg-amber-50/50" : ""
                   }`}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <span
                         className={
-                          isDone ? "text-green-600" : "text-muted-foreground"
+                          isDone ? "text-amber-600" : "text-muted-foreground"
                         }
                       >
                         {isDone ? (
@@ -260,7 +260,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
                       <div className="min-w-0">
                         <p
                           className={`text-sm font-medium ${
-                            isDone ? "text-green-700" : ""
+                            isDone ? "text-amber-700" : ""
                           }`}
                         >
                           {condition.label}
@@ -291,7 +291,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
                       <div className="min-w-[4rem] text-center">
                         <span
                           className={`text-lg font-bold ${
-                            isDone ? "text-green-600" : ""
+                            isDone ? "text-amber-600" : ""
                           }`}
                         >
                           {count}

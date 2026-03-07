@@ -49,7 +49,7 @@ export function generateMetadata({
       locale: "pl_PL",
     },
     alternates: {
-      canonical: `https://bankpremie.pl/oferta/${offer.slug}`,
+      canonical: `https://cebulazysku.pl/oferta/${offer.slug}`,
     },
   };
 }
@@ -94,19 +94,19 @@ export default async function OfferDetailPage({
         "@type": "ListItem",
         position: 1,
         name: "Strona główna",
-        item: "https://bankpremie.pl",
+        item: "https://cebulazysku.pl",
       },
       {
         "@type": "ListItem",
         position: 2,
         name: "Oferty",
-        item: "https://bankpremie.pl/#oferty",
+        item: "https://cebulazysku.pl/#oferty",
       },
       {
         "@type": "ListItem",
         position: 3,
         name: offer.offerName,
-        item: `https://bankpremie.pl/oferta/${offer.slug}`,
+        item: `https://cebulazysku.pl/oferta/${offer.slug}`,
       },
     ],
   };
@@ -150,7 +150,7 @@ export default async function OfferDetailPage({
               Zostało {daysLeft} dni
             </Badge>
             {offer.monthlyFee === 0 && (
-              <Badge variant="outline" className="text-green-600 border-green-200">
+              <Badge variant="outline" className="text-amber-600 border-amber-200">
                 Darmowe konto
               </Badge>
             )}
@@ -158,7 +158,7 @@ export default async function OfferDetailPage({
         </div>
         <div className="text-right">
           <p className="text-sm text-muted-foreground">Premia</p>
-          <p className="text-4xl font-extrabold text-green-600">
+          <p className="text-4xl font-extrabold text-amber-600">
             {offer.reward} zł
           </p>
           {offer.lastUpdated && (
@@ -184,7 +184,7 @@ export default async function OfferDetailPage({
               {offer.freeIf && (
                 <p className="mt-4 text-sm">
                   <strong>Konto bezpłatne jeśli:</strong>{" "}
-                  <span className="text-green-600">{offer.freeIf}</span>
+                  <span className="text-amber-600">{offer.freeIf}</span>
                 </p>
               )}
             </CardContent>
@@ -228,7 +228,7 @@ export default async function OfferDetailPage({
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div className="space-y-2">
-                  <h4 className="font-semibold text-green-600 flex items-center gap-1.5">
+                  <h4 className="font-semibold text-amber-600 flex items-center gap-1.5">
                     <Plus className="h-4 w-4" /> Zalety
                   </h4>
                   {offer.pros.map((pro, i) => (

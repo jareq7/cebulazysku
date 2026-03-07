@@ -1,6 +1,6 @@
-# BankPremie – Zarabiaj na promocjach bankowych
+# 🧅 CebulaZysku – Obierz premie bankowe warstwa po warstwie
 
-Serwis do porównywania promocji bankowych i śledzenia postępów spełniania warunków.
+Serwis do porównywania promocji bankowych i śledzenia postępów spełniania warunków. Łupimy banki legalnie!
 
 ## Stack technologiczny
 

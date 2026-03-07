@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 export const metadata: Metadata = {
   title: "O nas",
   description:
-    "Poznaj BankPremie – serwis porównujący promocje bankowe w Polsce. Dowiedz się o naszej misji i modelu działania.",
+    "Poznaj CebulaZysku – serwis, który obiera premie bankowe warstwa po warstwie. Dowiedz się o naszej misji.",
 };
 
 export default function AboutPage() {
@@ -18,8 +18,8 @@ export default function AboutPage() {
         <h1 className="text-3xl font-extrabold">O nas</h1>
       </div>
       <p className="text-lg text-muted-foreground mb-12 max-w-2xl">
-        BankPremie to niezależny serwis informacyjny pomagający porównywać
-        promocje bankowe i śledzić postępy spełniania ich warunków.
+        CebulaZysku to niezależny serwis, który pomaga obierać premie bankowe
+        warstwa po warstwie — porównujemy oferty i pomagamy śledzić warunki. 🧅
       </p>
 
       {/* Mission */}
@@ -32,9 +32,9 @@ export default function AboutPage() {
           śledzenie postępów jest trudne.
         </p>
         <p className="text-muted-foreground leading-relaxed">
-          BankPremie rozwiązuje ten problem – zbieramy aktualne promocje w
+          CebulaZysku rozwiązuje ten problem – zbieramy aktualne promocje w
           jednym miejscu, prezentujemy warunki w przejrzysty sposób i
-          oferujemy tracker, który pomaga nie przegapić żadnego warunku.
+          oferujemy tracker, który pilnuje każdej warstwy Twojego zysku.
         </p>
       </section>
 
@@ -80,7 +80,7 @@ export default function AboutPage() {
         <h2 className="text-xl font-bold mb-4">Model działania</h2>
         <div className="rounded-2xl bg-muted/50 p-6 space-y-3">
           <p className="text-muted-foreground leading-relaxed">
-            BankPremie utrzymuje się z <strong>prowizji afiliacyjnych</strong>.
+            CebulaZysku utrzymuje się z <strong>prowizji afiliacyjnych</strong>.
             Oznacza to, że gdy klikniesz link prowadzący do strony banku i
             otworzysz konto, bank może wypłacić nam prowizję za
             polecenie.
@@ -104,7 +104,7 @@ export default function AboutPage() {
         <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
           <h3 className="font-bold text-amber-900 mb-2">Ważna informacja</h3>
           <p className="text-sm text-amber-800 leading-relaxed">
-            BankPremie ma charakter wyłącznie informacyjny i{" "}
+            CebulaZysku ma charakter wyłącznie informacyjny i{" "}
             <strong>nie stanowi doradztwa finansowego</strong>, inwestycyjnego
             ani prawnego. Przed podjęciem decyzji finansowych zalecamy
             zapoznanie się z pełnymi warunkami oferty na stronie banku.

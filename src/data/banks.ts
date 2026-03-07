@@ -657,7 +657,7 @@ export function getDifficultyLabel(difficulty: BankOffer["difficulty"]): string 
 
 export function getDifficultyColor(difficulty: BankOffer["difficulty"]): string {
   const colors = {
-    easy: "bg-green-100 text-green-800",
+    easy: "bg-amber-100 text-amber-800",
     medium: "bg-yellow-100 text-yellow-800",
     hard: "bg-red-100 text-red-800",
   };

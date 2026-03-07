@@ -70,10 +70,10 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
 
       <CardContent className="space-y-4">
         <div className="flex items-baseline gap-1">
-          <span className="text-3xl font-extrabold text-green-600">
+          <span className="text-3xl font-extrabold text-amber-600">
             {offer.reward}
           </span>
-          <span className="text-lg font-semibold text-green-600">zł</span>
+          <span className="text-lg font-semibold text-amber-600">zł</span>
           <span className="text-sm text-muted-foreground ml-1">premii</span>
         </div>
 
@@ -90,7 +90,7 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
             {daysLeft} dni
           </Badge>
           {offer.monthlyFee === 0 && (
-            <Badge variant="outline" className="text-green-600 border-green-200">
+            <Badge variant="outline" className="text-amber-600 border-amber-200">
               Darmowe konto
             </Badge>
           )}

@@ -21,10 +21,10 @@ export default function Home() {
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "BankPremie",
-    url: "https://bankpremie.pl",
+    name: "CebulaZysku",
+    url: "https://cebulazysku.pl",
     description:
-      "Porównaj promocje bankowe i odbieraj premie za założenie konta.",
+      "Obierz premie bankowe warstwa po warstwie. Łupimy banki legalnie!",
     inLanguage: "pl-PL",
   };
   const totalEarnings = getTotalPotentialEarnings();
@@ -34,24 +34,24 @@ export default function Home() {
       <JsonLd data={websiteJsonLd} />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2230%22%20height%3D%2230%22%20viewBox%3D%220%200%2030%2030%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M15%200L30%2015L15%2030L0%2015Z%22%20fill%3D%22%2310b981%22%20fill-opacity%3D%220.03%22%2F%3E%3C%2Fsvg%3E')] opacity-50" />
+      <section className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%228%22%20fill%3D%22%23f59e0b%22%20fill-opacity%3D%220.04%22%2F%3E%3C%2Fsvg%3E')] opacity-50" />
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
           <div className="text-center">
             <Badge variant="secondary" className="mb-6 gap-1.5 px-4 py-1.5 text-sm">
               <Sparkles className="h-4 w-4 text-amber-500" />
-              Aktualnie {bankOffers.length} aktywnych promocji
+              🧅 {bankOffers.length} ofert do ołupienia
             </Badge>
             <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-              Porównaj promocje i{" "}
-              <span className="bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
-                odbieraj premie bankowe
+              Obierz premie bankowe{" "}
+              <span className="bg-gradient-to-r from-amber-600 to-orange-500 bg-clip-text text-transparent">
+                warstwa po warstwie
               </span>
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground leading-relaxed">
-              Porównaj oferty, załóż konta i odbieraj premie. Śledź postępy
-              spełniania warunków w jednym miejscu. Aktualnie do odebrania nawet{" "}
-              <strong className="text-green-600 font-bold">{totalEarnings} zł</strong>!
+              Jak cebula — każda warstwa to kolejny zysk. Porównuj promocje, śledź
+              warunki i zbieraj premie. Aktualnie do obrania nawet{" "}
+              <strong className="text-amber-600 font-bold">{totalEarnings} zł</strong>!
             </p>
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link href="/rejestracja">
@@ -71,16 +71,16 @@ export default function Home() {
           {/* Stats */}
           <div className="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-8">
             {[
-              { label: "Do odebrania", value: `${totalEarnings} zł`, icon: TrendingUp },
-              { label: "Aktywnych ofert", value: `${bankOffers.length}`, icon: Sparkles },
-              { label: "Bezpłatnych kont", value: `${bankOffers.filter(o => o.monthlyFee === 0).length}`, icon: Shield },
+              { label: "Do obrania", value: `${totalEarnings} zł`, icon: TrendingUp },
+              { label: "Ofert do łupienia", value: `${bankOffers.length}`, icon: Sparkles },
+              { label: "Darmowych kont", value: `${bankOffers.filter(o => o.monthlyFee === 0).length}`, icon: Shield },
               { label: "Min. czas", value: "2 mies.", icon: Clock },
             ].map((stat) => (
               <div
                 key={stat.label}
                 className="rounded-2xl bg-white/80 backdrop-blur p-4 sm:p-6 text-center shadow-sm"
               >
-                <stat.icon className="mx-auto h-6 w-6 text-green-600 mb-2" />
+                <stat.icon className="mx-auto h-6 w-6 text-amber-600 mb-2" />
                 <p className="text-2xl font-bold sm:text-3xl">{stat.value}</p>
                 <p className="text-sm text-muted-foreground">{stat.label}</p>
               </div>
@@ -95,34 +95,34 @@ export default function Home() {
       {/* How it works */}
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
         <div className="text-center mb-12">
-          <h2 className="text-3xl font-bold">Jak to działa?</h2>
+          <h2 className="text-3xl font-bold">Jak obięramy zysk? 🧅</h2>
           <p className="mt-3 text-muted-foreground">
-            Trzy proste kroki do dodatkowego zarobku
+            Trzy warstwy do Twojej premii
           </p>
         </div>
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {[
             {
-              step: "1",
-              title: "Wybierz ofertę",
+              step: "🧅",
+              title: "Wybierz cebulkę",
               description:
-                "Przeglądaj aktualne promocje bankowe i wybierz te, które Ci odpowiadają.",
+                "Przeglądaj oferty banków i wybierz te, które chcesz ołupić.",
             },
             {
-              step: "2",
-              title: "Załóż konto i śledź postępy",
+              step: "🔪",
+              title: "Załóż konto i obieraj",
               description:
-                "Otwórz konto przez nasz link afiliacyjny i dodaj ofertę do trackera.",
+                "Załóż konto przez nasz link i dodaj ofertę do trackera.",
             },
             {
-              step: "3",
-              title: "Spełniaj warunki i odbieraj premie",
+              step: "💰",
+              title: "Zbieraj warstwy zysku",
               description:
-                "Zaznaczaj wykonane zadania w trackerze i odbieraj premie bankowe!",
+                "Spełniaj warunki, odhaczaj w trackerze i odbieraj premie!",
             },
           ].map((item) => (
             <div key={item.step} className="text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-green-100 text-green-700 font-bold text-xl mb-4">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-700 font-bold text-xl mb-4">
                 {item.step}
               </div>
               <h3 className="font-semibold text-lg">{item.title}</h3>
@@ -138,9 +138,9 @@ export default function Home() {
       <section className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8" id="oferty">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-3xl font-bold">Aktualne promocje</h2>
+            <h2 className="text-3xl font-bold">🧅 Co dzisiaj obieramy?</h2>
             <p className="mt-2 text-muted-foreground">
-              Porównaj oferty i wybierz najlepsze dla siebie
+              Przeglądaj oferty i wybierz swoje cebulki
             </p>
           </div>
         </div>
@@ -149,12 +149,12 @@ export default function Home() {
 
       {/* Social proof */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="rounded-2xl bg-green-50 border border-green-100 p-6 text-center">
-          <p className="text-lg font-semibold text-green-800">
-            Ponad <span className="text-2xl font-extrabold">1 200</span> osób korzysta z BankPremie do śledzenia promocji
+        <div className="rounded-2xl bg-amber-50 border border-amber-200 p-6 text-center">
+          <p className="text-lg font-semibold text-amber-900">
+            🧅 Ponad <span className="text-2xl font-extrabold">1 200</span> cebularzy już obiera premie
           </p>
-          <p className="text-sm text-green-700 mt-1">
-            Dołącz i odbieraj premie bankowe razem z nami
+          <p className="text-sm text-amber-700 mt-1">
+            Dołącz do społeczności i łup banki razem z nami
           </p>
         </div>
       </section>
@@ -169,30 +169,30 @@ export default function Home() {
             {[
               {
                 icon: Shield,
-                title: "Bezpieczne",
-                desc: "Współpracujemy tylko z licencjonowanymi bankami objętymi BFG.",
+                title: "Bezpieczne 🛡️",
+                desc: "Tylko licencjonowane banki z gwarancją BFG. Żadna podejrzana cebulka.",
               },
               {
                 icon: CheckCircle,
-                title: "Sprawdzone",
-                desc: "Każda oferta jest weryfikowana i aktualizowana na bieżąco.",
+                title: "Sprawdzone ✅",
+                desc: "Każda oferta zweryfikowana i aktualizowana z feedu banków.",
               },
               {
                 icon: Clock,
-                title: "Oszczędność czasu",
-                desc: "Tracker automatycznie przypomina o warunkach do spełnienia.",
+                title: "Tracker ⏰",
+                desc: "Przypomnimy Ci o warunkach, żebyś nie przegapił żadnej warstwy.",
               },
               {
                 icon: TrendingUp,
-                title: "Realne premie",
-                desc: `Nawet ${totalEarnings} zł rocznie z promocji bankowych.`,
+                title: "Realne premie 💰",
+                desc: `Nawet ${totalEarnings} zł rocznie. To dużo cebuli!`,
               },
             ].map((item) => (
               <div
                 key={item.title}
                 className="rounded-2xl bg-background p-6 text-center shadow-sm"
               >
-                <item.icon className="mx-auto h-8 w-8 text-green-600 mb-3" />
+                <item.icon className="mx-auto h-8 w-8 text-amber-600 mb-3" />
                 <h3 className="font-semibold">{item.title}</h3>
                 <p className="mt-2 text-sm text-muted-foreground">{item.desc}</p>
               </div>
@@ -204,14 +204,14 @@ export default function Home() {
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 text-center">
         <h2 className="text-3xl font-bold sm:text-4xl">
-          Gotowy na premie bankowe?
+          Gotowy na obieranie? 🧅
         </h2>
         <p className="mt-4 text-lg text-muted-foreground">
-          Załóż darmowe konto i śledź swoje postępy w odbieraniu premii.
+          Załóż darmowe konto i zacznij łupić premie bankowe.
         </p>
         <Link href="/rejestracja">
           <Button size="lg" className="mt-8 gap-2 text-base px-10">
-            Załóż konto za darmo
+            Zacznij obierać
             <ArrowRight className="h-5 w-5" />
           </Button>
         </Link>

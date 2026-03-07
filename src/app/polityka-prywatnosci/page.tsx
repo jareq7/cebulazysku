@@ -4,7 +4,7 @@ import { Shield } from "lucide-react";
 export const metadata: Metadata = {
   title: "Polityka prywatności",
   description:
-    "Polityka prywatności serwisu BankPremie. Informacje o przetwarzaniu danych osobowych zgodnie z RODO.",
+    "Polityka prywatności serwisu CebulaZysku. Informacje o przetwarzaniu danych osobowych zgodnie z RODO.",
 };
 
 export default function PrivacyPolicyPage() {
@@ -25,7 +25,7 @@ export default function PrivacyPolicyPage() {
           </h2>
           <p>
             Administratorem danych osobowych przetwarzanych w serwisie
-            BankPremie (dalej: „Serwis") dostępnym pod adresem bankpremie.pl
+            CebulaZysku (dalej: „Serwis") dostępnym pod adresem cebulazysku.pl
             jest właściciel serwisu (dalej: „Administrator").
           </p>
           <p>
@@ -34,7 +34,7 @@ export default function PrivacyPolicyPage() {
             <a href="/kontakt" className="text-primary underline">
               /kontakt
             </a>{" "}
-            lub pod adresem e-mail: kontakt@bankpremie.pl.
+            lub pod adresem e-mail: kontakt@cebulazysku.pl.
           </p>
         </section>
 

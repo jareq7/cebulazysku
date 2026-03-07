@@ -43,9 +43,9 @@ Zakładaj konta wyłącznie przez oficjalne strony banków. Nigdy nie podawaj da
 
 ## Podsumowanie
 
-Promocje bankowe to bezpieczny sposób na dodatkowe środki, o ile podchodzisz do nich świadomie. Sprawdzaj warunki, korzystaj z licencjonowanych banków i śledź postępy za pomocą narzędzi takich jak BankPremie.
+Promocje bankowe to bezpieczny sposób na dodatkowe środki, o ile podchodzisz do nich świadomie. Sprawdzaj warunki, korzystaj z licencjonowanych banków i śledź postępy za pomocą narzędzi takich jak CebulaZysku.
     `.trim(),
-    author: "Zespół BankPremie",
+    author: "Zespół CebulaZysku",
     publishedAt: "2026-03-01",
     readingTime: "4 min",
     tags: ["poradnik", "bezpieczeństwo", "promocje bankowe"],

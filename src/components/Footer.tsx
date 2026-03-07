@@ -1,6 +1,5 @@
 "use client";
 
-import { Landmark } from "lucide-react";
 import Link from "next/link";
 
 export function Footer() {
@@ -10,14 +9,14 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-              <Landmark className="h-5 w-5 text-primary" />
-              <span className="bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
-                BankPremie
+              <span className="text-xl" role="img" aria-label="cebula">🧅</span>
+              <span className="bg-gradient-to-r from-amber-600 to-orange-500 bg-clip-text text-transparent">
+                CebulaZysku
               </span>
             </Link>
             <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-              Porównuj promocje bankowe i śledź swoje postępy
-              w odbieraniu premii.
+              Obieramy premie bankowe warstwa po warstwie.
+              Łupimy legalnie!
             </p>
           </div>
 
@@ -81,8 +80,8 @@ export function Footer() {
         </div>
 
         <div className="mt-8 border-t pt-6 text-center text-xs text-muted-foreground">
-          &copy; {new Date().getFullYear()} BankPremie. Wszystkie prawa
-          zastrzeżone.
+          &copy; {new Date().getFullYear()} CebulaZysku. Wszystkie prawa
+          zastrzeżone. 🧅
         </div>
       </div>
     </footer>
