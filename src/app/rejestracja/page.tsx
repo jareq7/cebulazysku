@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Landmark, Loader2 } from "lucide-react";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -98,14 +99,13 @@ export default function RegisterPage() {
               />
             </div>
             <div className="flex items-start gap-2">
-              <input
+              <Checkbox
                 id="consent"
-                type="checkbox"
                 checked={consent}
-                onChange={(e) => setConsent(e.target.checked)}
-                className="mt-1 h-4 w-4 rounded border-gray-300"
+                onCheckedChange={(checked) => setConsent(checked === true)}
+                className="mt-0.5"
               />
-              <Label htmlFor="consent" className="text-xs text-muted-foreground leading-relaxed font-normal">
+              <Label htmlFor="consent" className="text-xs text-muted-foreground leading-relaxed font-normal cursor-pointer">
                 Akceptuję{" "}
                 <Link href="/regulamin" className="text-emerald-600 underline" target="_blank">
                   Regulamin

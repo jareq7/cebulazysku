@@ -52,7 +52,7 @@ export default async function Home() {
               <strong className="text-emerald-600 font-bold">{totalEarnings} zł</strong>!
             </p>
             <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-              <Link href="/rejestracja">
+              <Link href="/#oferty">
                 <Button size="lg" className="gap-2 text-base px-8">
                   Sprawdź oferty
                   <ArrowRight className="h-5 w-5" />
@@ -149,10 +149,10 @@ export default async function Home() {
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 p-6 text-center">
           <p className="text-lg font-semibold text-emerald-900 dark:text-emerald-200">
-            🧅 Ponad <span className="text-2xl font-extrabold">1 200</span> cebularzy już obiera premie
+            🧅 Dołącz do społeczności cebularzy
           </p>
           <p className="text-sm text-emerald-700 dark:text-emerald-400 mt-1">
-            Dołącz do społeczności i łup banki razem z nami
+            Razem łupimy banki legalnie — obierz swoją pierwszą premię
           </p>
         </div>
       </section>

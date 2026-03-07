@@ -132,13 +132,21 @@ export default async function OfferDetailPage({
 
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
-        <div
-          className="flex h-16 w-16 items-center justify-center rounded-2xl text-white font-bold text-2xl shrink-0"
-          style={{ backgroundColor: offer.bankColor }}
-          aria-label={`Logo ${offer.bankName}`}
-        >
-          {offer.bankName.charAt(0)}
-        </div>
+        {offer.bankLogo && offer.bankLogo.startsWith("http") ? (
+          <img
+            src={offer.bankLogo}
+            alt={`${offer.bankName} logo`}
+            className="h-16 w-16 rounded-2xl object-contain bg-white p-1.5 shrink-0"
+          />
+        ) : (
+          <div
+            className="flex h-16 w-16 items-center justify-center rounded-2xl text-white font-bold text-2xl shrink-0"
+            style={{ backgroundColor: offer.bankColor }}
+            aria-label={`Logo ${offer.bankName}`}
+          >
+            {offer.bankName.charAt(0)}
+          </div>
+        )}
         <div className="flex-1">
           <p className="text-sm text-muted-foreground">{offer.bankName}</p>
           <h1 className="text-3xl font-extrabold">{offer.offerName}</h1>
@@ -192,67 +200,75 @@ export default async function OfferDetailPage({
           </Card>
 
           {/* Conditions */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Warunki do spełnienia</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {offer.conditions.map((condition) => (
-                <div
-                  key={condition.id}
-                  className="rounded-lg border p-4 space-y-1"
-                >
-                  <div className="flex items-center justify-between">
-                    <h4 className="font-semibold">{condition.label}</h4>
-                    <Badge variant="secondary" className="text-xs">
-                      {conditionTypeLabels[condition.type]}
-                    </Badge>
+          {offer.conditions.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Warunki do spełnienia</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                {offer.conditions.map((condition) => (
+                  <div
+                    key={condition.id}
+                    className="rounded-lg border p-4 space-y-1"
+                  >
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-semibold">{condition.label}</h4>
+                      <Badge variant="secondary" className="text-xs">
+                        {conditionTypeLabels[condition.type]}
+                      </Badge>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                      {condition.description}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {condition.perMonth
+                        ? `${condition.requiredCount}x miesięcznie przez ${condition.monthsRequired} mies.`
+                        : `Jednorazowo`}
+                    </p>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    {condition.description}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {condition.perMonth
-                      ? `${condition.requiredCount}x miesięcznie przez ${condition.monthsRequired} mies.`
-                      : `Jednorazowo`}
-                  </p>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+                ))}
+              </CardContent>
+            </Card>
+          )}
 
           {/* Pros & Cons */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Zalety i wady</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-emerald-600 flex items-center gap-1.5">
-                    <Plus className="h-4 w-4" /> Zalety
-                  </h4>
-                  {offer.pros.map((pro, i) => (
-                    <div key={i} className="flex items-start gap-2 text-sm">
-                      <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
-                      <span>{pro}</span>
+          {(offer.pros.length > 0 || offer.cons.length > 0) && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Zalety i wady</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {offer.pros.length > 0 && (
+                    <div className="space-y-2">
+                      <h4 className="font-semibold text-emerald-600 flex items-center gap-1.5">
+                        <Plus className="h-4 w-4" /> Zalety
+                      </h4>
+                      {offer.pros.map((pro, i) => (
+                        <div key={i} className="flex items-start gap-2 text-sm">
+                          <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 shrink-0" />
+                          <span>{pro}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
-                <div className="space-y-2">
-                  <h4 className="font-semibold text-red-600 flex items-center gap-1.5">
-                    <Minus className="h-4 w-4" /> Wady
-                  </h4>
-                  {offer.cons.map((con, i) => (
-                    <div key={i} className="flex items-start gap-2 text-sm">
-                      <XCircle className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
-                      <span>{con}</span>
+                  )}
+                  {offer.cons.length > 0 && (
+                    <div className="space-y-2">
+                      <h4 className="font-semibold text-red-600 flex items-center gap-1.5">
+                        <Minus className="h-4 w-4" /> Wady
+                      </h4>
+                      {offer.cons.map((con, i) => (
+                        <div key={i} className="flex items-start gap-2 text-sm">
+                          <XCircle className="h-4 w-4 text-red-500 mt-0.5 shrink-0" />
+                          <span>{con}</span>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  )}
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          )}
 
           {/* FAQ */}
           {offer.faq.length > 0 && (

@@ -53,12 +53,20 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
       )}
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
-          <div
-            className="flex h-12 w-12 items-center justify-center rounded-xl text-white font-bold text-lg shrink-0"
-            style={{ backgroundColor: offer.bankColor }}
-          >
-            {offer.bankName.charAt(0)}
-          </div>
+          {offer.bankLogo && offer.bankLogo.startsWith("http") ? (
+            <img
+              src={offer.bankLogo}
+              alt={`${offer.bankName} logo`}
+              className="h-12 w-12 rounded-xl object-contain bg-white p-1 shrink-0"
+            />
+          ) : (
+            <div
+              className="flex h-12 w-12 items-center justify-center rounded-xl text-white font-bold text-lg shrink-0"
+              style={{ backgroundColor: offer.bankColor }}
+            >
+              {offer.bankName.charAt(0)}
+            </div>
+          )}
           <div className="min-w-0">
             <p className="text-sm text-muted-foreground">{offer.bankName}</p>
             <h3 className="font-semibold text-base leading-tight truncate">
