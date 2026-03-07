@@ -67,6 +67,19 @@
 
 ---
 
+## Faza 0d — Automatyczny sync XML (Vercel Cron)
+
+**Co zrobiono:**
+- Utworzono `vercel.json` z cron schedule (`0 6 * * *` — codziennie o 6:00 UTC)
+- Refaktor `sync-offers/route.ts`: wyodrębniono `runSync()`, dodano GET handler dla Vercel Cron
+- Obsługa `CRON_SECRET` (Vercel) obok istniejącego `SYNC_SECRET` (ręczne)
+- Soft delete: oferty nieobecne w feedzie XML → `is_active = false`
+- Logi sync zapisywane w tabeli `sync_log` (z polem `offers_deactivated`)
+
+📄 Szczegóły: [15-auto-sync-xml.md](./15-auto-sync-xml.md)
+
+---
+
 ## Fazy wcześniejsze (1–4)
 
 Zostały zrealizowane w poprzednich sesjach. Kluczowe deliverables:
