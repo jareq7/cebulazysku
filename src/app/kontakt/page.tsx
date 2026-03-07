@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Mail, Send, MapPin, Clock } from "lucide-react";
+import { Mail, Send, Clock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,12 +10,34 @@ import { Separator } from "@/components/ui/separator";
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
-  const [form, setForm] = useState({ name: "", email: "", message: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [form, setForm] = useState({ name: "", email: "", message: "", website: "" });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Frontend-only – no backend
-    setSent(true);
+    setError("");
+    setLoading(true);
+
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setError(data.error || "Wystąpił błąd. Spróbuj ponownie.");
+      } else {
+        setSent(true);
+      }
+    } catch {
+      setError("Nie udało się wysłać wiadomości. Sprawdź połączenie.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -45,6 +67,21 @@ export default function ContactPage() {
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
+                {error && (
+                  <div className="rounded-lg bg-red-50 dark:bg-red-950/30 p-3 text-sm text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/40">
+                    {error}
+                  </div>
+                )}
+                {/* Honeypot — hidden from real users */}
+                <input
+                  type="text"
+                  name="website"
+                  value={form.website}
+                  onChange={(e) => setForm({ ...form, website: e.target.value })}
+                  className="hidden"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
                 <div>
                   <Label htmlFor="name">Imię</Label>
                   <Input
@@ -83,9 +120,13 @@ export default function ContactPage() {
                     }
                   />
                 </div>
-                <Button type="submit" className="w-full gap-2">
-                  <Send className="h-4 w-4" />
-                  Wyślij wiadomość
+                <Button type="submit" className="w-full gap-2" disabled={loading}>
+                  {loading ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Send className="h-4 w-4" />
+                  )}
+                  {loading ? "Wysyłanie..." : "Wyślij wiadomość"}
                 </Button>
               </form>
             )}

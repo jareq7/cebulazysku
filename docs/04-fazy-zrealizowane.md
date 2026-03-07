@@ -67,6 +67,37 @@
 
 ---
 
+## Faza 0g — Backend formularza kontaktowego
+
+**Co zrobiono:**
+- API route `POST /api/contact` z walidacją, rate limitingiem i honeypot
+- Frontend z loading/error states, przycisk z spinnerem
+- Tabela `contact_messages` w Supabase (SQL migracja gotowa)
+- RLS: anon INSERT, service_role full access
+
+📄 Szczegóły: [18-backend-kontakt.md](./18-backend-kontakt.md)
+
+---
+
+## Faza 0f — Audyt UX/UI
+
+**Co zrobiono:**
+- Pełny audyt UX/UI (10 problemów zidentyfikowanych i naprawionych)
+- CSS variables amber→green (globals.css)
+- Favicon z logo
+- CTA hero → #oferty zamiast /rejestracja
+- Logo banków na kartach ofert i stronie szczegółów
+- Ukrywanie pustych sekcji (warunki, pros/cons)
+- Loading skeleton (loading.tsx)
+- Social proof — usunięto fałszywą liczbę
+- Mobile menu: auto-close na resize, Escape key, aria-expanded
+- Checkbox rejestracji → shadcn Checkbox
+- Skip-to-content link + aria labels
+
+📄 Szczegóły: [17-audyt-ux-ui.md](./17-audyt-ux-ui.md)
+
+---
+
 ## Faza 0e — SEO & Analytics
 
 **Co zrobiono:**
