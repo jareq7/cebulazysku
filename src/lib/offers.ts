@@ -48,17 +48,17 @@ async function supabaseGet(path: string): Promise<unknown[] | null> {
 
 export async function fetchOffersFromDB(): Promise<BankOffer[]> {
   const data = await supabaseGet(
-    "offers?is_active=eq.true&order=reward.desc&select=*"
+    "offers?is_active=eq.true&reward=gt.0&order=reward.desc&select="
   );
   if (!data || !Array.isArray(data) || data.length === 0) {
-    return staticOffers;
+    return staticOffers.filter((o) => o.reward > 0);
   }
   return data.map(mapDbOffer);
 }
 
 export async function fetchOfferBySlug(slug: string): Promise<BankOffer | null> {
   const data = await supabaseGet(
-    `offers?slug=eq.${encodeURIComponent(slug)}&is_active=eq.true&select=*`
+    `offers?slug=eq.${encodeURIComponent(slug)}&is_active=eq.true&reward=gt.0&select=*`
   );
   if (!data || !Array.isArray(data) || data.length === 0) {
     return staticOffers.find((o) => o.slug === slug) || null;

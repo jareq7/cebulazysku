@@ -42,13 +42,15 @@ export function useOffers() {
       return;
     }
 
-    fetch(`${url}/rest/v1/offers?is_active=eq.true&order=reward.desc&select=*`, {
+    fetch(`${url}/rest/v1/offers?is_active=eq.true&reward=gt.0&order=reward.desc&select=*`, {
       headers: { apikey: key, Authorization: `Bearer ${key}` },
     })
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           setOffers(data.map(mapDbOffer));
+        } else {
+          setOffers(staticOffers.filter((o) => o.reward > 0));
         }
       })
       .catch(() => {})
