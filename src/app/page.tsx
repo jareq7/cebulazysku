@@ -2,10 +2,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { OfferFilters } from "@/components/OfferFilters";
-import {
-  bankOffers,
-  getTotalPotentialEarnings,
-} from "@/data/banks";
+import { fetchOffersFromDB, getTotalPotentialEarnings } from "@/lib/offers";
 import {
   TrendingUp,
   Shield,
@@ -17,7 +14,7 @@ import {
 import { DisclaimerBanner } from "@/components/DisclaimerBanner";
 import { JsonLd } from "@/components/JsonLd";
 
-export default function Home() {
+export default async function Home() {
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -27,7 +24,8 @@ export default function Home() {
       "Obierz premie bankowe warstwa po warstwie. Łupimy banki legalnie!",
     inLanguage: "pl-PL",
   };
-  const totalEarnings = getTotalPotentialEarnings();
+  const bankOffers = await fetchOffersFromDB();
+  const totalEarnings = await getTotalPotentialEarnings();
 
   return (
     <>

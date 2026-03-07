@@ -1,9 +1,10 @@
 import { MetadataRoute } from "next";
-import { bankOffers } from "@/data/banks";
+import { fetchOffersFromDB } from "@/lib/offers";
 import { blogPosts } from "@/data/blog";
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://cebulazysku.pl";
+  const bankOffers = await fetchOffersFromDB();
 
   const offerPages = bankOffers.map((offer) => ({
     url: `${baseUrl}/oferta/${offer.slug}`,

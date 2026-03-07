@@ -2,12 +2,11 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
 import {
-  bankOffers,
-  getOfferBySlug,
   getDifficultyLabel,
   getDifficultyColor,
   conditionTypeLabels,
 } from "@/data/banks";
+import { fetchOffersFromDB, fetchOfferBySlug } from "@/lib/offers";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -22,18 +21,20 @@ import {
   Minus,
 } from "lucide-react";
 
-export function generateStaticParams() {
-  return bankOffers.map((offer) => ({
+export async function generateStaticParams() {
+  const offers = await fetchOffersFromDB();
+  return offers.map((offer) => ({
     slug: offer.slug,
   }));
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
-}): Metadata {
-  const offer = getOfferBySlug(params.slug);
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const offer = await fetchOfferBySlug(slug);
   if (!offer) return {};
 
   const title = `${offer.bankName} – ${offer.offerName} | Warunki i szczegóły`;
@@ -60,7 +61,7 @@ export default async function OfferDetailPage({
   params: { slug: string };
 }) {
   const { slug } = await params;
-  const offer = getOfferBySlug(slug);
+  const offer = await fetchOfferBySlug(slug);
 
   if (!offer) {
     notFound();
@@ -291,8 +292,9 @@ export default async function OfferDetailPage({
       </div>
 
       {/* Zobacz też */}
-      {(() => {
-        const related = bankOffers
+      {await (async () => {
+        const allOffers = await fetchOffersFromDB();
+        const related = allOffers
           .filter((o) => o.id !== offer.id)
           .sort((a, b) => {
             if (a.difficulty === offer.difficulty && b.difficulty !== offer.difficulty) return -1;

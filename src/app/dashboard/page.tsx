@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { useTracker } from "@/context/TrackerContext";
-import { bankOffers } from "@/data/banks";
+import { useOffers } from "@/hooks/useOffers";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -28,6 +28,7 @@ export default function DashboardPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const { trackedOffers } = useTracker();
+  const { offers: bankOffers } = useOffers();
 
   useEffect(() => {
     if (!isLoading && !user) {

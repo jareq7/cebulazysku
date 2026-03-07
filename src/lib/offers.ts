@@ -1,7 +1,9 @@
-import { createClient } from "@/lib/supabase/client";
 import type { BankOffer, Condition } from "@/data/banks";
+import { bankOffers as staticOffers } from "@/data/banks";
 
-// Maps a Supabase DB row to a BankOffer object for frontend use
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapDbOffer(row: any): BankOffer {
   return {
@@ -28,31 +30,48 @@ function mapDbOffer(row: any): BankOffer {
   };
 }
 
-export async function fetchOffersFromDB(): Promise<BankOffer[]> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from("offers")
-    .select("*")
-    .eq("is_active", true)
-    .order("reward", { ascending: false });
-
-  if (error || !data) {
-    console.error("Failed to fetch offers from DB:", error?.message);
-    return [];
+async function supabaseGet(path: string): Promise<unknown[] | null> {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+      headers: {
+        apikey: SUPABASE_KEY,
+        Authorization: `Bearer ${SUPABASE_KEY}`,
+      },
+      next: { revalidate: 300 },
+    });
+    if (!res.ok) return null;
+    return res.json();
+  } catch {
+    return null;
   }
+}
 
+export async function fetchOffersFromDB(): Promise<BankOffer[]> {
+  const data = await supabaseGet(
+    "offers?is_active=eq.true&order=reward.desc&select=*"
+  );
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return staticOffers;
+  }
   return data.map(mapDbOffer);
 }
 
 export async function fetchOfferBySlug(slug: string): Promise<BankOffer | null> {
-  const supabase = createClient();
-  const { data, error } = await supabase
-    .from("offers")
-    .select("*")
-    .eq("slug", slug)
-    .eq("is_active", true)
-    .single();
+  const data = await supabaseGet(
+    `offers?slug=eq.${encodeURIComponent(slug)}&is_active=eq.true&select=*`
+  );
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return staticOffers.find((o) => o.slug === slug) || null;
+  }
+  return mapDbOffer(data[0]);
+}
 
-  if (error || !data) return null;
-  return mapDbOffer(data);
+export async function getTotalPotentialEarnings(): Promise<number> {
+  const offers = await fetchOffersFromDB();
+  return offers.reduce((sum, o) => sum + o.reward, 0);
+}
+
+export async function getFeaturedOffers(): Promise<BankOffer[]> {
+  const offers = await fetchOffersFromDB();
+  return offers.filter((o) => o.featured);
 }
