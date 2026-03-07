@@ -32,6 +32,7 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 17 | [Audyt UX/UI](./17-audyt-ux-ui.md) | Przegląd spójności, responsywności, a11y, rekomendacje |
 | 18 | [Backend kontakt](./18-backend-kontakt.md) | API /api/contact, Supabase, walidacja, honeypot |
 | 19 | [Admin panel](./19-admin-panel.md) | Dashboard, oferty, sync logi, wiadomości |
+| 20 | [Blog dynamiczny](./20-blog-dynamiczny.md) | Supabase, ISR, admin CRUD, fallback |
 
 ---
 

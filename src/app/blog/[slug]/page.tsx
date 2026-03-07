@@ -1,25 +1,35 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
-import { blogPosts, getBlogPostBySlug } from "@/data/blog";
+import { getPublishedPosts, getPostBySlug } from "@/lib/blog";
+import { blogPosts as staticPosts, getBlogPostBySlug } from "@/data/blog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/JsonLd";
 import { ArrowLeft, Clock, User } from "lucide-react";
 
-export function generateStaticParams() {
-  return blogPosts.map((post) => ({
-    slug: post.slug,
-  }));
+export const revalidate = 300;
+
+export async function generateStaticParams() {
+  const dbPosts = await getPublishedPosts();
+  if (dbPosts.length > 0) {
+    return dbPosts.map((post) => ({ slug: post.slug }));
+  }
+  return staticPosts.map((post) => ({ slug: post.slug }));
 }
 
-export function generateMetadata({
+export async function generateMetadata({
   params,
 }: {
   params: { slug: string };
-}): Metadata {
-  const post = getBlogPostBySlug(params.slug);
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const dbPost = await getPostBySlug(slug);
+  const staticPost = getBlogPostBySlug(slug);
+  const post = dbPost || staticPost;
   if (!post) return {};
+
+  const publishedAt = dbPost ? dbPost.published_at : (staticPost?.publishedAt || "");
 
   return {
     title: post.title,
@@ -29,7 +39,7 @@ export function generateMetadata({
       description: post.excerpt,
       type: "article",
       locale: "pl_PL",
-      publishedTime: post.publishedAt,
+      publishedTime: publishedAt,
     },
     alternates: {
       canonical: `https://cebulazysku.pl/blog/${post.slug}`,
@@ -43,7 +53,34 @@ export default async function BlogPostPage({
   params: { slug: string };
 }) {
   const { slug } = await params;
-  const post = getBlogPostBySlug(slug);
+
+  const dbPost = await getPostBySlug(slug);
+  const staticPost = getBlogPostBySlug(slug);
+
+  // Normalize to a common shape
+  const post = dbPost
+    ? {
+        title: dbPost.title,
+        slug: dbPost.slug,
+        excerpt: dbPost.excerpt,
+        content: dbPost.content,
+        author: dbPost.author,
+        publishedAt: dbPost.published_at,
+        readingTime: dbPost.reading_time,
+        tags: dbPost.tags,
+      }
+    : staticPost
+    ? {
+        title: staticPost.title,
+        slug: staticPost.slug,
+        excerpt: staticPost.excerpt,
+        content: staticPost.content,
+        author: staticPost.author,
+        publishedAt: staticPost.publishedAt,
+        readingTime: staticPost.readingTime,
+        tags: staticPost.tags,
+      }
+    : null;
 
   if (!post) {
     notFound();

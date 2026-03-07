@@ -67,6 +67,20 @@
 
 ---
 
+## Faza 0i — Blog dynamiczny (Supabase)
+
+**Co zrobiono:**
+- Tabela `blog_posts` z RLS (anon SELECT published, service_role full)
+- `src/lib/blog.ts` — `getPublishedPosts()`, `getPostBySlug()`
+- Blog listing i detail z ISR (5 min) + fallback na statyczne dane
+- Admin CRUD: `/admin/blog` — tworzenie, edycja, publikacja, usuwanie
+- API: `/api/admin/blog` (GET/POST/PATCH/DELETE)
+- Auto-generowanie slug z tytułu, tagi jako PostgreSQL `TEXT[]`
+
+📄 Szczegóły: [20-blog-dynamiczny.md](./20-blog-dynamiczny.md)
+
+---
+
 ## Faza 0h — Admin Panel (/admin)
 
 **Co zrobiono:**

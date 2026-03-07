@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { blogPosts } from "@/data/blog";
+import { getPublishedPosts } from "@/lib/blog";
+import { blogPosts as staticPosts } from "@/data/blog";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -12,7 +13,30 @@ export const metadata: Metadata = {
     "Praktyczne poradniki, porównania i aktualności ze świata promocji bankowych. Dowiedz się, jak bezpiecznie korzystać z premii.",
 };
 
-export default function BlogPage() {
+export const revalidate = 300; // ISR: revalidate every 5 min
+
+export default async function BlogPage() {
+  const dbPosts = await getPublishedPosts();
+
+  // Fallback to static posts if Supabase returns nothing
+  const posts = dbPosts.length > 0
+    ? dbPosts.map((p) => ({
+        slug: p.slug,
+        title: p.title,
+        excerpt: p.excerpt,
+        publishedAt: p.published_at,
+        readingTime: p.reading_time,
+        tags: p.tags,
+      }))
+    : staticPosts.map((p) => ({
+        slug: p.slug,
+        title: p.title,
+        excerpt: p.excerpt,
+        publishedAt: p.publishedAt,
+        readingTime: p.readingTime,
+        tags: p.tags,
+      }));
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-16 sm:px-6 lg:px-8">
       <div className="flex items-center gap-3 mb-4">
@@ -23,7 +47,7 @@ export default function BlogPage() {
         Praktyczne poradniki i aktualności ze świata promocji bankowych.
       </p>
 
-      {blogPosts.length === 0 ? (
+      {posts.length === 0 ? (
         <div className="text-center py-16">
           <BookOpen className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
           <h2 className="text-xl font-bold mb-2">Wkrótce pojawią się artykuły</h2>
@@ -34,7 +58,7 @@ export default function BlogPage() {
         </div>
       ) : (
         <div className="space-y-6">
-          {blogPosts.map((post) => (
+          {posts.map((post) => (
             <Card key={post.slug} className="group hover:shadow-md transition-shadow">
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
