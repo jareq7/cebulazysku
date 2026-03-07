@@ -1,7 +1,8 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "./AuthContext";
+import { createClient } from "@/lib/supabase/client";
 
 export interface TrackedCondition {
   conditionId: string;
@@ -27,40 +28,73 @@ interface TrackerContextType {
 
 const TrackerContext = createContext<TrackerContextType | undefined>(undefined);
 
-function getStorageKey(userId: string) {
-  return `bankafiliacje_tracker_${userId}`;
-}
-
 export function TrackerProvider({ children }: { children: React.ReactNode }) {
   const { user } = useAuth();
   const [trackedOffers, setTrackedOffers] = useState<TrackedOffer[]>([]);
+  const supabaseRef = useRef(createClient());
+  const supabase = supabaseRef.current;
 
+  // Load tracked offers and condition progress from Supabase
   useEffect(() => {
     if (!user) {
       setTrackedOffers([]);
       return;
     }
-    try {
-      const data = localStorage.getItem(getStorageKey(user.id));
-      if (data) setTrackedOffers(JSON.parse(data));
-    } catch {
-      setTrackedOffers([]);
-    }
-  }, [user]);
 
-  const persist = useCallback(
-    (offers: TrackedOffer[]) => {
-      if (!user) return;
-      localStorage.setItem(getStorageKey(user.id), JSON.stringify(offers));
-    },
-    [user]
-  );
+    async function loadFromDB() {
+      // Fetch tracked offers
+      const { data: offers } = await supabase
+        .from("tracked_offers")
+        .select("*")
+        .eq("user_id", user!.id);
+
+      if (!offers || offers.length === 0) {
+        setTrackedOffers([]);
+        return;
+      }
+
+      // Fetch all condition progress for this user
+      const { data: progress } = await supabase
+        .from("condition_progress")
+        .select("*")
+        .eq("user_id", user!.id);
+
+      // Build TrackedOffer[] from DB rows
+      const built: TrackedOffer[] = offers.map((o) => {
+        const offerProgress = (progress || []).filter((p) => p.offer_id === o.offer_id);
+
+        // Group by condition_id
+        const condMap = new Map<string, Record<string, number>>();
+        offerProgress.forEach((p) => {
+          if (!condMap.has(p.condition_id)) condMap.set(p.condition_id, {});
+          condMap.get(p.condition_id)![p.month] = p.count;
+        });
+
+        const conditions: TrackedCondition[] = Array.from(condMap.entries()).map(
+          ([conditionId, completedCounts]) => ({ conditionId, completedCounts })
+        );
+
+        return {
+          offerId: o.offer_id,
+          startedAt: o.started_at,
+          conditions,
+        };
+      });
+
+      setTrackedOffers(built);
+    }
+
+    loadFromDB();
+  }, [user, supabase]);
 
   const startTracking = useCallback(
-    (offerId: string, conditionIds: string[]) => {
+    async (offerId: string, conditionIds: string[]) => {
+      if (!user) return;
+
+      // Optimistic update
       setTrackedOffers((prev) => {
         if (prev.find((o) => o.offerId === offerId)) return prev;
-        const next = [
+        return [
           ...prev,
           {
             offerId,
@@ -71,22 +105,42 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
             })),
           },
         ];
-        persist(next);
-        return next;
       });
+
+      // Persist to Supabase
+      await supabase.from("tracked_offers").upsert(
+        {
+          user_id: user.id,
+          offer_id: offerId,
+          started_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id,offer_id" }
+      );
     },
-    [persist]
+    [user, supabase]
   );
 
   const stopTracking = useCallback(
-    (offerId: string) => {
-      setTrackedOffers((prev) => {
-        const next = prev.filter((o) => o.offerId !== offerId);
-        persist(next);
-        return next;
-      });
+    async (offerId: string) => {
+      if (!user) return;
+
+      // Optimistic update
+      setTrackedOffers((prev) => prev.filter((o) => o.offerId !== offerId));
+
+      // Delete from Supabase (cascade: condition_progress rows cleaned by offer_id match)
+      await supabase
+        .from("condition_progress")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("offer_id", offerId);
+
+      await supabase
+        .from("tracked_offers")
+        .delete()
+        .eq("user_id", user.id)
+        .eq("offer_id", offerId);
     },
-    [persist]
+    [user, supabase]
   );
 
   const isTracking = useCallback(
@@ -100,56 +154,121 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
   );
 
   const incrementCondition = useCallback(
-    (offerId: string, conditionId: string, month: string) => {
-      setTrackedOffers((prev) => {
-        const next = prev.map((offer) => {
+    async (offerId: string, conditionId: string, month: string) => {
+      if (!user) return;
+
+      let newCount = 1;
+
+      // Optimistic update
+      setTrackedOffers((prev) =>
+        prev.map((offer) => {
           if (offer.offerId !== offerId) return offer;
-          return {
-            ...offer,
-            conditions: offer.conditions.map((c) => {
-              if (c.conditionId !== conditionId) return c;
-              return {
-                ...c,
-                completedCounts: {
-                  ...c.completedCounts,
-                  [month]: (c.completedCounts[month] || 0) + 1,
-                },
-              };
-            }),
-          };
-        });
-        persist(next);
-        return next;
-      });
+
+          // Check if condition already exists
+          const existingCond = offer.conditions.find((c) => c.conditionId === conditionId);
+          if (existingCond) {
+            newCount = (existingCond.completedCounts[month] || 0) + 1;
+            return {
+              ...offer,
+              conditions: offer.conditions.map((c) => {
+                if (c.conditionId !== conditionId) return c;
+                return {
+                  ...c,
+                  completedCounts: { ...c.completedCounts, [month]: newCount },
+                };
+              }),
+            };
+          } else {
+            // Condition not tracked yet — add it
+            return {
+              ...offer,
+              conditions: [
+                ...offer.conditions,
+                { conditionId, completedCounts: { [month]: 1 } },
+              ],
+            };
+          }
+        })
+      );
+
+      // Upsert to Supabase
+      // First check current value
+      const { data: existing } = await supabase
+        .from("condition_progress")
+        .select("count")
+        .eq("user_id", user.id)
+        .eq("offer_id", offerId)
+        .eq("condition_id", conditionId)
+        .eq("month", month)
+        .single();
+
+      const dbCount = (existing?.count || 0) + 1;
+
+      await supabase.from("condition_progress").upsert(
+        {
+          user_id: user.id,
+          offer_id: offerId,
+          condition_id: conditionId,
+          month,
+          count: dbCount,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id,offer_id,condition_id,month" }
+      );
     },
-    [persist]
+    [user, supabase]
   );
 
   const decrementCondition = useCallback(
-    (offerId: string, conditionId: string, month: string) => {
-      setTrackedOffers((prev) => {
-        const next = prev.map((offer) => {
+    async (offerId: string, conditionId: string, month: string) => {
+      if (!user) return;
+
+      let newCount = 0;
+
+      // Optimistic update
+      setTrackedOffers((prev) =>
+        prev.map((offer) => {
           if (offer.offerId !== offerId) return offer;
           return {
             ...offer,
             conditions: offer.conditions.map((c) => {
               if (c.conditionId !== conditionId) return c;
               const current = c.completedCounts[month] || 0;
+              newCount = Math.max(0, current - 1);
               return {
                 ...c,
-                completedCounts: {
-                  ...c.completedCounts,
-                  [month]: Math.max(0, current - 1),
-                },
+                completedCounts: { ...c.completedCounts, [month]: newCount },
               };
             }),
           };
-        });
-        persist(next);
-        return next;
-      });
+        })
+      );
+
+      // Update in Supabase
+      const { data: existing } = await supabase
+        .from("condition_progress")
+        .select("count")
+        .eq("user_id", user.id)
+        .eq("offer_id", offerId)
+        .eq("condition_id", conditionId)
+        .eq("month", month)
+        .single();
+
+      const dbCount = Math.max(0, (existing?.count || 0) - 1);
+
+      await supabase.from("condition_progress").upsert(
+        {
+          user_id: user.id,
+          offer_id: offerId,
+          condition_id: conditionId,
+          month,
+          count: dbCount,
+          updated_at: new Date().toISOString(),
+        },
+        { onConflict: "user_id,offer_id,condition_id,month" }
+      );
     },
-    [persist]
+    [user, supabase]
   );
 
   const getConditionCount = useCallback(
