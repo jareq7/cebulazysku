@@ -150,7 +150,7 @@ export default async function OfferDetailPage({
               Zostało {daysLeft} dni
             </Badge>
             {offer.monthlyFee === 0 && (
-              <Badge variant="outline" className="text-amber-600 border-amber-200">
+              <Badge variant="outline" className="text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-700">
                 Darmowe konto
               </Badge>
             )}

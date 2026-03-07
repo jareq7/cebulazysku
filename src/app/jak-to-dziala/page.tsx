@@ -62,7 +62,7 @@ export default function HowItWorksPage() {
             key={i}
             className="flex gap-6 items-start"
           >
-            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-amber-100 text-amber-600">
+            <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400">
               <step.icon className="h-7 w-7" />
             </div>
             <div>
@@ -75,7 +75,7 @@ export default function HowItWorksPage() {
         ))}
       </div>
 
-      <div className="mt-16 rounded-2xl bg-amber-50 border border-amber-200 p-8">
+      <div className="mt-16 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 p-8">
         <div className="flex items-start gap-4">
           <ShieldCheck className="h-8 w-8 text-amber-600 shrink-0 mt-1" />
           <div>

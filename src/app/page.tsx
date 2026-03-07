@@ -34,7 +34,7 @@ export default function Home() {
       <JsonLd data={websiteJsonLd} />
 
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50">
+      <section className="relative overflow-hidden bg-gradient-to-br from-amber-50 via-orange-50 to-yellow-50 dark:from-background dark:via-background dark:to-background">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%228%22%20fill%3D%22%23f59e0b%22%20fill-opacity%3D%220.04%22%2F%3E%3C%2Fsvg%3E')] opacity-50" />
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
           <div className="text-center">
@@ -78,7 +78,7 @@ export default function Home() {
             ].map((stat) => (
               <div
                 key={stat.label}
-                className="rounded-2xl bg-white/80 backdrop-blur p-4 sm:p-6 text-center shadow-sm"
+                className="rounded-2xl bg-white/80 dark:bg-card/80 backdrop-blur p-4 sm:p-6 text-center shadow-sm"
               >
                 <stat.icon className="mx-auto h-6 w-6 text-amber-600 mb-2" />
                 <p className="text-2xl font-bold sm:text-3xl">{stat.value}</p>
@@ -122,7 +122,7 @@ export default function Home() {
             },
           ].map((item) => (
             <div key={item.step} className="text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 text-amber-700 font-bold text-xl mb-4">
+              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-700 dark:text-amber-400 font-bold text-xl mb-4">
                 {item.step}
               </div>
               <h3 className="font-semibold text-lg">{item.title}</h3>
@@ -149,11 +149,11 @@ export default function Home() {
 
       {/* Social proof */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
-        <div className="rounded-2xl bg-amber-50 border border-amber-200 p-6 text-center">
-          <p className="text-lg font-semibold text-amber-900">
+        <div className="rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800/40 p-6 text-center">
+          <p className="text-lg font-semibold text-amber-900 dark:text-amber-200">
             🧅 Ponad <span className="text-2xl font-extrabold">1 200</span> cebularzy już obiera premie
           </p>
-          <p className="text-sm text-amber-700 mt-1">
+          <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
             Dołącz do społeczności i łup banki razem z nami
           </p>
         </div>

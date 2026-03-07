@@ -1,28 +1,8 @@
 # 🧅 CebulaZysku — Dokumentacja Projektu
 
-> **Domena:** cebulazysku.pl  
-> **Repozytorium:** https://github.com/jareq7/cebulazysku  
-> **Deploy:** Vercel (automatyczny z brancha `main`)  
-> **Data dokumentu:** 7 marca 2026 r.
-
----
-
-## Spis treści
-
-1. [Czym jest CebulaZysku?](#1-czym-jest-cebulazysku)
-2. [Cel biznesowy](#2-cel-biznesowy)
-3. [Architektura techniczna](#3-architektura-techniczna)
-4. [Co zostało już zrobione](#4-co-zostało-już-zrobione)
-5. [Co jeszcze przed nami — plan rozwoju](#5-co-jeszcze-przed-nami--plan-rozwoju)
-6. [Szczegółowy opis zrealizowanych faz](#6-szczegółowy-opis-zrealizowanych-faz)
-7. [Szczegółowy opis planowanych faz](#7-szczegółowy-opis-planowanych-faz)
-8. [Struktura projektu](#8-struktura-projektu)
-9. [Źródło danych — LeadStar XML](#9-źródło-danych--leadstar-xml)
-10. [Decyzje architektoniczne](#10-decyzje-architektoniczne)
-11. [Zmienne środowiskowe (docelowe)](#11-zmienne-środowiskowe-docelowe)
-12. [Jak uruchomić projekt lokalnie](#12-jak-uruchomić-projekt-lokalnie)
-13. [Wizja produktu — pełny ekosystem](#13-wizja-produktu--pełny-ekosystem)
-14. [Uwagi prawne](#14-uwagi-prawne)
+> ⚠️ **Ten plik jest przestarzały.** Dokumentacja została rozbita na osobne pliki tematyczne.
+>
+> **→ Przejdź do [docs/README.md](./README.md) — główny spis treści dokumentacji.**
 
 ---
 

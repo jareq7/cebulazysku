@@ -101,9 +101,9 @@ export default function AboutPage() {
 
       {/* Disclaimer */}
       <section className="mb-12">
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6">
-          <h3 className="font-bold text-amber-900 mb-2">Ważna informacja</h3>
-          <p className="text-sm text-amber-800 leading-relaxed">
+        <div className="rounded-2xl border border-amber-200 dark:border-amber-800/40 bg-amber-50 dark:bg-amber-950/30 p-6">
+          <h3 className="font-bold text-amber-900 dark:text-amber-200 mb-2">Ważna informacja</h3>
+          <p className="text-sm text-amber-800 dark:text-amber-300 leading-relaxed">
             CebulaZysku ma charakter wyłącznie informacyjny i{" "}
             <strong>nie stanowi doradztwa finansowego</strong>, inwestycyjnego
             ani prawnego. Przed podjęciem decyzji finansowych zalecamy

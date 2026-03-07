@@ -36,8 +36,8 @@ export default function LoginPage() {
     <div className="flex min-h-[calc(100vh-12rem)] items-center justify-center px-4 py-12">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100">
-            <Landmark className="h-6 w-6 text-amber-600" />
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/40">
+            <Landmark className="h-6 w-6 text-amber-600 dark:text-amber-400" />
           </div>
           <CardTitle className="text-2xl">Zaloguj się</CardTitle>
           <CardDescription>
@@ -47,7 +47,7 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
             {error && (
-              <div className="rounded-lg bg-red-50 p-3 text-sm text-red-600 border border-red-200">
+              <div className="rounded-lg bg-red-50 dark:bg-red-950/30 p-3 text-sm text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/40">
                 {error}
               </div>
             )}

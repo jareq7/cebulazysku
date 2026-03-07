@@ -105,7 +105,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
   const isComplete = progressPercent === 100;
 
   return (
-    <Card className={`transition-all ${isComplete ? "border-amber-300 bg-amber-50/50" : ""}`}>
+    <Card className={`transition-all ${isComplete ? "border-amber-300 dark:border-amber-700 bg-amber-50/50 dark:bg-amber-950/20" : ""}`}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -163,7 +163,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
             {offer.reward} zł
           </span>
           {isComplete && (
-            <Badge className="bg-amber-100 text-amber-800">
+            <Badge className="bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Ukończone
             </Badge>
@@ -241,7 +241,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
                 <div
                   key={condition.id}
                   className={`rounded-lg border p-4 transition-all ${
-                    isDone ? "border-amber-300 bg-amber-50/50" : ""
+                    isDone ? "border-amber-300 dark:border-amber-700 bg-amber-50/50 dark:bg-amber-950/20" : ""
                   }`}
                 >
                   <div className="flex items-center justify-between gap-3">
@@ -260,7 +260,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
                       <div className="min-w-0">
                         <p
                           className={`text-sm font-medium ${
-                            isDone ? "text-amber-700" : ""
+                            isDone ? "text-amber-700 dark:text-amber-400" : ""
                           }`}
                         >
                           {condition.label}
@@ -354,7 +354,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
             <Button
               variant="ghost"
               size="sm"
-              className="text-red-500 hover:text-red-700 hover:bg-red-50 gap-2"
+              className="text-red-500 hover:text-red-700 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 gap-2"
               onClick={() => stopTracking(offer.id)}
             >
               <Trash2 className="h-4 w-4" />
