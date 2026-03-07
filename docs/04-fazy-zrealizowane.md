@@ -67,6 +67,19 @@
 
 ---
 
+## Faza 0j — PWA (Progressive Web App)
+
+**Co zrobiono:**
+- `public/manifest.json` — standalone, emerald theme, ikony 192/512
+- `public/sw.js` — network-first, cache fallback, offline support
+- Ikony wygenerowane z logo-icon.png (192x192, 512x512)
+- Metatagi: manifest, themeColor, appleWebApp w layout.tsx
+- `ServiceWorkerRegister` komponent z rejestracją SW
+
+📄 Szczegóły: [21-pwa.md](./21-pwa.md)
+
+---
+
 ## Faza 0i — Blog dynamiczny (Supabase)
 
 **Co zrobiono:**

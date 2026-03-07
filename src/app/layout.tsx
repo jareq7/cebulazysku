@@ -5,6 +5,7 @@ import { Providers } from "./providers";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { TrackingPixels } from "@/components/TrackingPixels";
+import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -24,6 +25,13 @@ export const metadata: Metadata = {
   },
   description:
     "Obierz kolejne warstwy zysku z promocji bankowych. Porównuj oferty, śledź warunki i zbieraj premie. Łupimy banki legalnie!",
+  manifest: "/manifest.json",
+  themeColor: "#059669",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "CebulaZysku",
+  },
   openGraph: {
     title: "CebulaZysku – Obierz premie bankowe warstwa po warstwie",
     description:
@@ -42,6 +50,7 @@ export default function RootLayout({
     <html lang="pl" suppressHydrationWarning>
       <head>
         <TrackingPixels />
+        <link rel="apple-touch-icon" href="/icon-192x192.png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
@@ -52,6 +61,7 @@ export default function RootLayout({
         >
           Przejdź do treści
         </a>
+        <ServiceWorkerRegister />
         <Providers>
           <div className="flex min-h-screen flex-col">
             <Navbar />
