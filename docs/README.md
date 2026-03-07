@@ -35,6 +35,7 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 20 | [Blog dynamiczny](./20-blog-dynamiczny.md) | Supabase, ISR, admin CRUD, fallback |
 | 21 | [PWA](./21-pwa.md) | Manifest, service worker, offline, ikony |
 | 22 | [Gamifikacja](./22-gamifikacja.md) | Streaki, odznaki, dashboard |
+| 23 | [Push notyfikacje](./23-push-notyfikacje.md) | Web Push, VAPID, admin send, SW |
 
 ---
 

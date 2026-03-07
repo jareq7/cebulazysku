@@ -12,6 +12,7 @@ import {
   RefreshCw,
   MessageSquare,
   FileText,
+  Bell,
   Lock,
   Loader2,
 } from "lucide-react";
@@ -22,6 +23,7 @@ const NAV_ITEMS = [
   { href: "/admin/blog", label: "Blog", icon: FileText },
   { href: "/admin/sync", label: "Sync logi", icon: RefreshCw },
   { href: "/admin/wiadomosci", label: "Wiadomości", icon: MessageSquare },
+  { href: "/admin/push", label: "Push", icon: Bell },
 ];
 
 export default function AdminLayout({

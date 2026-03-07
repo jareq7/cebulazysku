@@ -25,6 +25,7 @@ import {
 import { ConditionTracker } from "@/components/ConditionTracker";
 import { StreakBadge } from "@/components/StreakBadge";
 import { AchievementsList } from "@/components/AchievementsList";
+import { PushNotificationToggle } from "@/components/PushNotificationToggle";
 
 export default function DashboardPage() {
   const { user, isLoading } = useAuth();
@@ -61,13 +62,16 @@ export default function DashboardPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl font-extrabold">
-          Cześć, {user.name}! 👋
-        </h1>
-        <p className="mt-1 text-muted-foreground">
-          Śledź postępy swoich promocji bankowych
-        </p>
+      <div className="mb-8 flex items-start justify-between gap-4">
+        <div>
+          <h1 className="text-3xl font-extrabold">
+            Cześć, {user.name}! 👋
+          </h1>
+          <p className="mt-1 text-muted-foreground">
+            Śledź postępy swoich promocji bankowych
+          </p>
+        </div>
+        <PushNotificationToggle />
       </div>
 
       {/* Summary cards */}

@@ -67,6 +67,21 @@
 
 ---
 
+## Faza 0l — Push notyfikacje
+
+**Co zrobiono:**
+- Tabela `push_subscriptions` z RLS
+- `PushNotificationToggle` — przycisk włącz/wyłącz na dashboard
+- Service worker: `push` + `notificationclick` handlers
+- API: `/api/push/subscribe` (POST/DELETE), `/api/admin/push/send` (POST)
+- Admin panel: `/admin/push` — formularz masowego wysyłania
+- Auto-cleanup wygasłych subskrypcji (410/404)
+- Biblioteka `web-push` do wysyłania z serwera
+
+📄 Szczegóły: [23-push-notyfikacje.md](./23-push-notyfikacje.md)
+
+---
+
 ## Faza 0k — Gamifikacja (streaki, odznaki)
 
 **Co zrobiono:**

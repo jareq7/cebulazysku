@@ -28,6 +28,48 @@ self.addEventListener("activate", (event) => {
   self.clients.claim();
 });
 
+// Push notification received
+self.addEventListener("push", (event) => {
+  if (!event.data) return;
+
+  try {
+    const data = event.data.json();
+    const options = {
+      body: data.body || "",
+      icon: data.icon || "/icon-192x192.png",
+      badge: data.badge || "/icon-192x192.png",
+      data: { url: data.url || "/" },
+      vibrate: [100, 50, 100],
+    };
+
+    event.waitUntil(
+      self.registration.showNotification(data.title || "CebulaZysku", options)
+    );
+  } catch (e) {
+    console.warn("Push parse error:", e);
+  }
+});
+
+// Notification click — open URL
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = event.notification.data?.url || "/";
+
+  event.waitUntil(
+    self.clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clients) => {
+        for (const client of clients) {
+          if (client.url.includes(self.location.origin) && "focus" in client) {
+            client.navigate(url);
+            return client.focus();
+          }
+        }
+        return self.clients.openWindow(url);
+      })
+  );
+});
+
 // Fetch — network first, fallback to cache
 self.addEventListener("fetch", (event) => {
   const { request } = event;
