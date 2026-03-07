@@ -25,6 +25,8 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 10 | [Źródło danych — LeadStar XML](./10-leadstar-xml.md) | Feed URL, struktura XML, aktualne oferty |
 | 11 | [Decyzje architektoniczne](./11-decyzje.md) | Dlaczego Supabase, Claude, ISR, Vercel, Resend |
 | 12 | [Wizja produktu](./12-wizja.md) | Pełny ekosystem, user journey, KPI, monetyzacja |
+| 13 | [Migracja ofert do Supabase](./13-migracja-supabase-offers.md) | Przeniesienie ofert z banks.ts do DB, deduplikacja, frontend fetch |
+| 14 | [Logo i kolorystyka](./14-logo-kolorystyka.md) | Integracja logo, zmiana amber→emerald, spell check |
 
 ---
 

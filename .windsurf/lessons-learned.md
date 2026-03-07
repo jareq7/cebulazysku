@@ -70,8 +70,10 @@
 - ✅ Supabase: client, server, middleware
 - ✅ Auth: Supabase Auth (signup/login/logout)
 - ✅ Tracker: tracked_offers + condition_progress w DB
-- ✅ Offers table: 18 ofert z LeadStar (minimalne dane)
+- ✅ Offers table: 20 ofert w Supabase (16 LeadStar/hybrid + 2 manual + 2 hybrid) — pełne dane
 - ✅ Sync API route: `/api/sync-offers` (POST, chronione SYNC_SECRET)
-- ⏳ Oferty w DB wymagają wzbogacenia (opisy, loga, affiliate URL z XML)
-- ⏳ Frontend nadal czyta z `banks.ts` (8 hardcoded ofert)
-- ⏳ Vercel env vars nie dodane
+- ✅ Frontend pobiera oferty z Supabase (z fallbackiem na `banks.ts`)
+- ✅ Vercel env vars dodane
+- ✅ Logo: `public/logo-icon.png` w Navbar (36px) i Footer (28px)
+- ✅ Kolorystyka: amber/orange → emerald/green (15 plików)
+- ✅ Pisownia sprawdzona (1 poprawka: obięramy → obieramy)

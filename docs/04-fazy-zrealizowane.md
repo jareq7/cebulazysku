@@ -38,6 +38,35 @@
 
 ---
 
+## Faza 0b — Migracja ofert do Supabase
+
+**Co zrobiono:**
+- Wzbogacono 18 ofert LeadStar w Supabase o logo, affiliate URL, reward z pliku XML
+- Przeniesiono 8 ofert z `banks.ts` do Supabase (conditions, FAQ, pros, cons)
+- Deduplikacja: merge 6 ofert ręcznych z LeadStar (→ `source: "hybrid"`), DELETE duplikatów
+- Wynik: **20 ofert w bazie** (16 LeadStar/hybrid + 2 manual + 2 hybrid)
+- Frontend przestawiony na fetch z Supabase REST API (z fallbackiem na `banks.ts`)
+- Nowy moduł: `src/lib/offers.ts` (server-side fetch)
+- Nowy hook: `src/hooks/useOffers.ts` (client-side fetch)
+- Strony `page.tsx`, `sitemap.ts`, `oferta/[slug]/page.tsx`, `dashboard/page.tsx` — async fetch
+
+📄 Szczegóły: [13-migracja-supabase-offers.md](./13-migracja-supabase-offers.md)
+
+---
+
+## Faza 0c — Logo i kolorystyka
+
+**Co zrobiono:**
+- Wstawiono logo PNG (`public/logo-icon.png`) do Navbara (36px) i Footera (28px)
+- Zmieniono kolorystykę z `amber/orange` na `emerald/green` w **15 plikach**
+- Gradient: `from-amber-600 to-orange-500` → `from-emerald-700 to-green-500`
+- Poprawka pisowni: „obięramy" → „obieramy"
+- Sprawdzono pisownię na wszystkich stronach
+
+📄 Szczegóły: [14-logo-kolorystyka.md](./14-logo-kolorystyka.md)
+
+---
+
 ## Fazy wcześniejsze (1–4)
 
 Zostały zrealizowane w poprzednich sesjach. Kluczowe deliverables:
