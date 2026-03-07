@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -9,8 +10,14 @@ export function Footer() {
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <Link href="/" className="flex items-center gap-2 font-bold text-lg">
-              <span className="text-xl" role="img" aria-label="cebula">🧅</span>
-              <span className="bg-gradient-to-r from-amber-600 to-orange-500 bg-clip-text text-transparent">
+              <Image
+                src="/logo-icon.png"
+                alt="CebulaZysku logo"
+                width={28}
+                height={28}
+                className="rounded-lg"
+              />
+              <span className="bg-gradient-to-r from-emerald-700 to-green-500 bg-clip-text text-transparent">
                 CebulaZysku
               </span>
             </Link>

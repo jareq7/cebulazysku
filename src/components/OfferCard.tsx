@@ -47,7 +47,7 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
   return (
     <Card className="group relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
       {offer.featured && (
-        <div className="absolute top-0 right-0 bg-gradient-to-l from-amber-500 to-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-bl-lg">
+        <div className="absolute top-0 right-0 bg-gradient-to-l from-emerald-600 to-green-500 text-white text-xs font-semibold px-3 py-1 rounded-bl-lg">
           Polecane
         </div>
       )}
@@ -70,10 +70,10 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
 
       <CardContent className="space-y-4">
         <div className="flex items-baseline gap-1">
-          <span className="text-3xl font-extrabold text-amber-600">
+          <span className="text-3xl font-extrabold text-emerald-600">
             {offer.reward}
           </span>
-          <span className="text-lg font-semibold text-amber-600">zł</span>
+          <span className="text-lg font-semibold text-emerald-600">zł</span>
           <span className="text-sm text-muted-foreground ml-1">premii</span>
         </div>
 
@@ -90,7 +90,7 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
             {daysLeft} dni
           </Badge>
           {offer.monthlyFee === 0 && (
-            <Badge variant="outline" className="text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-700">
+            <Badge variant="outline" className="text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-700">
               Darmowe konto
             </Badge>
           )}

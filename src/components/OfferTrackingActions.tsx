@@ -44,7 +44,7 @@ export function OfferTrackingActions({
     <div className="space-y-4">
       <div className="text-center">
         <p className="text-sm text-muted-foreground">Do odebrania</p>
-        <p className="text-5xl font-extrabold text-amber-600">{reward} zł</p>
+        <p className="text-5xl font-extrabold text-emerald-600">{reward} zł</p>
         <p className="text-xs text-muted-foreground mt-1">
           Termin: {new Date(deadline).toLocaleDateString("pl-PL")}
         </p>

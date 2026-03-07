@@ -73,12 +73,12 @@ export default function DashboardPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/40">
-                <Wallet className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/40">
+                <Wallet className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Potencjalna premia</p>
-                <p className="text-2xl font-bold text-amber-600">
+                <p className="text-2xl font-bold text-emerald-600">
                   {totalPotential} zł
                 </p>
               </div>
@@ -105,8 +105,8 @@ export default function DashboardPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-100 dark:bg-amber-900/40">
-                <TrendingUp className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/40">
+                <TrendingUp className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div>
                 <p className="text-sm text-muted-foreground">Dostępnych ofert</p>
@@ -161,7 +161,7 @@ export default function DashboardPage() {
                           <p className="font-semibold text-sm truncate">{offer.offerName}</p>
                         </div>
                       </div>
-                      <p className="text-2xl font-extrabold text-amber-600 mb-2">{offer.reward} zł</p>
+                      <p className="text-2xl font-extrabold text-emerald-600 mb-2">{offer.reward} zł</p>
                       <Badge variant="secondary" className="text-xs">Łatwy</Badge>
                     </CardContent>
                     <div className="px-6 pb-6">

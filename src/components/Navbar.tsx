@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,8 +21,14 @@ export function Navbar() {
     <nav className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         <Link href="/" className="flex items-center gap-2 font-bold text-xl">
-          <span className="text-2xl" role="img" aria-label="cebula">🧅</span>
-          <span className="bg-gradient-to-r from-amber-600 to-orange-500 bg-clip-text text-transparent">
+          <Image
+            src="/logo-icon.png"
+            alt="CebulaZysku logo"
+            width={36}
+            height={36}
+            className="rounded-lg"
+          />
+          <span className="bg-gradient-to-r from-emerald-700 to-green-500 bg-clip-text text-transparent">
             CebulaZysku
           </span>
         </Link>

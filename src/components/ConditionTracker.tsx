@@ -105,7 +105,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
   const isComplete = progressPercent === 100;
 
   return (
-    <Card className={`transition-all ${isComplete ? "border-amber-300 dark:border-amber-700 bg-amber-50/50 dark:bg-amber-950/20" : ""}`}>
+    <Card className={`transition-all ${isComplete ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-950/20" : ""}`}>
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -123,7 +123,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
 
           <div className="flex items-center gap-3">
             <div className="text-right hidden sm:block">
-              <p className="text-2xl font-bold text-amber-600">
+              <p className="text-2xl font-bold text-emerald-600">
                 {offer.reward} zł
               </p>
               <p className="text-xs text-muted-foreground">
@@ -159,11 +159,11 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
 
         {/* Mobile reward display */}
         <div className="sm:hidden mt-2 flex items-center justify-between">
-          <span className="text-xl font-bold text-amber-600">
+          <span className="text-xl font-bold text-emerald-600">
             {offer.reward} zł
           </span>
           {isComplete && (
-            <Badge className="bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300">
+            <Badge className="bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Ukończone
             </Badge>
@@ -241,14 +241,14 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
                 <div
                   key={condition.id}
                   className={`rounded-lg border p-4 transition-all ${
-                    isDone ? "border-amber-300 dark:border-amber-700 bg-amber-50/50 dark:bg-amber-950/20" : ""
+                    isDone ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-950/20" : ""
                   }`}
                 >
                   <div className="flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3 min-w-0">
                       <span
                         className={
-                          isDone ? "text-amber-600" : "text-muted-foreground"
+                          isDone ? "text-emerald-600" : "text-muted-foreground"
                         }
                       >
                         {isDone ? (
@@ -260,7 +260,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
                       <div className="min-w-0">
                         <p
                           className={`text-sm font-medium ${
-                            isDone ? "text-amber-700 dark:text-amber-400" : ""
+                            isDone ? "text-emerald-700 dark:text-emerald-400" : ""
                           }`}
                         >
                           {condition.label}
@@ -291,7 +291,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
                       <div className="min-w-[4rem] text-center">
                         <span
                           className={`text-lg font-bold ${
-                            isDone ? "text-amber-600" : ""
+                            isDone ? "text-emerald-600" : ""
                           }`}
                         >
                           {count}

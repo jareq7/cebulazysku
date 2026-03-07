@@ -249,8 +249,8 @@ export default function TermsPage() {
           </ol>
         </section>
 
-        <div className="rounded-lg border border-amber-200 dark:border-amber-800/40 bg-amber-50 dark:bg-amber-950/30 p-4 mt-8">
-          <p className="text-amber-800 dark:text-amber-300 text-xs">
+        <div className="rounded-lg border border-emerald-200 dark:border-emerald-800/40 bg-emerald-50 dark:bg-emerald-950/30 p-4 mt-8">
+          <p className="text-emerald-800 dark:text-emerald-300 text-xs">
             <strong>Uwaga:</strong> Niniejszy regulamin ma charakter wzorcowy i
             powinien zostać zweryfikowany przez radcę prawnego przed publikacją
             w wersji produkcyjnej.
