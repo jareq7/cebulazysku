@@ -67,6 +67,19 @@
 
 ---
 
+## Faza 0e — SEO & Analytics
+
+**Co zrobiono:**
+- Zamieniono zakomentowany placeholder `TrackingPixels.tsx` na działający komponent z env vars
+- Google Analytics 4 (`NEXT_PUBLIC_GA_MEASUREMENT_ID`)
+- Google Search Console verification (`NEXT_PUBLIC_GSC_VERIFICATION`)
+- Meta Pixel (`NEXT_PUBLIC_META_PIXEL_ID`)
+- Warunkowe renderowanie — brak env var = brak skryptu
+
+📄 Szczegóły: [16-seo-analytics.md](./16-seo-analytics.md)
+
+---
+
 ## Faza 0d — Automatyczny sync XML (Vercel Cron)
 
 **Co zrobiono:**

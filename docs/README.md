@@ -28,6 +28,7 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 13 | [Migracja ofert do Supabase](./13-migracja-supabase-offers.md) | Przeniesienie ofert z banks.ts do DB, deduplikacja, frontend fetch |
 | 14 | [Logo i kolorystyka](./14-logo-kolorystyka.md) | Integracja logo, zmiana amber→emerald, spell check |
 | 15 | [Automatyczny sync XML](./15-auto-sync-xml.md) | Vercel Cron, soft delete, sync_log |
+| 16 | [SEO & Analytics](./16-seo-analytics.md) | GA4, Google Search Console, Meta Pixel |
 
 ---
 
