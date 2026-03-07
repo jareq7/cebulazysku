@@ -21,7 +21,8 @@
 10. [Decyzje architektoniczne](#10-decyzje-architektoniczne)
 11. [Zmienne środowiskowe (docelowe)](#11-zmienne-środowiskowe-docelowe)
 12. [Jak uruchomić projekt lokalnie](#12-jak-uruchomić-projekt-lokalnie)
-13. [Uwagi prawne](#13-uwagi-prawne)
+13. [Wizja produktu — pełny ekosystem](#13-wizja-produktu--pełny-ekosystem)
+14. [Uwagi prawne](#14-uwagi-prawne)
 
 ---
 
@@ -144,8 +145,10 @@ Monitoring:   Vercel Analytics
 | 2 | XML parser LeadStar + tabela ofert + cron | 🔲 Do zrobienia | Wysoki |
 | 3 | Auto-generowanie opisów (AI + cebulowy ton) | 🔲 Do zrobienia | Wysoki |
 | 4 | Filtr „mam konto" + onboarding | 🔲 Do zrobienia | Średni |
-| 5 | System powiadomień email | 🔲 Do zrobienia | Średni |
-| 6 | Gamifikacja + statystyki zarobków | 🔲 Do zrobienia | Niski |
+| 5 | System powiadomień email + push notifications | 🔲 Do zrobienia | Średni |
+| 6 | Gamifikacja, system zachęt, streaki, rankingi | 🔲 Do zrobienia | Średni |
+| 7 | Panel administracyjny | 🔲 Do zrobienia | Średni |
+| 8 | Aplikacje mobilne (iOS + Android) | 🔲 Do zrobienia | Planowane |
 
 ---
 
@@ -376,23 +379,250 @@ Banki: BNP Paribas, Pekao (x2), Santander (x3), Alior (x2),
 4. Ustawienia użytkownika — opt-in/opt-out per typ powiadomienia
 5. Unsubscribe link w każdym mailu
 
-### Faza 6 — Gamifikacja + Statystyki
+### Faza 6 — Gamifikacja, System Zachęt, Streaki, Rankingi
 
-**Cel:** Motywacja użytkowników do dalszego korzystania.
+**Cel:** Motywacja użytkowników do regularnego korzystania z serwisu i dokańczania promocji. Użytkownik powinien czuć satysfakcję i chcieć wracać.
 
-**Zakres:**
-1. **Statystyki na dashboardzie:**
-   - Łącznie obrane: X zł z Y banków
-   - W trakcie: X ofert, potencjalnie X zł
-   - Ranking miesięczny
-2. **Odznaki/Achievementy:**
-   - 🧅 Pierwsza Cebulka — obrałeś pierwszą premię
-   - 🧅🧅 Cebularz — 3 premie odebrane
-   - 🧅🧅🧅 Cebulowy Baron — 5+ premii
-   - 💰 Tysiącznik — łącznie >1000 zł
-   - ⚡ Błyskawica — spełnił warunki w <50% czasu
-3. **Status wypłaty** — user oznacza „premia wpłynęła" → statystyki realnych zarobków
-4. **Publiczny ranking** (opcjonalny, opt-in) — „Top cebularze miesiąca"
+**6.1. Statystyki na dashboardzie:**
+- Łącznie obrane: X zł z Y banków (potwierdzone wypłaty)
+- W trakcie: X ofert, potencjalnie X zł
+- Ranking miesięczny i ogólny
+- Wykres postępu w czasie (ile zarobiono per miesiąc)
+
+**6.2. System odznak/achievementów:**
+
+| Odznaka | Warunek | Ikona |
+|---------|---------|-------|
+| Pierwsza Cebulka | Obrałeś pierwszą premię | 🧅 |
+| Cebularz | 3 premie odebrane | 🧅🧅 |
+| Cebulowy Baron | 5+ premii odebranych | 🧅🧅🧅 |
+| Cebulowy Magnat | 10+ premii odebranych | �🧅 |
+| Tysiącznik | Łącznie >1000 zł obranych | 💰 |
+| Pięciotysiącznik | Łącznie >5000 zł obranych | 💎 |
+| Błyskawica | Spełnił warunki w <50% dostępnego czasu | ⚡ |
+| Perfekcjonista | 100% warunków spełnionych w 3 ofertach z rzędu | ✨ |
+| Stały Bywalec | 7-dniowy streak logowań | 🔥 |
+| Cebulowy Maraton | 30-dniowy streak logowań | 🏆 |
+| Odkrywca | Skorzystał z ofert 5 różnych banków | 🗺️ |
+| Ambasador | Zaprosił znajomego który się zarejestrował | 🤝 |
+
+**6.3. System streaków:**
+- **Streak dzienny** — logowanie + jakiekolwiek działanie (zaznaczenie warunku, sprawdzenie oferty)
+- Streak wyświetlany na dashboardzie z animacją ognia 🔥
+- Po przerwaniu streaka — delikatny komunikat zachęcający do powrotu
+- Milestone'y: 3, 7, 14, 30, 60, 100 dni → dodatkowe odznaki
+
+**6.4. System zachęt i motywacji:**
+- **Daily nudge** — codzienne powiadomienie „Hej cebularzu, masz 3 rzeczy do zrobienia dziś"
+- **Progress celebrations** — animacja konfetti po spełnieniu warunku
+- **Milestone alerts** — „Brawo! Jesteś w połowie drogi do 300 zł z BNP Paribas!"
+- **Porównania** — „Jesteś w top 10% cebularzy pod względem szybkości obierania"
+- **Sugestie** — „Masz otwarte konto w mBanku ale nie śledzisz żadnej promocji. Może czas obrać kolejną warstwę?"
+
+**6.5. Status wypłaty:**
+- User oznacza „premia wpłynęła na konto" → zmiana statusu oferty na „Obrana! 🧅"
+- Potwierdzenie kwoty — statystyki realnych zarobków (nie tylko potencjalnych)
+- Timeline: kiedy zacząłeś → kiedy spełniłeś warunki → kiedy premia wpłynęła
+
+**6.6. Rankingi (opt-in):**
+- „Top cebularze miesiąca" — publiczny ranking zarobków
+- „Najszybszy cebularz" — kto najszybciej spełnił warunki
+- Anonimowe uczestnictwo domyślnie (pseudonim)
+- Nagrody symboliczne — specjalne odznaki za top 3
+
+**6.7. Program poleceń:**
+- Unikalny link polecający per user
+- Za każdego zaproszonego usera który się zarejestruje → odznaka + punkty
+- Za każdego który obrał pierwszą premię → dodatkowe punkty
+- Leaderboard poleceń
+
+**Schemat DB (rozszerzenie):**
+```sql
+user_achievements (
+  id, user_id, achievement_type, unlocked_at
+)
+
+user_streaks (
+  id, user_id, current_streak, longest_streak,
+  last_activity_date, updated_at
+)
+
+user_referrals (
+  id, referrer_user_id, referred_user_id,
+  referral_code, registered_at, first_offer_completed_at
+)
+```
+
+### Faza 7 — Panel Administracyjny
+
+**Cel:** Umożliwienie właścicielowi serwisu zarządzanie ofertami, użytkownikami, treściami i monitorowanie statystyk bez ingerencji w kod.
+
+**Dostęp:** `/admin` — zabezpieczony rolą `admin` w Supabase Auth (RLS + middleware check)
+
+**7.1. Dashboard admina:**
+- Liczba użytkowników (total, nowi dziś/tydzień/miesiąc)
+- Liczba aktywnych ofert
+- Łączna liczba kliknięć w linki afiliacyjne (dziś/tydzień/miesiąc)
+- CTR per oferta
+- Wykres rejestracji i aktywności w czasie
+- Top 5 najczęściej wybieranych ofert
+- Top 5 najczęściej klikanych linków afiliacyjnych
+
+**7.2. Zarządzanie ofertami:**
+- Lista ofert z XML + status (aktywna/nieaktywna/wstrzymana)
+- Podgląd oryginalnych danych z LeadStar vs. wygenerowany opis
+- Ręczna edycja opisów (override AI)
+- Przycisk „Regeneruj opis" → trigger AI
+- Dodawanie własnych ofert (nie tylko z XML)
+- Ustawianie kolejności/wyróżnienia ofert (pinned/featured)
+- Archiwizacja nieaktualnych ofert
+
+**7.3. Zarządzanie użytkownikami:**
+- Lista użytkowników z filtrowaniem i wyszukiwaniem
+- Szczegóły usera: data rejestracji, śledzone oferty, postępy, streaki, odznaki
+- Blokowanie/odblokowanie kont
+- Reset hasła
+- Przypisywanie roli admin
+
+**7.4. Zarządzanie treściami:**
+- Edytor postów blogowych (WYSIWYG lub Markdown)
+- Zarządzanie FAQ per oferta
+- Edycja stron statycznych (o nas, jak to działa)
+
+**7.5. Powiadomienia:**
+- Podgląd kolejki powiadomień
+- Ręczne wysłanie powiadomienia (do jednego usera lub masowe)
+- Statystyki: ile wysłano, ile otwarto, ile kliknięto
+
+**7.6. Logi i monitoring:**
+- Logi sync XML (ostatni sync, ile ofert zaktualizowano, błędy)
+- Logi generowania opisów AI (tokeny, koszty, błędy)
+- Logi emaili (delivered, bounced, opened)
+- Error tracking
+
+**7.7. Ustawienia serwisu:**
+- Częstotliwość sync XML (co ile godzin)
+- Włączanie/wyłączanie powiadomień
+- Konfiguracja prompt'a AI do generowania opisów
+- Maintenance mode (wyłączenie serwisu z komunikatem)
+
+**Technologia:**
+- Next.js route group `(admin)` z osobnym layoutem
+- Middleware sprawdzający rolę `admin` na poziomie Supabase RLS
+- Recharts/Tremor do wykresów
+- DataTable z tanstack/react-table do tabel
+- React Hook Form do formularzy edycji
+
+### Faza 8 — Aplikacje Mobilne (iOS + Android)
+
+**Cel:** Umożliwienie użytkownikom śledzenia postępów i zaznaczania warunków **w czasie rzeczywistym** — np. zaraz po zakupach w sklepie, po otrzymaniu przelewu, po wykonaniu transakcji kartą.
+
+**8.1. Wybór technologii:**
+
+| Opcja | Plusy | Minusy |
+|-------|-------|--------|
+| **React Native (Expo)** | Wspólny kod z webem (React), szybki development, OTA updates | Mniej natywne UX |
+| **Flutter** | Szybkie UI, hot reload, jeden codebase | Inny język (Dart), brak code sharing z Next.js |
+| **PWA (Progressive Web App)** | Najtańsze, zero app store, działa od razu | Ograniczone push notifications na iOS, brak app store |
+| **Capacitor (Ionic)** | Opakowuje webową apkę w natywną, code sharing | Ograniczenia wydajności |
+
+**Rekomendacja:** **React Native z Expo** — największy code sharing z istniejącym Next.js (React + TypeScript), bogaty ekosystem, Expo EAS do budowania i dystrybucji.
+
+**Alternatywa na start:** **PWA** jako szybki MVP mobilny (bez app store), potem pełna apka React Native.
+
+**8.2. Kluczowe funkcje mobilne:**
+
+- **Quick Track** — szybkie zaznaczanie warunków jednym tapnięciem
+  - Widget „Dzisiejsze zadania" na ekranie głównym apki
+  - Np. „Zrobiłeś zakupy kartą?" → tap → +1 transakcja
+  - Np. „Wpłynął przelew?" → tap → warunek spełniony
+- **Push notifications** — natywne powiadomienia
+  - „Hej, pamiętaj o transakcji kartą w Santanderze! 🧅"
+  - „Jutro mija termin na wpłatę w Aliorze!"
+  - „Brawo! Nowa cebulka obrana — 300 zł! 🎉"
+- **Offline mode** — zaznaczanie warunków bez internetu, sync po połączeniu
+- **Dashboard mobilny** — streaki, odznaki, progress bary
+- **Skaner potwierdzeń** (przyszłość) — zdjęcie potwierdzenia przelewu → OCR → auto-zaznaczenie warunku
+- **Widgety** — iOS Widget / Android Widget z postępem aktualnych ofert
+
+**8.3. Architektura mobile ↔ backend:**
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌──────────────┐
+│   Apka mobilna  │────▶│   Supabase API  │◀────│   Next.js    │
+│  (React Native) │     │  (REST + Auth)  │     │   (web app)  │
+└─────────────────┘     └─────────────────┘     └──────────────┘
+        │                       │                       │
+        │                       ▼                       │
+        │               ┌──────────────┐                │
+        └──────────────▶│  PostgreSQL   │◀──────────────┘
+                        │  (Supabase)   │
+                        └──────────────┘
+```
+
+- **Wspólny backend** — Supabase obsługuje zarówno web jak i mobile
+- **Wspólne API** — ten sam REST/GraphQL endpoint dla obu platform
+- **Wspólna auth** — Supabase Auth z JWT, token refresh
+- **Realtime sync** — Supabase Realtime Subscriptions
+  - User zaznacza warunek na telefonie → natychmiast widoczne na webie
+  - Admin zmienia ofertę → natychmiast widoczne w apce
+- **Offline-first** — lokalna baza (WatermelonDB lub Supabase offline) → sync przy połączeniu
+
+**8.4. Struktura projektu mobilnego (osobne repo):**
+
+```
+cebulazysku-mobile/
+├── app/                     # Expo Router (file-based routing)
+│   ├── (tabs)/
+│   │   ├── index.tsx        # Dashboard z strekami i progress
+│   │   ├── offers.tsx       # Lista ofert
+│   │   ├── track.tsx        # Quick Track — szybkie zaznaczanie
+│   │   └── profile.tsx      # Profil, odznaki, ustawienia
+│   ├── offer/[id].tsx       # Szczegóły oferty
+│   ├── login.tsx            # Logowanie
+│   └── onboarding.tsx       # Onboarding "mam konto w..."
+├── components/
+│   ├── StreakCounter.tsx     # Licznik streaka z animacją
+│   ├── QuickTrackCard.tsx   # Karta szybkiego zaznaczania
+│   ├── AchievementBadge.tsx # Odznaka z animacją unlock
+│   └── ProgressRing.tsx     # Kołowy progress bar
+├── lib/
+│   ├── supabase.ts          # Supabase client dla RN
+│   ├── notifications.ts     # Expo Notifications setup
+│   └── offline.ts           # Offline sync logic
+├── assets/                  # Ikony, splash screen, lottie animations
+├── app.json                 # Expo config
+└── package.json
+```
+
+**8.5. Plan wdrożenia mobilnego:**
+
+1. **MVP (PWA)** — natychmiastowy dostęp mobilny
+   - Service Worker + manifest.json
+   - „Dodaj do ekranu głównego" prompt
+   - Responsywny dashboard z Quick Track
+   - Ograniczone push notifications (Web Push API)
+
+2. **React Native v1** — pełna apka
+   - Expo SDK + Expo Router
+   - Supabase Auth (email + biometrics)
+   - Quick Track z native haptics
+   - Push notifications (Expo Notifications)
+   - Offline mode podstawowy
+
+3. **React Native v2** — zaawansowane
+   - iOS/Android widgety (Expo Widget)
+   - Animacje Lottie na achievementy
+   - Deep linking (web → apka)
+   - App Store + Google Play publikacja
+   - OCR skanera potwierdzeń (przyszłość)
+
+**8.6. Wymagania do publikacji:**
+- Apple Developer Account (99$/rok)
+- Google Play Developer Account (25$ jednorazowo)
+- Expo EAS (darmowy tier na start, 30 buildów/miesiąc)
+- Ikona apki, splash screen, screenshots do store
+- Polityka prywatności dostosowana do wymogów App Store i Google Play
 
 ---
 
@@ -470,27 +700,66 @@ bank-afiliacje/
 src/
 ├── app/
 │   ├── api/
-│   │   ├── sync-offers/route.ts    # NOWE: Cron endpoint — sync XML → DB
-│   │   └── generate-desc/route.ts  # NOWE: Trigger generowania opisów AI
+│   │   ├── sync-offers/route.ts    # Cron endpoint — sync XML → DB
+│   │   ├── generate-desc/route.ts  # Trigger generowania opisów AI
+│   │   └── cron/
+│   │       ├── check-deadlines/route.ts  # Cron sprawdzający deadliny
+│   │       └── weekly-summary/route.ts   # Cron tygodniowego podsumowania
 │   ├── auth/
-│   │   ├── callback/route.ts       # NOWE: Supabase auth callback
-│   │   └── confirm/route.ts        # NOWE: Email confirmation
+│   │   ├── callback/route.ts       # Supabase auth callback
+│   │   └── confirm/route.ts        # Email confirmation
+│   ├── (admin)/                    # Route group — panel admina
+│   │   ├── layout.tsx              # Admin layout z sidebar
+│   │   ├── admin/page.tsx          # Dashboard admina (statystyki)
+│   │   ├── admin/offers/page.tsx   # Zarządzanie ofertami
+│   │   ├── admin/users/page.tsx    # Zarządzanie użytkownikami
+│   │   ├── admin/blog/page.tsx     # Zarządzanie blogiem
+│   │   ├── admin/notifications/page.tsx # Kolejka powiadomień
+│   │   └── admin/settings/page.tsx # Ustawienia serwisu
 │   ├── onboarding/
-│   │   └── page.tsx                # NOWE: „W których bankach masz konto?"
+│   │   └── page.tsx                # „W których bankach masz konto?"
 │   └── ustawienia/
-│       └── page.tsx                # NOWE: Profil użytkownika
+│       └── page.tsx                # Profil użytkownika
+├── components/
+│   ├── gamification/
+│   │   ├── StreakCounter.tsx        # Licznik streaka z animacją 🔥
+│   │   ├── AchievementBadge.tsx    # Odznaka z animacją unlock
+│   │   ├── ConfettiCelebration.tsx # Konfetti po spełnieniu warunku
+│   │   └── ProgressTimeline.tsx    # Timeline postępu oferty
+│   └── admin/
+│       ├── AdminSidebar.tsx        # Nawigacja panelu admina
+│       ├── StatsCard.tsx           # Karta statystyk
+│       └── OfferEditor.tsx         # Edytor ofert (override AI)
 ├── lib/
 │   ├── supabase/
-│   │   ├── client.ts               # NOWE: Browser Supabase client
-│   │   ├── server.ts               # NOWE: Server Supabase client
-│   │   └── middleware.ts            # NOWE: Auth middleware
+│   │   ├── client.ts               # Browser Supabase client
+│   │   ├── server.ts               # Server Supabase client
+│   │   └── middleware.ts            # Auth middleware (user + admin roles)
 │   ├── leadstar/
-│   │   └── parser.ts               # NOWE: XML parser
+│   │   └── parser.ts               # XML parser
 │   ├── ai/
-│   │   └── generate-description.ts # NOWE: Claude API integration
-│   └── email/
-│       └── send.ts                 # NOWE: Resend.com integration
+│   │   └── generate-description.ts # Claude API integration
+│   ├── email/
+│   │   └── send.ts                 # Resend.com integration
+│   └── gamification/
+│       ├── achievements.ts         # Logika odznak i achievementów
+│       ├── streaks.ts              # Logika streaków
+│       └── referrals.ts            # System poleceń
 └── ...
+
+# Osobne repo — aplikacja mobilna
+cebulazysku-mobile/                 # React Native (Expo)
+├── app/                            # Expo Router
+│   ├── (tabs)/
+│   │   ├── index.tsx               # Dashboard mobilny
+│   │   ├── offers.tsx              # Lista ofert
+│   │   ├── track.tsx               # Quick Track
+│   │   └── profile.tsx             # Profil + odznaki
+│   ├── offer/[id].tsx              # Szczegóły oferty
+│   └── login.tsx                   # Logowanie (Supabase Auth)
+├── components/                     # Komponenty mobilne
+├── lib/                            # Supabase client, notifications, offline sync
+└── app.json                        # Expo config
 ```
 
 ---
@@ -631,7 +900,80 @@ npm start
 
 ---
 
-## 13. Uwagi prawne
+## 13. Wizja produktu — pełny ekosystem
+
+CebulaZysku w pełnej wersji to **ekosystem do zarządzania zarobkami z promocji bankowych**, obejmujący:
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│                    🧅 EKOSYSTEM CebulaZysku                    │
+├────────────────────────────────────────────────────────────────┤
+│                                                                │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐ │
+│  │   Web App    │  │  Mobile App  │  │   Panel Admina       │ │
+│  │  (Next.js)   │  │ (React Nat.) │  │   (Next.js /admin)   │ │
+│  │              │  │              │  │                      │ │
+│  │ • Oferty     │  │ • Quick Track│  │ • Zarządzanie ofertami│
+│  │ • Blog       │  │ • Push notif.│  │ • Użytkownicy        │ │
+│  │ • Dashboard  │  │ • Offline    │  │ • Statystyki         │ │
+│  │ • Tracker    │  │ • Widgety    │  │ • Treści             │ │
+│  │ • Gamifikacja│  │ • Biometrics │  │ • Powiadomienia      │ │
+│  └──────┬───────┘  └──────┬───────┘  └──────────┬───────────┘ │
+│         │                 │                      │             │
+│         ▼                 ▼                      ▼             │
+│  ┌─────────────────────────────────────────────────────────┐   │
+│  │              Supabase (wspólny backend)                 │   │
+│  │  • PostgreSQL (oferty, użytkownicy, tracker, streaki)   │   │
+│  │  • Auth (email, Google, biometrics)                     │   │
+│  │  • Realtime Subscriptions (sync mobile ↔ web)           │   │
+│  │  • Row Level Security (dane per user)                   │   │
+│  │  • Edge Functions (logika biznesowa)                    │   │
+│  └─────────────────────────────────────────────────────────┘   │
+│         ▲                 ▲                      ▲             │
+│         │                 │                      │             │
+│  ┌──────┴───────┐  ┌─────┴──────┐  ┌───────────┴───────────┐ │
+│  │  LeadStar    │  │ Claude API │  │    Resend.com         │ │
+│  │  XML Feed    │  │ (opisy AI) │  │    (email notif.)     │ │
+│  │  (co 6h)     │  │            │  │    + Expo Push        │ │
+│  └──────────────┘  └────────────┘  └───────────────────────┘ │
+│                                                                │
+└────────────────────────────────────────────────────────────────┘
+```
+
+### User journey (docelowy):
+
+1. **Odkrycie** → User trafia na cebulazysku.pl (SEO/reklama/polecenie)
+2. **Przeglądanie** → Widzi oferty z cebulowym humorem, filtruje, porównuje
+3. **Rejestracja** → Zakłada konto, onboarding „w których bankach masz konto"
+4. **Otwarcie konta** → Klika link afiliacyjny, zakłada konto w banku
+5. **Śledzenie** → Dodaje ofertę do trackera, zaznacza warunki na bieżąco
+6. **Motywacja** → Streaki, odznaki, milestone'y, daily nudge, konfetti
+7. **Powiadomienia** → Przypomnienia o terminach (email + push mobilny)
+8. **Quick Track (mobile)** → Zaraz po zakupach w sklepie: tap → „transakcja kartą ✓"
+9. **Wypłata** → Premia wpływa → user oznacza „obrana cebulka! 🧅"
+10. **Powtarzanie** → Sugestie kolejnych ofert, program poleceń, rankingi
+
+### Monetyzacja (docelowa):
+
+| Źródło | Opis | Priorytet |
+|--------|------|-----------|
+| **Prowizje afiliacyjne** | Za otwarcie konta przez link LeadStar | Główne |
+| **Premium (przyszłość)** | Zaawansowane statystyki, priorytetowe powiadomienia, ekskluzywne odznaki | Opcjonalne |
+| **Newsletter sponsorowany** | Cotygodniowy email z wyróżnioną ofertą | Opcjonalne |
+
+### Kluczowe metryki (KPI):
+
+- **CTR** — % userów klikających linki afiliacyjne
+- **Konwersja** — % userów otwierających konto po kliknięciu
+- **Retencja 7d/30d** — % userów wracających do serwisu
+- **Streak retention** — % userów z aktywnym streakiem >7 dni
+- **Completion rate** — % ofert z w pełni spełnionymi warunkami
+- **NPS** — Net Promoter Score (czy user poleci serwis)
+- **Referral rate** — ile nowych userów z poleceń
+
+---
+
+## 14. Uwagi prawne
 
 - Serwis ma charakter **wyłącznie informacyjny** i nie stanowi doradztwa finansowego
 - Przedstawione oferty mogą ulec zmianie — szczegóły na stronach banków
