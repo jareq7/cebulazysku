@@ -34,6 +34,7 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 19 | [Admin panel](./19-admin-panel.md) | Dashboard, oferty, sync logi, wiadomości |
 | 20 | [Blog dynamiczny](./20-blog-dynamiczny.md) | Supabase, ISR, admin CRUD, fallback |
 | 21 | [PWA](./21-pwa.md) | Manifest, service worker, offline, ikony |
+| 22 | [Gamifikacja](./22-gamifikacja.md) | Streaki, odznaki, dashboard |
 
 ---
 

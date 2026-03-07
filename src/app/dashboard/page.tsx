@@ -23,6 +23,8 @@ import {
   Loader2,
 } from "lucide-react";
 import { ConditionTracker } from "@/components/ConditionTracker";
+import { StreakBadge } from "@/components/StreakBadge";
+import { AchievementsList } from "@/components/AchievementsList";
 
 export default function DashboardPage() {
   const { user, isLoading } = useAuth();
@@ -117,6 +119,9 @@ export default function DashboardPage() {
         </Card>
       </div>
 
+      {/* Streak */}
+      <StreakBadge />
+
       {/* Tracked offers */}
       {trackedOfferDetails.length === 0 ? (
         <div className="space-y-8">
@@ -201,6 +206,11 @@ export default function DashboardPage() {
           })}
         </div>
       )}
+
+      {/* Achievements */}
+      <div className="mt-8">
+        <AchievementsList />
+      </div>
     </div>
   );
 }

@@ -67,6 +67,19 @@
 
 ---
 
+## Faza 0k — Gamifikacja (streaki, odznaki)
+
+**Co zrobiono:**
+- Tabele `user_streaks` i `user_achievements` z RLS
+- 13 odznak w 4 kategoriach (oferty, streak, pieniądze, specjalne)
+- Streak tracking z auto-bump przy wejściu na dashboard
+- Komponenty `StreakBadge` + `AchievementsList` na dashboard
+- API: `/api/gamification/streak` (GET/POST), `/api/gamification/achievements` (GET/POST)
+
+📄 Szczegóły: [22-gamifikacja.md](./22-gamifikacja.md)
+
+---
+
 ## Faza 0j — PWA (Progressive Web App)
 
 **Co zrobiono:**
