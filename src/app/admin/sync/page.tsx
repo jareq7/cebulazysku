@@ -1,0 +1,149 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Loader2, AlertTriangle, RefreshCw } from "lucide-react";
+
+interface SyncLog {
+  id: string;
+  created_at: string;
+  offers_found: number;
+  offers_created: number;
+  offers_updated: number;
+  offers_deactivated: number;
+  duration_ms: number;
+  errors: string[];
+}
+
+export default function AdminSyncPage() {
+  const [logs, setLogs] = useState<SyncLog[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [syncing, setSyncing] = useState(false);
+  const [error, setError] = useState("");
+
+  const fetchLogs = () => {
+    setLoading(true);
+    fetch("/api/admin/sync-logs")
+      .then((r) => r.json())
+      .then((d) => setLogs(d.logs || []))
+      .catch(() => setError("Nie udało się załadować logów."))
+      .finally(() => setLoading(false));
+  };
+
+  useEffect(() => {
+    fetchLogs();
+  }, []);
+
+  const triggerSync = async () => {
+    setSyncing(true);
+    try {
+      const res = await fetch("/api/admin/trigger-sync", { method: "POST" });
+      const data = await res.json();
+      if (res.ok) {
+        fetchLogs();
+      } else {
+        setError(data.error || "Sync failed");
+      }
+    } catch {
+      setError("Nie udało się uruchomić sync.");
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (error && logs.length === 0) {
+    return (
+      <div className="text-center py-20">
+        <AlertTriangle className="mx-auto h-8 w-8 text-destructive mb-2" />
+        <p className="text-muted-foreground">{error}</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Sync logi ({logs.length})</h1>
+        <Button
+          onClick={triggerSync}
+          disabled={syncing}
+          className="gap-2"
+          size="sm"
+        >
+          {syncing ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : (
+            <RefreshCw className="h-4 w-4" />
+          )}
+          {syncing ? "Synchronizuję..." : "Uruchom sync"}
+        </Button>
+      </div>
+
+      {error && (
+        <p className="text-sm text-red-500">{error}</p>
+      )}
+
+      <div className="space-y-2">
+        {logs.map((log) => (
+          <Card key={log.id}>
+            <CardContent className="py-4">
+              <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-sm">
+                    {new Date(log.created_at).toLocaleString("pl-PL")}
+                  </p>
+                  <div className="flex flex-wrap items-center gap-2 mt-1 text-xs">
+                    <span>Znalezionych: {log.offers_found}</span>
+                    <Badge variant="secondary" className="text-xs bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                      +{log.offers_created} nowych
+                    </Badge>
+                    <Badge variant="secondary" className="text-xs bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+                      ↻{log.offers_updated} aktual.
+                    </Badge>
+                    {log.offers_deactivated > 0 && (
+                      <Badge variant="secondary" className="text-xs bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400">
+                        −{log.offers_deactivated} dezaktyw.
+                      </Badge>
+                    )}
+                    <span className="text-muted-foreground">
+                      {(log.duration_ms / 1000).toFixed(1)}s
+                    </span>
+                    {log.errors && log.errors.length > 0 && (
+                      <Badge variant="destructive" className="text-xs">
+                        {log.errors.length} błędów
+                      </Badge>
+                    )}
+                  </div>
+                  {log.errors && log.errors.length > 0 && (
+                    <div className="mt-2 text-xs text-red-500 space-y-0.5">
+                      {log.errors.slice(0, 3).map((err, i) => (
+                        <p key={i} className="truncate">
+                          {err}
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+        {logs.length === 0 && (
+          <p className="text-center text-muted-foreground py-8">
+            Brak logów sync.
+          </p>
+        )}
+      </div>
+    </div>
+  );
+}

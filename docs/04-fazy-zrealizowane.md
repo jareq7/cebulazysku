@@ -67,6 +67,20 @@
 
 ---
 
+## Faza 0h — Admin Panel (/admin)
+
+**Co zrobiono:**
+- Layout z auth gate (hasło z env var `ADMIN_PASSWORD`)
+- Dashboard: statystyki ofert, wiadomości, sync
+- Lista ofert z wyszukiwarką i statusem
+- Logi sync XML + przycisk ręcznego sync
+- Wiadomości kontaktowe z oznaczaniem przeczytanych
+- 6 API routes w `/api/admin/*`
+
+📄 Szczegóły: [19-admin-panel.md](./19-admin-panel.md)
+
+---
+
 ## Faza 0g — Backend formularza kontaktowego
 
 **Co zrobiono:**
