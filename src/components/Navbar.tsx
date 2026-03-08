@@ -63,6 +63,12 @@ export function Navbar() {
             Jak to działa?
           </Link>
           <Link
+            href="/ranking"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Ranking
+          </Link>
+          <Link
             href="/blog"
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
@@ -128,6 +134,13 @@ export function Navbar() {
             onClick={() => setMobileOpen(false)}
           >
             Jak to działa?
+          </Link>
+          <Link
+            href="/ranking"
+            className="block text-sm font-medium"
+            onClick={() => setMobileOpen(false)}
+          >
+            Ranking
           </Link>
           <Link
             href="/blog"

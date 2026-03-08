@@ -11,7 +11,7 @@ export async function GET() {
     const { data, error } = await supabase
       .from("offers")
       .select(
-        "id, slug, bank_name, offer_name, short_description, full_description, reward, difficulty, source, is_active, leadstar_id, affiliate_url, leadstar_description_html, leadstar_benefits_html, updated_at"
+        "id, slug, bank_name, offer_name, short_description, full_description, reward, difficulty, source, is_active, leadstar_id, affiliate_url, leadstar_description_html, leadstar_benefits_html, banner_url, updated_at"
       )
       .order("bank_name", { ascending: true });
 
@@ -46,6 +46,7 @@ export async function PATCH(request: NextRequest) {
       "monthly_fee",
       "free_if",
       "deadline",
+      "banner_url",
     ];
 
     const safeUpdates: Record<string, unknown> = {};

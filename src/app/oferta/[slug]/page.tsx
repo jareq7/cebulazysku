@@ -199,6 +199,23 @@ export default async function OfferDetailPage({
             </CardContent>
           </Card>
 
+          {/* Banner */}
+          {offer.bannerUrl && (
+            <a
+              href={offer.affiliateUrl}
+              target="_blank"
+              rel="noopener noreferrer sponsored"
+              className="block overflow-hidden rounded-2xl border shadow-sm hover:shadow-md transition-shadow"
+            >
+              <img
+                src={offer.bannerUrl}
+                alt={`Baner promocyjny ${offer.bankName} – ${offer.offerName}`}
+                className="w-full h-auto object-contain"
+                loading="lazy"
+              />
+            </a>
+          )}
+
           {/* Conditions */}
           {offer.conditions.length > 0 && (
             <Card>

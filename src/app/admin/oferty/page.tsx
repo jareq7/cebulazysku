@@ -36,6 +36,7 @@ interface Offer {
   affiliate_url: string | null;
   leadstar_description_html: string | null;
   leadstar_benefits_html: string | null;
+  banner_url: string | null;
   updated_at: string;
 }
 
@@ -50,6 +51,7 @@ export default function AdminOffersPage() {
     full_description: "",
     reward: 0,
     difficulty: "medium",
+    banner_url: "",
   });
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<"all" | "active" | "hidden" | "zero">("all");
@@ -85,6 +87,7 @@ export default function AdminOffersPage() {
       full_description: offer.full_description || "",
       reward: offer.reward,
       difficulty: offer.difficulty,
+      banner_url: offer.banner_url || "",
     });
   };
 
@@ -116,6 +119,7 @@ export default function AdminOffersPage() {
                 full_description: editForm.full_description,
                 reward: editForm.reward,
                 difficulty: editForm.difficulty,
+                banner_url: editForm.banner_url || null,
                 updated_at: new Date().toISOString(),
               }
             : o
@@ -377,6 +381,28 @@ export default function AdminOffersPage() {
                         <option value="hard">Trudny</option>
                       </select>
                     </div>
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-banner" className="text-xs">URL banera (z LeadStar lub inny)</Label>
+                    <Input
+                      id="edit-banner"
+                      value={editForm.banner_url}
+                      onChange={(e) =>
+                        setEditForm({ ...editForm, banner_url: e.target.value })
+                      }
+                      placeholder="https://leadstar.pl/banners/..."
+                      className="mt-1"
+                    />
+                    {editForm.banner_url && (
+                      <div className="mt-2 rounded-lg border overflow-hidden">
+                        <img
+                          src={editForm.banner_url}
+                          alt="Podgląd banera"
+                          className="w-full h-auto max-h-32 object-contain"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="flex items-center gap-2">
                     <Button

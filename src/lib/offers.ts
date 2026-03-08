@@ -27,6 +27,7 @@ function mapDbOffer(row: any): BankOffer {
     freeIf: row.free_if || null,
     featured: row.featured || false,
     lastUpdated: row.last_updated || row.updated_at || "",
+    bannerUrl: row.banner_url || null,
   };
 }
 

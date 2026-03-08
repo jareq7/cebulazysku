@@ -40,6 +40,7 @@ export interface BankOffer {
   freeIf: string | null;
   featured: boolean;
   lastUpdated: string;
+  bannerUrl: string | null;
 }
 
 export const conditionTypeLabels: Record<ConditionType, string> = {
@@ -143,6 +144,7 @@ export const bankOffers: BankOffer[] = [
     freeIf: "Wpływ min. 1000 zł/mies.",
     featured: true,
     lastUpdated: "2026-03-01",
+    bannerUrl: null,
   },
   {
     id: "ing-konto-promo",
@@ -215,6 +217,7 @@ export const bankOffers: BankOffer[] = [
     freeIf: null,
     featured: true,
     lastUpdated: "2026-03-01",
+    bannerUrl: null,
   },
   {
     id: "santander-promo",
@@ -298,6 +301,7 @@ export const bankOffers: BankOffer[] = [
     freeIf: "Wpływ min. 2500 zł/mies.",
     featured: true,
     lastUpdated: "2026-02-28",
+    bannerUrl: null,
   },
   {
     id: "pkobp-promo",
@@ -364,6 +368,7 @@ export const bankOffers: BankOffer[] = [
     freeIf: "Wpływ min. 1500 zł/mies.",
     featured: false,
     lastUpdated: "2026-02-25",
+    bannerUrl: null,
   },
   {
     id: "millennium-promo",
@@ -454,6 +459,7 @@ export const bankOffers: BankOffer[] = [
     freeIf: "Wpływ min. 2000 zł/mies.",
     featured: true,
     lastUpdated: "2026-03-03",
+    bannerUrl: null,
   },
   {
     id: "bnp-promo",
@@ -511,6 +517,7 @@ export const bankOffers: BankOffer[] = [
     freeIf: "Wpływ min. 1000 zł/mies.",
     featured: false,
     lastUpdated: "2026-02-20",
+    bannerUrl: null,
   },
   {
     id: "citi-promo",
@@ -578,6 +585,7 @@ export const bankOffers: BankOffer[] = [
     freeIf: "Wpływ min. 2000 zł/mies.",
     featured: false,
     lastUpdated: "2026-02-15",
+    bannerUrl: null,
   },
   {
     id: "credit-agricole-promo",
@@ -635,6 +643,7 @@ export const bankOffers: BankOffer[] = [
     freeIf: null,
     featured: false,
     lastUpdated: "2026-03-05",
+    bannerUrl: null,
   },
 ];
 
