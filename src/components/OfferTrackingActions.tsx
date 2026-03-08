@@ -1,15 +1,20 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useTracker } from "@/context/TrackerContext";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { toast } from "sonner";
 import {
   ExternalLink,
   Plus,
   ArrowRight,
   LayoutDashboard,
+  CheckCircle2,
+  X,
 } from "lucide-react";
 
 interface OfferTrackingActionsProps {
@@ -28,17 +33,37 @@ export function OfferTrackingActions({
   deadline,
 }: OfferTrackingActionsProps) {
   const { user } = useAuth();
+  const router = useRouter();
   const { isTracking, startTracking, stopTracking } = useTracker();
+  const [justAdded, setJustAdded] = useState(false);
 
   const tracking = isTracking(offerId);
 
-  const handleToggleTracking = () => {
-    if (tracking) {
-      stopTracking(offerId);
-    } else {
-      startTracking(offerId, conditionIds);
-    }
+  const handleStartTracking = () => {
+    startTracking(offerId, conditionIds);
+    setJustAdded(true);
+    toast.success("Oferta dodana do trackera!", {
+      description: "Przejdź do dashboardu, aby śledzić postępy.",
+      action: {
+        label: "Dashboard →",
+        onClick: () => router.push("/dashboard"),
+      },
+      duration: 6000,
+    });
   };
+
+  const handleStopTracking = () => {
+    stopTracking(offerId);
+    setJustAdded(false);
+    toast("Oferta usunięta z trackera");
+  };
+
+  const daysLeft = Math.max(
+    0,
+    Math.ceil(
+      (new Date(deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
+    )
+  );
 
   return (
     <div className="space-y-4">
@@ -46,51 +71,85 @@ export function OfferTrackingActions({
         <p className="text-sm text-muted-foreground">Do odebrania</p>
         <p className="text-5xl font-extrabold text-emerald-600">{reward} zł</p>
         <p className="text-xs text-muted-foreground mt-1">
-          Termin: {new Date(deadline).toLocaleDateString("pl-PL")}
+          Zostało {daysLeft} dni
         </p>
       </div>
 
       <Separator />
 
-      <a href={affiliateUrl} target="_blank" rel="noopener noreferrer">
-        <Button className="w-full gap-2" size="lg">
-          Otwórz konto
-          <ExternalLink className="h-4 w-4" />
-        </Button>
-      </a>
+      {/* Step 1: Open bank account - always primary CTA */}
+      <div className="space-y-1.5">
+        <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          Krok 1
+        </p>
+        <a href={affiliateUrl} target="_blank" rel="noopener noreferrer">
+          <Button className="w-full gap-2 h-12 text-base font-bold shadow-md hover:shadow-lg transition-shadow" size="lg">
+            Otwórz konto w banku
+            <ExternalLink className="h-5 w-5" />
+          </Button>
+        </a>
+      </div>
 
+      {/* Step 2: Track - prominent when not tracking */}
       {user ? (
-        <>
-          <Button
-            variant={tracking ? "destructive" : "outline"}
-            className="w-full gap-2"
-            onClick={handleToggleTracking}
-          >
-            {tracking ? (
-              <>Przestań śledzić</>
-            ) : (
-              <>
-                Dodaj do trackera
-                <Plus className="h-4 w-4" />
-              </>
-            )}
-          </Button>
-          {tracking && (
-            <Link href="/dashboard">
-              <Button variant="ghost" className="w-full gap-2" size="sm">
-                <LayoutDashboard className="h-4 w-4" />
-                Przejdź do dashboardu
+        <div className="space-y-1.5">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            Krok 2
+          </p>
+          {tracking ? (
+            <div className="space-y-2">
+              {/* Success state after tracking */}
+              <div className="rounded-lg border-2 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 p-3 text-center">
+                <CheckCircle2 className="mx-auto h-6 w-6 text-emerald-600 mb-1" />
+                <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-400">
+                  Śledzisz tę ofertę
+                </p>
+              </div>
+              <Link href="/dashboard">
+                <Button className="w-full gap-2 h-11 font-semibold bg-blue-600 hover:bg-blue-700 text-white" size="lg">
+                  <LayoutDashboard className="h-4 w-4" />
+                  Przejdź do dashboardu
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full text-xs text-muted-foreground hover:text-red-500 gap-1"
+                onClick={handleStopTracking}
+              >
+                <X className="h-3 w-3" />
+                Przestań śledzić
               </Button>
-            </Link>
+            </div>
+          ) : (
+            <Button
+              className="w-full gap-2 h-11 font-semibold border-2 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40"
+              variant="outline"
+              size="lg"
+              onClick={handleStartTracking}
+            >
+              <Plus className="h-5 w-5" />
+              Dodaj do trackera i śledź postępy
+            </Button>
           )}
-        </>
+        </div>
       ) : (
-        <Link href="/rejestracja">
-          <Button variant="outline" className="w-full gap-2">
-            Zaloguj się, aby śledzić
-            <ArrowRight className="h-4 w-4" />
-          </Button>
-        </Link>
+        <div className="space-y-1.5">
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            Krok 2
+          </p>
+          <Link href="/rejestracja">
+            <Button
+              className="w-full gap-2 h-11 font-semibold border-2 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40"
+              variant="outline"
+              size="lg"
+            >
+              Załóż konto i śledź postępy
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
+        </div>
       )}
 
       <p className="text-xs text-muted-foreground text-center leading-relaxed">

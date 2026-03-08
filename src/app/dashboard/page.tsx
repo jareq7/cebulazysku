@@ -26,12 +26,16 @@ import { ConditionTracker } from "@/components/ConditionTracker";
 import { StreakBadge } from "@/components/StreakBadge";
 import { AchievementsList } from "@/components/AchievementsList";
 import { PushNotificationToggle } from "@/components/PushNotificationToggle";
+import { useAchievementChecker } from "@/hooks/useAchievementChecker";
 
 export default function DashboardPage() {
   const { user, isLoading } = useAuth();
   const router = useRouter();
   const { trackedOffers } = useTracker();
   const { offers: bankOffers } = useOffers();
+
+  // Auto-check and award achievements
+  useAchievementChecker();
 
   useEffect(() => {
     if (!isLoading && !user) {
