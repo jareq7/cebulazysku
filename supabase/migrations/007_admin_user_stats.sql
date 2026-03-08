@@ -39,7 +39,7 @@ AS $$
   LEFT JOIN (
     SELECT user_id, COUNT(*) AS done
     FROM condition_progress
-    WHERE completed = true
+    WHERE count > 0
     GROUP BY user_id
   ) c ON c.user_id = u.id
   LEFT JOIN user_streaks s ON s.user_id = u.id
