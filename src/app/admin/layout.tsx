@@ -13,6 +13,7 @@ import {
   MessageSquare,
   FileText,
   Bell,
+  Users,
   Lock,
   Loader2,
 } from "lucide-react";
@@ -20,6 +21,7 @@ import {
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/oferty", label: "Oferty", icon: Package },
+  { href: "/admin/uzytkownicy", label: "Użytkownicy", icon: Users },
   { href: "/admin/blog", label: "Blog", icon: FileText },
   { href: "/admin/sync", label: "Sync logi", icon: RefreshCw },
   { href: "/admin/wiadomosci", label: "Wiadomości", icon: MessageSquare },
