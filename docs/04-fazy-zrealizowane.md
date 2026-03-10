@@ -193,6 +193,81 @@
 
 ---
 
+## Faza 0m — AI Reward Parser (Gemini)
+
+**Co zrobiono:**
+- Integracja z Google Gemini Flash API (`gemini-2.0-flash`) do automatycznego parsowania kwot premii z opisów HTML ofert LeadStar
+- Moduł `src/lib/gemini.ts` — wywołanie Gemini z promptem ekstrakcji kwoty
+- Moduł `src/lib/parse-reward.ts` — wrapper z fallbackiem na regex gdy AI niedostępne
+- Retry z exponential backoff (3 próby, 4s delay) dla obsługi rate limitów
+- Helper `sleep()` eksportowany do użycia w sync route
+- Integracja z `/api/sync-offers/route.ts` — 4s delay między wywołaniami AI
+- Endpoint testowy `/api/admin/test-reward-parser` do weryfikacji parsera
+- Przetestowano na 12/18 ofertach — 11/12 poprawnych wyników
+
+**Napotkane problemy i rozwiązania:**
+
+1. **Gemini API quota = 0** — model `gemini-2.0-flash` zwracał `quota: 0` na darmowym tierze.
+   - **Rozwiązanie:** Przełączenie na model `gemini-2.0-flash` z headerem `x-goog-api-key` zamiast `Authorization: Bearer`.
+
+2. **Rate limit 429 errors** — Gemini free tier pozwala na ~20 req/min.
+   - **Rozwiązanie:** Dodano retry z exponential backoff (4s, 8s, 16s) w `gemini.ts` + 4s delay między kolejnymi ofertami w sync route.
+
+3. **Test przerwany przez rate limit** — przy testowaniu 18 ofert naraz quota się wyczerpywała.
+   - **Rozwiązanie:** Testowano w partiach po 5-6 ofert. 12/18 przetestowanych, pozostałe 6 czeka na reset quota.
+
+4. **Zmiana danych w feedzie** — BNP Paribas zmienił premię z 1000 na 300 PLN między testami.
+   - **Rozwiązanie:** To nie był błąd parsera — potwierdzone w feedzie XML. Parser poprawnie odczytał nową kwotę.
+
+📄 Szczegóły: [24-ai-reward-parser.md](./24-ai-reward-parser.md)
+
+---
+
+## Faza 0n — Audyt bezpieczeństwa + poprawki
+
+**Co zrobiono:**
+- Pełny audyt bezpieczeństwa aplikacji (sekrety, auth, RLS, middleware, XSS, dependencies)
+- Dodano backend auth (`verifyAdmin()`) do **9 endpointów** admin API
+- Stworzono `src/lib/admin-auth.ts` — helper sprawdzający header `x-admin-password`
+- Stworzono `src/lib/admin-fetch.ts` — frontend helper dodający header auth do każdego fetch
+- Zaktualizowano 7 stron admin panelu na `adminFetch()`
+- Usunięto wyciek `SYNC_SECRET` z `docs/15-auto-sync-xml.md`
+- Przeniesiono LeadStar feed URL do zmiennej `LEADSTAR_FEED_URL` (env var)
+- Zamaskowano LeadStar URL w 5 plikach docs
+- Dodano rate-limiting na admin login (5 prób/min/IP)
+- Zmieniono `sessionStorage` z `"admin_auth" = "true"` na `"admin_password"` z prawdziwym hasłem
+
+**Napotkane problemy i rozwiązania:**
+
+1. **Admin API bez autoryzacji** — wszystkie endpointy `/api/admin/*` (poza `/auth`) były publicznie dostępne. Każdy mógł czytać dane użytkowników, edytować oferty, wysyłać push notyfikacje.
+   - **Przyczyna:** Frontend auth opierał się wyłącznie na `sessionStorage` flag. Backend nie weryfikował niczego.
+   - **Rozwiązanie:** Stworzono `verifyAdmin()` middleware sprawdzający hasło w headerze `x-admin-password` lub `Authorization: Bearer`. Dodano do każdego handlera GET/POST/PATCH/DELETE w 9 plikach route.ts.
+
+2. **SYNC_SECRET w publicznym repo** — sekret `cebulazysku-sync-2026` był jawnie zapisany w pliku `docs/15-auto-sync-xml.md` (zarówno w tabeli jak i w przykładzie curl).
+   - **Przyczyna:** Dokumentacja została napisana z konkretnymi wartościami zamiast placeholderów.
+   - **Rozwiązanie:** Zamieniono na `<YOUR_SYNC_SECRET>`. Stary sekret jest skompromitowany (w historii git) — wymaga zmiany w Vercel.
+
+3. **LeadStar feed URL z tokenem w kodzie źródłowym** — pełny URL z `pid`, `code` i `ha` parametrami (tokeny afiliacyjne) był hardcoded w `src/lib/leadstar.ts` i w 5 plikach docs.
+   - **Przyczyna:** Przy pierwszej implementacji nie pomyślano o tym jako o sekrecie.
+   - **Rozwiązanie:** Przeniesiono do `process.env.LEADSTAR_FEED_URL`. Zamaskowano we wszystkich docs. Dodano do `.env.local` i Vercel env vars.
+
+4. **Brak rate-limit na loginie** — endpoint `/api/admin/auth` przyjmował nieograniczoną liczbę prób hasła.
+   - **Przyczyna:** Prosty endpoint — sprawdź hasło, zwróć 200 lub 401. Brak ochrony przed brute-force.
+   - **Rozwiązanie:** Dodano in-memory rate-limit 5 prób/min/IP. Uwaga: w serverless (Vercel) to nie jest idealne (cold starts resetują Map), ale znacząco utrudnia automatyczny brute-force.
+
+5. **sessionStorage przechowywał "true" zamiast hasła** — po zalogowaniu frontend zapisywał `sessionStorage.setItem("admin_auth", "true")`, co nie pozwalało na wysyłanie hasła w headerach API.
+   - **Rozwiązanie:** Zmieniono na `sessionStorage.setItem("admin_password", password)`. Stworzono `adminFetch()` wrapper który automatycznie dodaje `x-admin-password` header.
+
+6. **Weryfikacja na produkcji** — po deployu przetestowano curlem:
+   ```
+   curl https://cebulazysku.pl/api/admin/stats → 401 Unauthorized ✅
+   ```
+   Wcześniej ten endpoint zwracał dane bez żadnej autoryzacji.
+
+📄 Szczegóły: [25-audyt-bezpieczenstwa.md](./25-audyt-bezpieczenstwa.md)
+
+---
+
 ## Fazy wcześniejsze (1–4)
 
 Zostały zrealizowane w poprzednich sesjach. Kluczowe deliverables:

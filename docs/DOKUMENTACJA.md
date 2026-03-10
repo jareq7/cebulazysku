@@ -118,16 +118,34 @@ Monitoring:   Vercel Analytics
 
 ## 5. Co jeszcze przed nami — plan rozwoju
 
+### Zrealizowane fazy
+
+| Faza | Nazwa | Status |
+|------|-------|--------|
+| 0 | Rebranding CebulaZysku | ✅ Gotowe |
+| 0b | Migracja ofert do Supabase (= oryg. faza 1) | ✅ Gotowe |
+| 0c | Logo i kolorystyka | ✅ Gotowe |
+| 0d | Auto-sync XML + Vercel Cron (= oryg. faza 2) | ✅ Gotowe |
+| 0e | SEO & Analytics | ✅ Gotowe |
+| 0f | Audyt UX/UI | ✅ Gotowe |
+| 0g | Backend kontaktu | ✅ Gotowe |
+| 0h | Admin Panel (= oryg. faza 7 bazowa) | ✅ Gotowe |
+| 0i | Blog dynamiczny | ✅ Gotowe |
+| 0j | PWA | ✅ Gotowe |
+| 0k | Gamifikacja — streaki, odznaki (= oryg. faza 6 bazowa) | ✅ Gotowe |
+| 0l | Push notyfikacje (= oryg. faza 5 częściowa) | ✅ Gotowe |
+| 0m | AI reward parser (Gemini) | ✅ Gotowe |
+| 0n | Audyt bezpieczeństwa + poprawki | ✅ Gotowe |
+
+### Planowane fazy
+
 | Faza | Nazwa | Status | Priorytet |
 |------|-------|--------|-----------|
-| 0 | Rebranding CebulaZysku | ✅ Gotowe | — |
-| 1 | Supabase + prawdziwy auth + DB tracker | 🔲 Do zrobienia | Wysoki |
-| 2 | XML parser LeadStar + tabela ofert + cron | 🔲 Do zrobienia | Wysoki |
 | 3 | Auto-generowanie opisów (AI + cebulowy ton) | 🔲 Do zrobienia | Wysoki |
 | 4 | Filtr „mam konto" + onboarding | 🔲 Do zrobienia | Średni |
-| 5 | System powiadomień email + push notifications | 🔲 Do zrobienia | Średni |
-| 6 | Gamifikacja, system zachęt, streaki, rankingi | 🔲 Do zrobienia | Średni |
-| 7 | Panel administracyjny | 🔲 Do zrobienia | Średni |
+| 5 | Powiadomienia email (Resend) | 🔲 Do zrobienia | Średni |
+| 6 | Rozszerzona gamifikacja (konfetti, rankingi, polecenia) | 🔲 Do zrobienia | Średni |
+| 7 | Rozbudowa admin panelu (wykresy, logi AI) | 🔲 Do zrobienia | Średni |
 | 8 | Aplikacje mobilne (iOS + Android) | 🔲 Do zrobienia | Planowane |
 
 ---

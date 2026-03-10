@@ -3,7 +3,7 @@
 > **Domena:** cebulazysku.pl  
 > **Repozytorium:** https://github.com/jareq7/cebulazysku  
 > **Deploy:** Vercel (automatyczny z brancha `main`)  
-> **Ostatnia aktualizacja:** 7 marca 2026 r.
+> **Ostatnia aktualizacja:** 10 marca 2026 r.
 
 ---
 
@@ -36,6 +36,9 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 21 | [PWA](./21-pwa.md) | Manifest, service worker, offline, ikony |
 | 22 | [Gamifikacja](./22-gamifikacja.md) | Streaki, odznaki, dashboard |
 | 23 | [Push notyfikacje](./23-push-notyfikacje.md) | Web Push, VAPID, admin send, SW |
+| 24 | [AI Reward Parser](./24-ai-reward-parser.md) | Gemini Flash, parsowanie kwot premii, retry, rate limit |
+| 25 | [Audyt bezpieczeństwa](./25-audyt-bezpieczenstwa.md) | Raport: sekrety, auth, RLS, XSS, dependencies |
+| 26 | [Security Fixes](./26-security-fixes.md) | Szczegółowy opis naprawek + troubleshooting |
 
 ---
 
