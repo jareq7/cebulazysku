@@ -38,6 +38,14 @@ export const metadata: Metadata = {
       "Obierz kolejne warstwy zysku z promocji bankowych. Porównuj oferty i zbieraj premie. Łupimy banki legalnie!",
     type: "website",
     locale: "pl_PL",
+    images: [
+      {
+        url: "/og-image.png",
+        width: 1200,
+        height: 630,
+        alt: "CebulaZysku – porównywarka premii bankowych",
+      },
+    ],
   },
 };
 
@@ -50,7 +58,8 @@ export default function RootLayout({
     <html lang="pl" suppressHydrationWarning>
       <head>
         <TrackingPixels />
-        <link rel="apple-touch-icon" href="/icon-192x192.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

@@ -13,8 +13,8 @@ export function Footer() {
               <Image
                 src="/logo-icon.png"
                 alt="CebulaZysku logo"
-                width={28}
-                height={28}
+                width={36}
+                height={36}
                 className="rounded-lg"
               />
               <span className="bg-gradient-to-r from-emerald-700 to-green-500 bg-clip-text text-transparent">

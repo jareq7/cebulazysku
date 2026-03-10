@@ -39,8 +39,8 @@ export function Navbar() {
           <Image
             src="/logo-icon.png"
             alt="CebulaZysku logo"
-            width={36}
-            height={36}
+            width={44}
+            height={44}
             className="rounded-lg"
           />
           <span className="bg-gradient-to-r from-emerald-700 to-green-500 bg-clip-text text-transparent">
