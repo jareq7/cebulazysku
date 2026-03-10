@@ -39,6 +39,7 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 24 | [AI Reward Parser](./24-ai-reward-parser.md) | Gemini Flash, parsowanie kwot premii, retry, rate limit |
 | 25 | [Audyt bezpieczeństwa](./25-audyt-bezpieczenstwa.md) | Raport: sekrety, auth, RLS, XSS, dependencies |
 | 26 | [Security Fixes](./26-security-fixes.md) | Szczegółowy opis naprawek + troubleshooting |
+| 27 | [Audyt wizualny](./27-audyt-wizualny.md) | Favicon, logo, OG image, cleanup śmieci z boilerplate |
 
 ---
 
