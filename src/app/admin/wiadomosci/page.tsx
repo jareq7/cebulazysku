@@ -1,5 +1,7 @@
 "use client";
 
+import { adminFetch } from "@/lib/admin-fetch";
+
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -27,7 +29,7 @@ export default function AdminMessagesPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("/api/admin/messages")
+    adminFetch("/api/admin/messages")
       .then((r) => r.json())
       .then((d) => setMessages(d.messages || []))
       .catch(() => setError("Nie udało się załadować wiadomości."))
@@ -35,7 +37,7 @@ export default function AdminMessagesPage() {
   }, []);
 
   const toggleRead = async (id: string, currentRead: boolean) => {
-    const res = await fetch("/api/admin/messages", {
+    const res = await adminFetch("/api/admin/messages", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, is_read: !currentRead }),

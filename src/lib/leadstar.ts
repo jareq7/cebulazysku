@@ -1,7 +1,6 @@
 // LeadStar XML feed parser
 
-const LEADSTAR_URL =
-  "https://leadstar.pl/xml?pid=93050&code=9f3d50f263d704d90b38d3f6549b11cc&ha=4242926830";
+const LEADSTAR_URL = process.env.LEADSTAR_FEED_URL || "";
 
 export interface LeadStarOffer {
   id: string;

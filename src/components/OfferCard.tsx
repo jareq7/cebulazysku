@@ -37,15 +37,13 @@ const iconMap: Record<ConditionType, React.ReactNode> = {
 };
 
 export function OfferCard({ offer }: { offer: BankOffer }) {
-  const daysLeft = Math.max(
-    0,
-    Math.ceil(
-      (new Date(offer.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-    )
-  );
+  const dlMs = offer.deadline ? new Date(offer.deadline).getTime() : NaN;
+  const daysLeft = !isNaN(dlMs)
+    ? Math.max(0, Math.ceil((dlMs - Date.now()) / (1000 * 60 * 60 * 24)))
+    : null;
 
   return (
-    <Card className="group relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1">
+    <Card className="group relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 flex flex-col">
       {offer.featured && (
         <div className="absolute top-0 right-0 bg-gradient-to-l from-emerald-600 to-green-500 text-white text-xs font-semibold px-3 py-1 rounded-bl-lg">
           Polecane
@@ -76,7 +74,7 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 flex-1">
         <div className="flex items-baseline gap-1">
           <span className="text-3xl font-extrabold text-emerald-600">
             {offer.reward}
@@ -93,10 +91,12 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
           <Badge variant="secondary" className={getDifficultyColor(offer.difficulty)}>
             {getDifficultyLabel(offer.difficulty)}
           </Badge>
-          <Badge variant="outline" className="gap-1">
-            <Clock className="h-3 w-3" />
-            {daysLeft} dni
-          </Badge>
+          {daysLeft !== null && (
+            <Badge variant="outline" className="gap-1">
+              <Clock className="h-3 w-3" />
+              {daysLeft} dni
+            </Badge>
+          )}
           {offer.monthlyFee === 0 && (
             <Badge variant="outline" className="text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-700">
               Darmowe konto
@@ -130,7 +130,7 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
         </div>
       )}
 
-      <CardFooter>
+      <CardFooter className="mt-auto">
         <Link href={`/oferta/${offer.slug}`} className="w-full">
           <Button className="w-full group/btn gap-2" variant="default">
             Zobacz szczegóły

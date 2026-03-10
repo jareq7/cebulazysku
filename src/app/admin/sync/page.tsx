@@ -1,5 +1,7 @@
 "use client";
 
+import { adminFetch } from "@/lib/admin-fetch";
+
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -25,7 +27,7 @@ export default function AdminSyncPage() {
 
   const fetchLogs = () => {
     setLoading(true);
-    fetch("/api/admin/sync-logs")
+    adminFetch("/api/admin/sync-logs")
       .then((r) => r.json())
       .then((d) => setLogs(d.logs || []))
       .catch(() => setError("Nie udało się załadować logów."))
@@ -39,7 +41,7 @@ export default function AdminSyncPage() {
   const triggerSync = async () => {
     setSyncing(true);
     try {
-      const res = await fetch("/api/admin/trigger-sync", { method: "POST" });
+      const res = await adminFetch("/api/admin/trigger-sync", { method: "POST" });
       const data = await res.json();
       if (res.ok) {
         fetchLogs();

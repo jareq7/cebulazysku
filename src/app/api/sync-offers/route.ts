@@ -1,22 +1,27 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchLeadStarOffers, generateSlug, generateOfferId } from "@/lib/leadstar";
+import { parseRewardFromDescription } from "@/lib/parse-reward";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
+export const maxDuration = 60;
 
 function isAuthorized(request: NextRequest): boolean {
   const authHeader = request.headers.get("authorization");
   const syncSecret = process.env.SYNC_SECRET;
   const cronSecret = process.env.CRON_SECRET;
 
-  return !!(
-    (syncSecret && authHeader === `Bearer ${syncSecret}`) ||
-    (cronSecret && authHeader === `Bearer ${cronSecret}`)
-  );
+  // Vercel Cron sends: Authorization: Bearer <CRON_SECRET>
+  if (cronSecret && authHeader === `Bearer ${cronSecret}`) return true;
+
+  // Manual trigger via SYNC_SECRET
+  if (syncSecret && authHeader === `Bearer ${syncSecret}`) return true;
+
+  return false;
 }
 
-async function runSync() {
+export async function runSync() {
   const start = Date.now();
   const supabase = createAdminClient();
   const leadstarOffers = await fetchLeadStarOffers();
@@ -24,8 +29,11 @@ async function runSync() {
   let created = 0;
   let updated = 0;
   let deactivated = 0;
+  let rewardsUpdated = 0;
   const errors: string[] = [];
+  const rewardChanges: { id: string; bank: string; old: number; new: number }[] = [];
   const activeLeadstarIds: string[] = [];
+  const hasGemini = !!process.env.GEMINI_API_KEY;
 
   for (const ls of leadstarOffers) {
     try {
@@ -55,37 +63,85 @@ async function runSync() {
         updated_at: new Date().toISOString(),
       };
 
+      // Parse reward using Gemini AI (if available)
+      let parsedReward: number | null = null;
+      if (hasGemini) {
+        try {
+          parsedReward = await parseRewardFromDescription(
+            ls.programName || ls.product,
+            ls.description || "",
+            ls.benefits || ""
+          );
+          // Rate limit: wait 4s between AI calls (free tier = 20 req/min)
+          await new Promise((r) => setTimeout(r, 4000));
+        } catch (err) {
+          errors.push(`AI parse error for ${ls.institution}: ${err instanceof Error ? err.message : String(err)}`);
+        }
+      }
+
       // Check if offer exists
       const { data: existing } = await supabase
         .from("offers")
-        .select("id")
+        .select("id, source, reward")
         .eq("leadstar_id", ls.id)
         .single();
 
       if (existing) {
         // Update — preserve manually enriched fields
+        // For "hybrid" offers (manually enriched), don't overwrite offer_name
+        // since admin may have corrected it
+        const updateData: Record<string, unknown> = {
+          bank_logo: offerData.bank_logo,
+          leadstar_description_html: offerData.leadstar_description_html,
+          leadstar_benefits_html: offerData.leadstar_benefits_html,
+          leadstar_logo_url: offerData.leadstar_logo_url,
+          leadstar_affiliate_url: offerData.leadstar_affiliate_url,
+          affiliate_url: offerData.affiliate_url,
+          free_first: offerData.free_first,
+          is_active: true,
+          updated_at: offerData.updated_at,
+        };
+
+        // Only overwrite offer_name and bank_name for pure leadstar offers
+        if (existing.source === "leadstar") {
+          updateData.bank_name = offerData.bank_name;
+          updateData.offer_name = offerData.offer_name;
+        }
+
+        // Update reward via AI parser:
+        // - For "leadstar" source: always update if AI parsed a value
+        // - For "hybrid" source: only update if current reward is 0 (never overwrite manual edits)
+        if (parsedReward !== null && parsedReward >= 0) {
+          const shouldUpdateReward =
+            existing.source === "leadstar" ||
+            (existing.source === "hybrid" && (existing.reward === 0 || existing.reward === null));
+
+          if (shouldUpdateReward && parsedReward !== existing.reward) {
+            rewardChanges.push({
+              id: existing.id,
+              bank: ls.institution,
+              old: existing.reward || 0,
+              new: parsedReward,
+            });
+            updateData.reward = parsedReward;
+            rewardsUpdated++;
+          }
+        }
+
         const { error } = await supabase
           .from("offers")
-          .update({
-            bank_name: offerData.bank_name,
-            bank_logo: offerData.bank_logo,
-            offer_name: offerData.offer_name,
-            leadstar_description_html: offerData.leadstar_description_html,
-            leadstar_benefits_html: offerData.leadstar_benefits_html,
-            leadstar_logo_url: offerData.leadstar_logo_url,
-            leadstar_affiliate_url: offerData.leadstar_affiliate_url,
-            affiliate_url: offerData.affiliate_url,
-            free_first: offerData.free_first,
-            is_active: true,
-            updated_at: offerData.updated_at,
-          })
+          .update(updateData)
           .eq("id", existing.id);
 
         if (error) throw error;
         updated++;
       } else {
-        // Insert new offer
-        const { error } = await supabase.from("offers").insert(offerData);
+        // Insert new offer — include AI-parsed reward if available
+        const insertData = {
+          ...offerData,
+          reward: parsedReward ?? 0,
+        };
+        const { error } = await supabase.from("offers").insert(insertData);
         if (error) throw error;
         created++;
       }
@@ -137,6 +193,9 @@ async function runSync() {
     created,
     updated,
     deactivated,
+    rewards_updated: rewardsUpdated,
+    reward_changes: rewardChanges,
+    ai_parser: hasGemini ? "gemini-flash" : "disabled",
     errors: errors.length,
     duration_ms: duration,
   };

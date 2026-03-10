@@ -34,6 +34,7 @@ const difficultyOrder: Record<Difficulty, number> = {
 export function OfferFilters({ offers }: { offers: BankOffer[] }) {
   const [activeDifficulties, setActiveDifficulties] = useState<Difficulty[]>([]);
   const [sort, setSort] = useState<SortOption>("reward-desc");
+  const [hideYoung, setHideYoung] = useState(false);
 
   const toggleDifficulty = (d: Difficulty) => {
     setActiveDifficulties((prev) =>
@@ -46,6 +47,10 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
 
     if (activeDifficulties.length > 0) {
       result = result.filter((o) => activeDifficulties.includes(o.difficulty));
+    }
+
+    if (hideYoung) {
+      result = result.filter((o) => !o.forYoung);
     }
 
     switch (sort) {
@@ -70,7 +75,7 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
     }
 
     return result;
-  }, [offers, activeDifficulties, sort]);
+  }, [offers, activeDifficulties, sort, hideYoung]);
 
   return (
     <div>
@@ -88,6 +93,13 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
               {getDifficultyLabel(d)}
             </Badge>
           ))}
+          <Badge
+            variant={hideYoung ? "default" : "outline"}
+            className="cursor-pointer select-none"
+            onClick={() => setHideYoung(!hideYoung)}
+          >
+            {hideYoung ? "✕ Dla młodych ukryte" : "Ukryj: dla młodych"}
+          </Badge>
         </div>
 
         <div className="sm:ml-auto">

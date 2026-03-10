@@ -129,13 +129,10 @@ export default async function RankingPage() {
       {/* Ranking table */}
       <div className="space-y-3">
         {sorted.map((offer, index) => {
-          const daysLeft = Math.max(
-            0,
-            Math.ceil(
-              (new Date(offer.deadline).getTime() - Date.now()) /
-                (1000 * 60 * 60 * 24)
-            )
-          );
+          const dlMs = offer.deadline ? new Date(offer.deadline).getTime() : NaN;
+          const daysLeft = !isNaN(dlMs)
+            ? Math.max(0, Math.ceil((dlMs - Date.now()) / (1000 * 60 * 60 * 24)))
+            : null;
 
           const isTop3 = index < 3;
           const positionColors = [
@@ -208,10 +205,12 @@ export default async function RankingPage() {
                     <Badge className={getDifficultyColor(offer.difficulty)}>
                       {getDifficultyLabel(offer.difficulty)}
                     </Badge>
-                    <Badge variant="outline" className="gap-1 text-xs">
-                      <Clock className="h-3 w-3" />
-                      {daysLeft}d
-                    </Badge>
+                    {daysLeft !== null && (
+                      <Badge variant="outline" className="gap-1 text-xs">
+                        <Clock className="h-3 w-3" />
+                        {daysLeft}d
+                      </Badge>
+                    )}
                     {offer.monthlyFee === 0 && (
                       <Badge
                         variant="outline"
@@ -248,10 +247,12 @@ export default async function RankingPage() {
                   <Badge className={`${getDifficultyColor(offer.difficulty)} text-[10px]`}>
                     {getDifficultyLabel(offer.difficulty)}
                   </Badge>
-                  <Badge variant="outline" className="gap-1 text-[10px]">
-                    <Clock className="h-2.5 w-2.5" />
-                    {daysLeft}d
-                  </Badge>
+                  {daysLeft !== null && (
+                    <Badge variant="outline" className="gap-1 text-[10px]">
+                      <Clock className="h-2.5 w-2.5" />
+                      {daysLeft}d
+                    </Badge>
+                  )}
                   {offer.monthlyFee === 0 && (
                     <Badge
                       variant="outline"

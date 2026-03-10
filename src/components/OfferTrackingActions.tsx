@@ -58,21 +58,21 @@ export function OfferTrackingActions({
     toast("Oferta usunięta z trackera");
   };
 
-  const daysLeft = Math.max(
-    0,
-    Math.ceil(
-      (new Date(deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-    )
-  );
+  const deadlineMs = deadline ? new Date(deadline).getTime() : NaN;
+  const daysLeft = !isNaN(deadlineMs)
+    ? Math.max(0, Math.ceil((deadlineMs - Date.now()) / (1000 * 60 * 60 * 24)))
+    : null;
 
   return (
     <div className="space-y-4">
       <div className="text-center">
         <p className="text-sm text-muted-foreground">Do odebrania</p>
         <p className="text-5xl font-extrabold text-emerald-600">{reward} zł</p>
-        <p className="text-xs text-muted-foreground mt-1">
-          Zostało {daysLeft} dni
-        </p>
+        {daysLeft !== null && (
+          <p className="text-xs text-muted-foreground mt-1">
+            Zostało {daysLeft} dni
+          </p>
+        )}
       </div>
 
       <Separator />
@@ -124,13 +124,13 @@ export function OfferTrackingActions({
             </div>
           ) : (
             <Button
-              className="w-full gap-2 h-11 font-semibold border-2 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40"
+              className="w-full gap-2 h-auto py-3 font-semibold border-2 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 whitespace-normal text-sm"
               variant="outline"
               size="lg"
               onClick={handleStartTracking}
             >
-              <Plus className="h-5 w-5" />
-              Dodaj do trackera i śledź postępy
+              <Plus className="h-5 w-5 shrink-0" />
+              Śledź postępy w trackerze
             </Button>
           )}
         </div>
@@ -141,12 +141,12 @@ export function OfferTrackingActions({
           </p>
           <Link href="/rejestracja">
             <Button
-              className="w-full gap-2 h-11 font-semibold border-2 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40"
+              className="w-full gap-2 h-auto py-3 font-semibold border-2 border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900/40 whitespace-normal text-sm"
               variant="outline"
               size="lg"
             >
               Załóż konto i śledź postępy
-              <ArrowRight className="h-4 w-4" />
+              <ArrowRight className="h-4 w-4 shrink-0" />
             </Button>
           </Link>
         </div>

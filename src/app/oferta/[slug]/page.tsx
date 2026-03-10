@@ -67,12 +67,10 @@ export default async function OfferDetailPage({
     notFound();
   }
 
-  const daysLeft = Math.max(
-    0,
-    Math.ceil(
-      (new Date(offer.deadline).getTime() - Date.now()) / (1000 * 60 * 60 * 24)
-    )
-  );
+  const deadlineMs = offer.deadline ? new Date(offer.deadline).getTime() : NaN;
+  const daysLeft = !isNaN(deadlineMs)
+    ? Math.max(0, Math.ceil((deadlineMs - Date.now()) / (1000 * 60 * 60 * 24)))
+    : null;
 
   const faqJsonLd = offer.faq.length > 0 ? {
     "@context": "https://schema.org",
@@ -154,10 +152,12 @@ export default async function OfferDetailPage({
             <Badge className={getDifficultyColor(offer.difficulty)}>
               {getDifficultyLabel(offer.difficulty)}
             </Badge>
-            <Badge variant="outline" className="gap-1">
-              <Clock className="h-3 w-3" />
-              Zostało {daysLeft} dni
-            </Badge>
+            {daysLeft !== null && (
+              <Badge variant="outline" className="gap-1">
+                <Clock className="h-3 w-3" />
+                Zostało {daysLeft} dni
+              </Badge>
+            )}
             {offer.monthlyFee === 0 && (
               <Badge variant="outline" className="text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-700">
                 Darmowe konto

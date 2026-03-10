@@ -89,7 +89,7 @@ Obie metody wywołują tę samą funkcję `runSync()`.
 | Zmienna | Wartość | Opis |
 |---------|---------|------|
 | `CRON_SECRET` | (automatycznie ustawiana przez Vercel) | Weryfikacja wywołania crona |
-| `SYNC_SECRET` | `cebulazysku-sync-2026` | Ręczne wywołanie sync |
+| `SYNC_SECRET` | `<YOUR_SYNC_SECRET>` | Ręczne wywołanie sync |
 | `SUPABASE_SERVICE_ROLE_KEY` | (z Supabase Dashboard) | Zapis do DB (bypasses RLS) |
 
 ---
@@ -137,7 +137,7 @@ Obie metody wywołują tę samą funkcję `runSync()`.
 ```bash
 # Test via POST (ręczne wywołanie)
 curl -X POST https://cebulazysku.pl/api/sync-offers \
-  -H "Authorization: Bearer cebulazysku-sync-2026"
+  -H "Authorization: Bearer <YOUR_SYNC_SECRET>"
 
 # Test via GET (symulacja crona)
 curl https://cebulazysku.pl/api/sync-offers \

@@ -256,7 +256,7 @@ Zostały zrealizowane w poprzednich sesjach. Kluczowe deliverables:
 
 **Źródło danych:**
 ```
-URL: https://leadstar.pl/xml?pid=93050&code=9f3d50f263d704d90b38d3f6549b11cc&ha=4242926830
+URL: ${LEADSTAR_FEED_URL} (env var)
 Format: XML
 Aktualnie: 18 ofert (konta osobiste)
 Banki: BNP Paribas, Pekao (x2), Santander (x3), Alior (x2), 
@@ -748,7 +748,7 @@ cebulazysku-mobile/                 # React Native (Expo)
 
 ### Feed URL
 ```
-https://leadstar.pl/xml?pid=93050&code=9f3d50f263d704d90b38d3f6549b11cc&ha=4242926830
+${LEADSTAR_FEED_URL} (env var)
 ```
 
 ### Aktualne oferty (stan na 7.03.2026)

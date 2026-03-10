@@ -1,10 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { verifyAdmin } from "@/lib/admin-auth";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const authError = verifyAdmin(request);
+  if (authError) return authError;
+
   try {
     const supabase = createAdminClient();
 
@@ -27,6 +31,9 @@ export async function GET() {
 }
 
 export async function PATCH(request: NextRequest) {
+  const authError = verifyAdmin(request);
+  if (authError) return authError;
+
   try {
     const { id, is_read } = await request.json();
     const supabase = createAdminClient();

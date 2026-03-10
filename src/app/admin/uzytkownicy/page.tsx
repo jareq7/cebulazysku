@@ -1,5 +1,7 @@
 "use client";
 
+import { adminFetch } from "@/lib/admin-fetch";
+
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -62,7 +64,7 @@ export default function AdminUsersPage() {
   const [filter, setFilter] = useState<FilterType>("all");
 
   useEffect(() => {
-    fetch("/api/admin/users")
+    adminFetch("/api/admin/users")
       .then((r) => r.json())
       .then((d) => {
         setSummary(d.summary);

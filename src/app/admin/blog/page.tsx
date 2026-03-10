@@ -1,5 +1,7 @@
 "use client";
 
+import { adminFetch } from "@/lib/admin-fetch";
+
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -57,7 +59,7 @@ export default function AdminBlogPage() {
 
   const fetchPosts = () => {
     setLoading(true);
-    fetch("/api/admin/blog")
+    adminFetch("/api/admin/blog")
       .then((r) => r.json())
       .then((d) => setPosts(d.posts || []))
       .catch(() => setError("Nie udało się załadować postów."))
@@ -109,7 +111,7 @@ export default function AdminBlogPage() {
 
     try {
       if (creating) {
-        const res = await fetch("/api/admin/blog", {
+        const res = await adminFetch("/api/admin/blog", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...form, tags }),
@@ -119,7 +121,7 @@ export default function AdminBlogPage() {
         setPosts((prev) => [data.post, ...prev]);
         setCreating(false);
       } else if (editing) {
-        const res = await fetch("/api/admin/blog", {
+        const res = await adminFetch("/api/admin/blog", {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ id: editing.id, ...form, tags }),
@@ -142,7 +144,7 @@ export default function AdminBlogPage() {
     if (!confirm("Czy na pewno chcesz usunąć ten post?")) return;
 
     try {
-      const res = await fetch("/api/admin/blog", {
+      const res = await adminFetch("/api/admin/blog", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id }),
@@ -156,7 +158,7 @@ export default function AdminBlogPage() {
 
   const togglePublish = async (post: BlogPost) => {
     try {
-      const res = await fetch("/api/admin/blog", {
+      const res = await adminFetch("/api/admin/blog", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

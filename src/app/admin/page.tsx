@@ -1,5 +1,7 @@
 "use client";
 
+import { adminFetch } from "@/lib/admin-fetch";
+
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -33,7 +35,7 @@ export default function AdminDashboard() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    fetch("/api/admin/stats")
+    adminFetch("/api/admin/stats")
       .then((r) => r.json())
       .then(setStats)
       .catch(() => setError("Nie udało się załadować statystyk."))

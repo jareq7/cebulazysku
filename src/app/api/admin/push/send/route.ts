@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { verifyAdmin } from "@/lib/admin-auth";
 import webpush from "web-push";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
+  const authError = verifyAdmin(request);
+  if (authError) return authError;
+
   try {
     const vapidPublic = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY;
     const vapidPrivate = process.env.VAPID_PRIVATE_KEY;

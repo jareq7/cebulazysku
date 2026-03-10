@@ -40,8 +40,8 @@ export default function AdminLayout({
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const stored = sessionStorage.getItem("admin_auth");
-    if (stored === "true") {
+    const stored = sessionStorage.getItem("admin_password");
+    if (stored) {
       setAuthenticated(true);
     }
     setChecking(false);
@@ -58,7 +58,7 @@ export default function AdminLayout({
     });
 
     if (res.ok) {
-      sessionStorage.setItem("admin_auth", "true");
+      sessionStorage.setItem("admin_password", password);
       setAuthenticated(true);
     } else {
       setError("Nieprawidłowe hasło.");

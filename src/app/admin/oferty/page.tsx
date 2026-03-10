@@ -1,5 +1,6 @@
 "use client";
 
+import { adminFetch } from "@/lib/admin-fetch";
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -37,6 +38,7 @@ interface Offer {
   leadstar_description_html: string | null;
   leadstar_benefits_html: string | null;
   banner_url: string | null;
+  for_young: boolean;
   updated_at: string;
 }
 
@@ -52,12 +54,13 @@ export default function AdminOffersPage() {
     reward: 0,
     difficulty: "medium",
     banner_url: "",
+    for_young: false,
   });
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<"all" | "active" | "hidden" | "zero">("all");
 
   useEffect(() => {
-    fetch("/api/admin/offers")
+    adminFetch("/api/admin/offers")
       .then((r) => r.json())
       .then((d) => setOffers(d.offers || []))
       .catch(() => setError("Nie udało się załadować ofert."))
@@ -88,6 +91,7 @@ export default function AdminOffersPage() {
       reward: offer.reward,
       difficulty: offer.difficulty,
       banner_url: offer.banner_url || "",
+      for_young: offer.for_young || false,
     });
   };
 
@@ -102,7 +106,7 @@ export default function AdminOffersPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/admin/offers", {
+      const res = await adminFetch("/api/admin/offers", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: editingId, ...editForm }),
@@ -120,6 +124,7 @@ export default function AdminOffersPage() {
                 reward: editForm.reward,
                 difficulty: editForm.difficulty,
                 banner_url: editForm.banner_url || null,
+                for_young: editForm.for_young,
                 updated_at: new Date().toISOString(),
               }
             : o
@@ -135,7 +140,7 @@ export default function AdminOffersPage() {
 
   const toggleActive = async (offer: Offer) => {
     try {
-      const res = await fetch("/api/admin/offers", {
+      const res = await adminFetch("/api/admin/offers", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: offer.id, is_active: !offer.is_active }),
@@ -403,6 +408,19 @@ export default function AdminOffersPage() {
                         />
                       </div>
                     )}
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <label className="flex items-center gap-2 cursor-pointer text-sm">
+                      <input
+                        type="checkbox"
+                        checked={editForm.for_young}
+                        onChange={(e) =>
+                          setEditForm({ ...editForm, for_young: e.target.checked })
+                        }
+                        className="h-4 w-4 rounded border-gray-300"
+                      />
+                      Oferta dla młodych (18-26 lat)
+                    </label>
                   </div>
                   <div className="flex items-center gap-2">
                     <Button

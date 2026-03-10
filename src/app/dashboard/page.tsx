@@ -163,12 +163,20 @@ export default function DashboardPage() {
                   <Card key={offer.id} className="flex flex-col justify-between">
                     <CardContent className="pt-6">
                       <div className="flex items-center gap-3 mb-3">
-                        <div
-                          className="flex h-10 w-10 items-center justify-center rounded-xl text-white font-bold shrink-0"
-                          style={{ backgroundColor: offer.bankColor }}
-                        >
-                          {offer.bankName.charAt(0)}
-                        </div>
+                        {offer.bankLogo && offer.bankLogo.startsWith("http") ? (
+                          <img
+                            src={offer.bankLogo}
+                            alt={`${offer.bankName} logo`}
+                            className="h-10 w-10 rounded-xl object-contain bg-white p-1 shrink-0"
+                          />
+                        ) : (
+                          <div
+                            className="flex h-10 w-10 items-center justify-center rounded-xl text-white font-bold shrink-0"
+                            style={{ backgroundColor: offer.bankColor }}
+                          >
+                            {offer.bankName.charAt(0)}
+                          </div>
+                        )}
                         <div className="min-w-0">
                           <p className="text-xs text-muted-foreground">{offer.bankName}</p>
                           <p className="font-semibold text-sm truncate">{offer.offerName}</p>

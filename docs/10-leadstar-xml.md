@@ -7,7 +7,7 @@
 ## Feed URL
 
 ```
-https://leadstar.pl/xml?pid=93050&code=9f3d50f263d704d90b38d3f6549b11cc&ha=4242926830
+${LEADSTAR_FEED_URL} (ustawiony w env var)
 ```
 
 ## Aktualne oferty (stan na 7.03.2026)
