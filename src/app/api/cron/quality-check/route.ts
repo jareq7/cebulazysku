@@ -14,7 +14,8 @@ const MAX_PER_RUN = 5;
 const MISMATCH_THRESHOLD = 50;
 
 // Ile dni może minąć zanim oferta wymaga ponownego sprawdzenia
-const RECHECK_DAYS = 7;
+// 4 uruchomienia/dzień × 5 ofert = 20 ofert/dzień → cały feed sprawdzony każdego dnia
+const RECHECK_DAYS = 1;
 
 function isAuthorized(request: NextRequest): boolean {
   const authHeader = request.headers.get("authorization");
