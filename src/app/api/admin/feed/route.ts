@@ -15,7 +15,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase
       .from("offers")
       .select(
-        "id, slug, bank_name, offer_name, reward, short_description, difficulty, is_active, source, affiliate_url, leadstar_id, leadstar_description_html, leadstar_benefits_html, locked_fields, quality_flags, first_seen_at, updated_at"
+        "id, slug, bank_name, offer_name, reward, short_description, difficulty, is_active, source, affiliate_url, leadstar_id, leadstar_description_html, leadstar_benefits_html, locked_fields, quality_flags, first_seen_at, updated_at, ai_generated_at"
       )
       .order("bank_name", { ascending: true });
 

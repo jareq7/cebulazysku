@@ -15,6 +15,7 @@ import {
   XCircle,
   Search,
   AlertCircle,
+  Sparkles,
 } from "lucide-react";
 
 interface QualityFlags {
@@ -52,6 +53,7 @@ interface FeedOffer {
   quality_flags: QualityFlags;
   first_seen_at: string | null;
   updated_at: string;
+  ai_generated_at: string | null;
 }
 
 type EditableField = "bank_name" | "offer_name" | "reward" | "short_description" | "difficulty" | "is_active";
@@ -70,6 +72,7 @@ const COLUMNS = [
   { key: "leadstar_description_html", label: "Opis z feedu", defaultWidth: 200 },
   { key: "leadstar_benefits_html", label: "Warunki z feedu", defaultWidth: 200 },
   { key: "quality_flags", label: "Flagi", defaultWidth: 140 },
+  { key: "ai_generated_at", label: "AI opisy", defaultWidth: 90 },
   { key: "affiliate_url", label: "Link", defaultWidth: 50 },
 ] as const;
 
@@ -308,6 +311,18 @@ function OfferRow({
       <td className="px-3 py-2" style={{ width: widths.quality_flags, minWidth: widths.quality_flags }}>
         <QualityBadges flags={offer.quality_flags} />
       </td>
+      <td className="px-3 py-2 text-center" style={{ width: widths.ai_generated_at, minWidth: widths.ai_generated_at }}>
+        {offer.ai_generated_at ? (
+          <div className="flex flex-col items-center gap-0.5">
+            <Sparkles className="h-3.5 w-3.5 text-violet-500" />
+            <span className="text-[10px] text-muted-foreground">
+              {new Date(offer.ai_generated_at).toLocaleDateString("pl-PL")}
+            </span>
+          </div>
+        ) : (
+          <span className="text-[10px] text-amber-500 font-medium">brak</span>
+        )}
+      </td>
       <td className="px-3 py-2 text-center" style={{ width: widths.affiliate_url, minWidth: widths.affiliate_url }}>
         {offer.affiliate_url && (
           <a href={offer.affiliate_url} target="_blank" rel="noopener noreferrer">
@@ -425,7 +440,9 @@ export default function AdminFeedPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<"all" | "issues" | "new" | "locked" | "scraped" | "mismatch">("all");
+  const [filter, setFilter] = useState<"all" | "issues" | "new" | "locked" | "scraped" | "mismatch" | "no_ai">("all");
+  const [generating, setGenerating] = useState(false);
+  const [generateResult, setGenerateResult] = useState<{ generated?: number; failed?: number; error?: string } | null>(null);
   const { widths, startResize } = useResizableColumns();
 
   useEffect(() => {
@@ -466,6 +483,26 @@ export default function AdminFeedPage() {
     o.bank_name.toLowerCase().includes(search.toLowerCase()) ||
     o.offer_name.toLowerCase().includes(search.toLowerCase());
 
+  const triggerGenerate = async () => {
+    setGenerating(true);
+    setGenerateResult(null);
+    try {
+      const res = await adminFetch("/api/cron/generate-descriptions", { method: "POST" });
+      const text = await res.text();
+      let data: Record<string, unknown>;
+      try { data = JSON.parse(text); } catch { data = { error: `HTTP ${res.status}` }; }
+      setGenerateResult(data);
+      // Odśwież listę ofert żeby pokazać nowe ai_generated_at
+      const r2 = await adminFetch("/api/admin/feed");
+      const d2 = await r2.json();
+      setOffers(d2.offers || []);
+    } catch (err) {
+      setGenerateResult({ error: err instanceof Error ? err.message : "Błąd" });
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   const matchesFilter = (o: FeedOffer) => {
     switch (filter) {
       case "issues": return !!(o.quality_flags.reward_zero || o.quality_flags.description_empty);
@@ -473,6 +510,7 @@ export default function AdminFeedPage() {
       case "locked": return o.locked_fields.length > 0;
       case "scraped": return !!o.quality_flags.scraped_from_page;
       case "mismatch": return !!(o.quality_flags.reward_mismatch || o.quality_flags.page_unreachable);
+      case "no_ai": return !o.ai_generated_at;
       default: return true;
     }
   };
@@ -484,6 +522,7 @@ export default function AdminFeedPage() {
   const newCount = offers.filter((o) => isNew(o.first_seen_at)).length;
   const lockedCount = offers.filter((o) => o.locked_fields.length > 0).length;
   const mismatchCount = offers.filter((o) => o.quality_flags.reward_mismatch || o.quality_flags.page_unreachable).length;
+  const noAiCount = offers.filter((o) => o.is_active && !o.ai_generated_at).length;
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
@@ -502,10 +541,31 @@ export default function AdminFeedPage() {
     <div className="space-y-4">
       <div className="flex items-center justify-between flex-wrap gap-2">
         <h1 className="text-2xl font-bold">Podgląd feedu ({offers.length})</h1>
-        <p className="text-xs text-muted-foreground">
-          Kliknij komórkę żeby edytować • 🔒 blokuje pole przed sync • Przeciągnij krawędź nagłówka żeby zmienić szerokość
-        </p>
+        <div className="flex items-center gap-3">
+          <p className="text-xs text-muted-foreground hidden sm:block">
+            Kliknij komórkę żeby edytować • 🔒 blokuje przed sync • Przeciągnij nagłówek żeby zmienić szerokość
+          </p>
+          <Button
+            onClick={triggerGenerate}
+            disabled={generating}
+            variant="outline"
+            size="sm"
+            className="gap-2 shrink-0"
+            title="Generuje opisy AI dla ofert bez treści (max 3 na raz)"
+          >
+            {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4 text-violet-500" />}
+            {generating ? "Generuję..." : `Generuj opisy AI${noAiCount > 0 ? ` (${noAiCount})` : ""}`}
+          </Button>
+        </div>
       </div>
+
+      {generateResult && (
+        <div className={`rounded-lg border px-3 py-2 text-sm ${generateResult.error ? "border-red-300 bg-red-50 dark:bg-red-950/20 text-red-700" : "border-violet-300 bg-violet-50 dark:bg-violet-950/20 text-violet-800 dark:text-violet-300"}`}>
+          {generateResult.error
+            ? `❌ ${generateResult.error}`
+            : `✍️ Wygenerowano: +${generateResult.generated ?? 0} ofert${(generateResult.failed ?? 0) > 0 ? `, błędy: ${generateResult.failed}` : ""}`}
+        </div>
+      )}
 
       {/* Filtry */}
       <div className="flex flex-wrap gap-2 items-center">
@@ -515,6 +575,7 @@ export default function AdminFeedPage() {
           { key: "issues", label: `Problemy (${issuesCount})`, color: issuesCount > 0 ? "text-red-600" : "" },
           { key: "locked", label: `Zablokowane (${lockedCount})`, color: "text-amber-600" },
           { key: "mismatch", label: `Niezgodności (${mismatchCount})`, color: mismatchCount > 0 ? "text-red-600" : "" },
+          { key: "no_ai", label: `Bez AI (${noAiCount})`, color: noAiCount > 0 ? "text-violet-600" : "" },
           { key: "scraped", label: "Scrapowane", color: "" },
         ].map(({ key, label, color }) => (
           <button
