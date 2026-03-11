@@ -26,6 +26,12 @@ interface QualityFlags {
   scrape_failed_reason?: string;
   scrape_reward?: number;
   last_scraped_at?: string;
+  // Quality check (cron dzienny)
+  reward_mismatch?: boolean;
+  page_unreachable?: boolean;
+  page_js_only?: boolean;
+  checked_reward?: number;
+  last_checked_at?: string;
 }
 
 interface FeedOffer {
@@ -82,16 +88,32 @@ function QualityBadges({ flags }: { flags: QualityFlags }) {
   if (flags.reward_zero) issues.push({ label: "Premia 0 zł", color: "destructive" as const });
   if (flags.description_empty) issues.push({ label: "Brak opisu", color: "destructive" as const });
   if (flags.benefits_empty) issues.push({ label: "Brak warunków", color: "secondary" as const });
+  if (flags.reward_mismatch) issues.push({ label: `Niezgodność! Strona: ${flags.checked_reward} zł`, color: "destructive" as const });
+  if (flags.page_unreachable) issues.push({ label: "Strona niedostępna", color: "destructive" as const });
+  if (flags.page_js_only) issues.push({ label: "JS-only (nie sprawdzono)", color: "secondary" as const });
   if (flags.scrape_failed) issues.push({ label: `Scraping: ${flags.scrape_failed_reason || "błąd"}`, color: "secondary" as const });
   if (flags.scraped_from_page) issues.push({ label: `Scraped: ${flags.scrape_reward} zł`, color: "secondary" as const });
-  if (issues.length === 0) return <span className="text-xs text-emerald-600">✓ OK</span>;
+
+  const checkedAt = flags.last_checked_at
+    ? new Date(flags.last_checked_at).toLocaleDateString("pl-PL")
+    : null;
+
+  if (issues.length === 0) return (
+    <div className="flex flex-col gap-0.5">
+      <span className="text-xs text-emerald-600">✓ OK</span>
+      {checkedAt && <span className="text-[10px] text-muted-foreground">sprawdzone {checkedAt}</span>}
+    </div>
+  );
   return (
-    <div className="flex flex-wrap gap-1">
-      {issues.map((issue) => (
-        <Badge key={issue.label} variant={issue.color} className="text-[10px] py-0 px-1.5 whitespace-nowrap">
-          {issue.label}
-        </Badge>
-      ))}
+    <div className="flex flex-col gap-1">
+      <div className="flex flex-wrap gap-1">
+        {issues.map((issue) => (
+          <Badge key={issue.label} variant={issue.color} className="text-[10px] py-0 px-1.5 whitespace-nowrap">
+            {issue.label}
+          </Badge>
+        ))}
+      </div>
+      {checkedAt && <span className="text-[10px] text-muted-foreground">sprawdzone {checkedAt}</span>}
     </div>
   );
 }
@@ -403,7 +425,7 @@ export default function AdminFeedPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
-  const [filter, setFilter] = useState<"all" | "issues" | "new" | "locked" | "scraped">("all");
+  const [filter, setFilter] = useState<"all" | "issues" | "new" | "locked" | "scraped" | "mismatch">("all");
   const { widths, startResize } = useResizableColumns();
 
   useEffect(() => {
@@ -450,6 +472,7 @@ export default function AdminFeedPage() {
       case "new": return isNew(o.first_seen_at);
       case "locked": return o.locked_fields.length > 0;
       case "scraped": return !!o.quality_flags.scraped_from_page;
+      case "mismatch": return !!(o.quality_flags.reward_mismatch || o.quality_flags.page_unreachable);
       default: return true;
     }
   };
@@ -460,6 +483,7 @@ export default function AdminFeedPage() {
   const issuesCount = offers.filter((o) => o.quality_flags.reward_zero || o.quality_flags.description_empty).length;
   const newCount = offers.filter((o) => isNew(o.first_seen_at)).length;
   const lockedCount = offers.filter((o) => o.locked_fields.length > 0).length;
+  const mismatchCount = offers.filter((o) => o.quality_flags.reward_mismatch || o.quality_flags.page_unreachable).length;
 
   if (loading) return (
     <div className="flex items-center justify-center py-20">
@@ -490,6 +514,7 @@ export default function AdminFeedPage() {
           { key: "new", label: `Nowe (${newCount})`, color: newCount > 0 ? "text-emerald-600" : "" },
           { key: "issues", label: `Problemy (${issuesCount})`, color: issuesCount > 0 ? "text-red-600" : "" },
           { key: "locked", label: `Zablokowane (${lockedCount})`, color: "text-amber-600" },
+          { key: "mismatch", label: `Niezgodności (${mismatchCount})`, color: mismatchCount > 0 ? "text-red-600" : "" },
           { key: "scraped", label: "Scrapowane", color: "" },
         ].map(({ key, label, color }) => (
           <button
@@ -513,11 +538,13 @@ export default function AdminFeedPage() {
         </div>
       </div>
 
-      {issuesCount > 0 && (
+      {(issuesCount > 0 || mismatchCount > 0) && (
         <div className="flex items-center gap-2 rounded-lg border border-amber-200 bg-amber-50 dark:bg-amber-950/20 px-3 py-2 text-sm text-amber-700 dark:text-amber-400">
           <AlertCircle className="h-4 w-4 shrink-0" />
           <span>
-            <strong>{issuesCount} ofert</strong> ma problemy z danymi. Sync próbuje scrapować stronę banku (max 5/dzień).
+            {issuesCount > 0 && <><strong>{issuesCount} ofert</strong> ma braki w danych (premia 0 lub pusty opis). </>}
+            {mismatchCount > 0 && <><strong className="text-red-600">{mismatchCount} ofert</strong> ma niezgodność premii między naszą bazą a stroną banku. </>}
+            Automatyczny quality check działa codziennie o 7:00 UTC (max 5 ofert/dzień).
           </span>
         </div>
       )}
