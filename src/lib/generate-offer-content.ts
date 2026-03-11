@@ -99,7 +99,7 @@ ZASADY:
 - Odpowiedz TYLKO JSON, bez żadnych komentarzy`;
 
   try {
-    const raw = await askGemini(prompt);
+    const raw = await askGemini(prompt, 3000);
     const jsonStr = extractJson(raw);
     const parsed = JSON.parse(jsonStr) as GeneratedOfferContent;
 

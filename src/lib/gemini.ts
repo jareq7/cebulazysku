@@ -11,7 +11,7 @@ interface GeminiResponse {
   }[];
 }
 
-export async function askGemini(prompt: string): Promise<string> {
+export async function askGemini(prompt: string, maxOutputTokens = 1024): Promise<string> {
   if (!GEMINI_API_KEY) {
     throw new Error("GEMINI_API_KEY is not set");
   }
@@ -20,7 +20,7 @@ export async function askGemini(prompt: string): Promise<string> {
     contents: [{ parts: [{ text: prompt }] }],
     generationConfig: {
       temperature: 0,
-      maxOutputTokens: 1024,
+      maxOutputTokens,
     },
   });
 
