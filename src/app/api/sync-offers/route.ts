@@ -58,7 +58,7 @@ export async function runSync() {
 
       const { data: existing } = await supabase
         .from("offers")
-        .select("id, source, reward, locked_fields, quality_flags")
+        .select("id, source, reward, locked_fields, quality_flags, leadstar_description_html, leadstar_benefits_html")
         .eq("leadstar_id", ls.id)
         .single();
 
@@ -77,9 +77,20 @@ export async function runSync() {
         };
 
         if (!lockedFields.includes("bank_logo")) updateData.bank_logo = offerData.bank_logo;
+        if (!lockedFields.includes("affiliate_url")) updateData.affiliate_url = offerData.affiliate_url;
+
+        // Wykryj zmianę opisu lub warunków w feedzie → zresetuj ai_generated_at
+        const descChanged = !lockedFields.includes("leadstar_description_html") &&
+          ls.description !== (existing.leadstar_description_html || "");
+        const benefitsChanged = !lockedFields.includes("leadstar_benefits_html") &&
+          ls.benefits !== (existing.leadstar_benefits_html || "");
+
         if (!lockedFields.includes("leadstar_description_html")) updateData.leadstar_description_html = offerData.leadstar_description_html;
         if (!lockedFields.includes("leadstar_benefits_html")) updateData.leadstar_benefits_html = offerData.leadstar_benefits_html;
-        if (!lockedFields.includes("affiliate_url")) updateData.affiliate_url = offerData.affiliate_url;
+
+        if (descChanged || benefitsChanged) {
+          updateData.ai_generated_at = null;
+        }
 
         if (existing.source === "leadstar") {
           if (!lockedFields.includes("bank_name")) updateData.bank_name = offerData.bank_name;

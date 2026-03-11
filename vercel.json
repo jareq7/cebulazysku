@@ -5,6 +5,10 @@
       "schedule": "0 1 * * *"
     },
     {
+      "path": "/api/cron/generate-descriptions",
+      "schedule": "15,30,45 1 * * *"
+    },
+    {
       "path": "/api/cron/quality-check",
       "schedule": "0,30 2-7 * * *"
     }

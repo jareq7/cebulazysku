@@ -39,11 +39,16 @@ export default function AdminSyncPage() {
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const [enriching, setEnriching] = useState(false);
+  const [generating, setGenerating] = useState(false);
   const [error, setError] = useState("");
   const [lastResult, setLastResult] = useState<SyncResult | null>(null);
   const [enrichResult, setEnrichResult] = useState<{
     error?: string; processed?: number; enriched?: number; scraped?: number;
     failed?: number; remaining?: string; duration_ms?: number;
+  } | null>(null);
+  const [generateResult, setGenerateResult] = useState<{
+    error?: string; generated?: number; failed?: number; duration_ms?: number;
+    details?: { bank: string; status: "ok" | "failed" }[];
   } | null>(null);
 
   const fetchLogs = () => {
@@ -89,6 +94,22 @@ export default function AdminSyncPage() {
     }
   };
 
+  const triggerGenerate = async () => {
+    setGenerating(true);
+    setGenerateResult(null);
+    try {
+      const res = await adminFetch("/api/cron/generate-descriptions", { method: "POST" });
+      const text = await res.text();
+      let data: Record<string, unknown>;
+      try { data = JSON.parse(text); } catch { data = { error: `HTTP ${res.status} — nieoczekiwana odpowiedź` }; }
+      setGenerateResult(data);
+    } catch (err) {
+      setGenerateResult({ error: err instanceof Error ? err.message : "Błąd połączenia" });
+    } finally {
+      setGenerating(false);
+    }
+  };
+
   const triggerEnrich = async () => {
     setEnriching(true);
     setEnrichResult(null);
@@ -131,7 +152,11 @@ export default function AdminSyncPage() {
             {syncing ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
             {syncing ? "Synchronizuję..." : "Uruchom sync"}
           </Button>
-          <Button onClick={triggerEnrich} disabled={syncing || enriching} variant="outline" className="gap-2" size="sm" title="Parsuje kwoty premii przez AI dla ofert z reward=0 (max 8 na raz)">
+          <Button onClick={triggerGenerate} disabled={syncing || enriching || generating} variant="outline" className="gap-2" size="sm" title="Generuje opisy, pros/cons, FAQ i warunki przez AI (max 3 oferty na raz)">
+            {generating ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>✍️</span>}
+            {generating ? "Generuję opisy..." : "Generuj opisy AI"}
+          </Button>
+          <Button onClick={triggerEnrich} disabled={syncing || enriching || generating} variant="outline" className="gap-2" size="sm" title="Parsuje kwoty premii przez AI dla ofert z reward=0 (max 8 na raz)">
             {enriching ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>🤖</span>}
             {enriching ? "Przetwarzam AI..." : "Wzbogać AI"}
           </Button>
@@ -195,6 +220,37 @@ export default function AdminSyncPage() {
               </div>
               {enrichResult.remaining && String(enrichResult.remaining) !== "brak" && (
                 <p className="text-xs mt-2 text-amber-600">⚠️ {String(enrichResult.remaining)}</p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {generateResult && (
+        <div className={`rounded-lg border p-4 text-sm ${generateResult.error ? "border-red-300 bg-red-50 dark:bg-red-950/20" : "border-violet-300 bg-violet-50 dark:bg-violet-950/20"}`}>
+          {generateResult.error ? (
+            <div className="flex items-start gap-2 text-red-700 dark:text-red-400">
+              <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-medium">Generowanie nie powiodło się</p>
+                <p className="text-xs mt-1 font-mono">{String(generateResult.error)}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="text-violet-800 dark:text-violet-300">
+              <p className="font-medium mb-2">✍️ Generowanie opisów zakończone ({((Number(generateResult.duration_ms) || 0) / 1000).toFixed(1)}s)</p>
+              <div className="grid grid-cols-2 gap-2 text-xs">
+                <div><span className="text-muted-foreground">Wygenerowanych:</span> <strong className="text-emerald-600">+{generateResult.generated}</strong></div>
+                <div><span className="text-muted-foreground">Błędy:</span> <strong className={generateResult.failed ? "text-red-600" : ""}>{generateResult.failed ?? 0}</strong></div>
+              </div>
+              {generateResult.details && generateResult.details.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-1">
+                  {generateResult.details.map((d, i) => (
+                    <span key={i} className={`text-[10px] px-1.5 py-0.5 rounded border ${d.status === "ok" ? "border-emerald-300 text-emerald-700" : "border-red-300 text-red-700"}`}>
+                      {d.bank}
+                    </span>
+                  ))}
+                </div>
               )}
             </div>
           )}
