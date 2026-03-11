@@ -38,8 +38,13 @@ export default function AdminSyncPage() {
   const [logs, setLogs] = useState<SyncLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
+  const [enriching, setEnriching] = useState(false);
   const [error, setError] = useState("");
   const [lastResult, setLastResult] = useState<SyncResult | null>(null);
+  const [enrichResult, setEnrichResult] = useState<{
+    error?: string; processed?: number; enriched?: number; scraped?: number;
+    failed?: number; remaining?: string; duration_ms?: number;
+  } | null>(null);
 
   const fetchLogs = () => {
     setLoading(true);
@@ -84,6 +89,22 @@ export default function AdminSyncPage() {
     }
   };
 
+  const triggerEnrich = async () => {
+    setEnriching(true);
+    setEnrichResult(null);
+    try {
+      const res = await adminFetch("/api/admin/enrich", { method: "POST" });
+      const text = await res.text();
+      let data: Record<string, unknown>;
+      try { data = JSON.parse(text); } catch { data = { error: `HTTP ${res.status} — nieoczekiwana odpowiedź` }; }
+      setEnrichResult(data);
+    } catch (err) {
+      setEnrichResult({ error: err instanceof Error ? err.message : "Błąd połączenia" });
+    } finally {
+      setEnriching(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -105,19 +126,16 @@ export default function AdminSyncPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold">Sync logi ({logs.length})</h1>
-        <Button
-          onClick={triggerSync}
-          disabled={syncing}
-          className="gap-2"
-          size="sm"
-        >
-          {syncing ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
-          ) : (
-            <RefreshCw className="h-4 w-4" />
-          )}
-          {syncing ? "Synchronizuję..." : "Uruchom sync"}
-        </Button>
+        <div className="flex gap-2">
+          <Button onClick={triggerSync} disabled={syncing || enriching} className="gap-2" size="sm">
+            {syncing ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />}
+            {syncing ? "Synchronizuję..." : "Uruchom sync"}
+          </Button>
+          <Button onClick={triggerEnrich} disabled={syncing || enriching} variant="outline" className="gap-2" size="sm" title="Parsuje kwoty premii przez AI dla ofert z reward=0 (max 8 na raz)">
+            {enriching ? <Loader2 className="h-4 w-4 animate-spin" /> : <span>🤖</span>}
+            {enriching ? "Przetwarzam AI..." : "Wzbogać AI"}
+          </Button>
+        </div>
       </div>
 
       {lastResult && (
@@ -151,6 +169,33 @@ export default function AdminSyncPage() {
                   <div><span className="text-muted-foreground">Błędy:</span> <strong className="text-red-600">{lastResult.errors}</strong></div>
                 )}
               </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {enrichResult && (
+        <div className={`rounded-lg border p-4 text-sm ${enrichResult.error ? "border-red-300 bg-red-50 dark:bg-red-950/20" : "border-blue-300 bg-blue-50 dark:bg-blue-950/20"}`}>
+          {enrichResult.error ? (
+            <div className="flex items-start gap-2 text-red-700 dark:text-red-400">
+              <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-medium">Wzbogacanie nie powiodło się</p>
+                <p className="text-xs mt-1 font-mono">{String(enrichResult.error)}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="text-blue-800 dark:text-blue-300">
+              <p className="font-medium mb-2">🤖 AI enrichment zakończony ({((Number(enrichResult.duration_ms) || 0) / 1000).toFixed(1)}s)</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <div><span className="text-muted-foreground">Przetworzonych:</span> <strong>{String(enrichResult.processed)}</strong></div>
+                <div><span className="text-muted-foreground">Uzupełnionych:</span> <strong className="text-emerald-600">{String(enrichResult.enriched)}</strong></div>
+                <div><span className="text-muted-foreground">Przez scraping:</span> <strong>{String(enrichResult.scraped)}</strong></div>
+                <div><span className="text-muted-foreground">Nie znaleziono:</span> <strong className="text-amber-600">{String(enrichResult.failed)}</strong></div>
+              </div>
+              {enrichResult.remaining && String(enrichResult.remaining) !== "brak" && (
+                <p className="text-xs mt-2 text-amber-600">⚠️ {String(enrichResult.remaining)}</p>
+              )}
             </div>
           )}
         </div>
