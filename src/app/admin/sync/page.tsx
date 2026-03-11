@@ -19,11 +19,27 @@ interface SyncLog {
   errors: string[];
 }
 
+interface SyncResult {
+  success?: boolean;
+  error?: string;
+  offers_found?: number;
+  created?: number;
+  updated?: number;
+  deactivated?: number;
+  rewards_updated?: number;
+  quality_issues?: number;
+  scraped_from_pages?: number;
+  ai_parser?: string;
+  errors?: number;
+  duration_ms?: number;
+}
+
 export default function AdminSyncPage() {
   const [logs, setLogs] = useState<SyncLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [syncing, setSyncing] = useState(false);
   const [error, setError] = useState("");
+  const [lastResult, setLastResult] = useState<SyncResult | null>(null);
 
   const fetchLogs = () => {
     setLoading(true);
@@ -40,16 +56,22 @@ export default function AdminSyncPage() {
 
   const triggerSync = async () => {
     setSyncing(true);
+    setLastResult(null);
+    setError("");
     try {
       const res = await adminFetch("/api/admin/trigger-sync", { method: "POST" });
       const data = await res.json();
       if (res.ok) {
+        setLastResult(data);
         fetchLogs();
       } else {
+        setLastResult({ error: data.error || "Nieznany błąd" });
         setError(data.error || "Sync failed");
       }
-    } catch {
-      setError("Nie udało się uruchomić sync.");
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Nie udało się uruchomić sync.";
+      setLastResult({ error: msg });
+      setError(msg);
     } finally {
       setSyncing(false);
     }
@@ -91,8 +113,40 @@ export default function AdminSyncPage() {
         </Button>
       </div>
 
-      {error && (
-        <p className="text-sm text-red-500">{error}</p>
+      {lastResult && (
+        <div className={`rounded-lg border p-4 text-sm ${lastResult.error ? "border-red-300 bg-red-50 dark:bg-red-950/20" : "border-emerald-300 bg-emerald-50 dark:bg-emerald-950/20"}`}>
+          {lastResult.error ? (
+            <div className="flex items-start gap-2 text-red-700 dark:text-red-400">
+              <AlertTriangle className="h-4 w-4 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-medium">Sync nie powiódł się</p>
+                <p className="text-xs mt-1 font-mono">{lastResult.error}</p>
+              </div>
+            </div>
+          ) : (
+            <div className="text-emerald-800 dark:text-emerald-300">
+              <p className="font-medium mb-2">✓ Sync zakończony ({((lastResult.duration_ms || 0) / 1000).toFixed(1)}s)</p>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                <div><span className="text-muted-foreground">Znalezionych:</span> <strong>{lastResult.offers_found}</strong></div>
+                <div><span className="text-muted-foreground">Nowych:</span> <strong className="text-emerald-600">+{lastResult.created}</strong></div>
+                <div><span className="text-muted-foreground">Zaktualizowanych:</span> <strong>{lastResult.updated}</strong></div>
+                <div><span className="text-muted-foreground">Dezaktywowanych:</span> <strong>{lastResult.deactivated}</strong></div>
+                {(lastResult.quality_issues ?? 0) > 0 && (
+                  <div><span className="text-muted-foreground">Problemy jakości:</span> <strong className="text-amber-600">{lastResult.quality_issues}</strong></div>
+                )}
+                {(lastResult.scraped_from_pages ?? 0) > 0 && (
+                  <div><span className="text-muted-foreground">Scrapowane:</span> <strong>{lastResult.scraped_from_pages}</strong></div>
+                )}
+                {(lastResult.rewards_updated ?? 0) > 0 && (
+                  <div><span className="text-muted-foreground">Premie zaktualizowane:</span> <strong>{lastResult.rewards_updated}</strong></div>
+                )}
+                {(lastResult.errors ?? 0) > 0 && (
+                  <div><span className="text-muted-foreground">Błędy:</span> <strong className="text-red-600">{lastResult.errors}</strong></div>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
       )}
 
       <div className="space-y-2">
