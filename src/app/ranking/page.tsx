@@ -186,7 +186,7 @@ export default async function RankingPage() {
                   {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
-                      <p className="font-semibold text-sm sm:text-base truncate">
+                      <p className="font-semibold text-sm sm:text-base">
                         {offer.bankName}
                       </p>
                       {offer.featured && (
@@ -195,7 +195,7 @@ export default async function RankingPage() {
                         </Badge>
                       )}
                     </div>
-                    <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                       {offer.offerName}
                     </p>
                   </div>

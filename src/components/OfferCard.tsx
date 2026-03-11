@@ -67,7 +67,7 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
           )}
           <div className="min-w-0">
             <p className="text-sm text-muted-foreground">{offer.bankName}</p>
-            <h3 className="font-semibold text-base leading-tight truncate">
+            <h3 className="font-semibold text-base leading-tight line-clamp-2">
               {offer.offerName}
             </h3>
           </div>
