@@ -60,18 +60,25 @@ export default function AdminSyncPage() {
     setError("");
     try {
       const res = await adminFetch("/api/admin/trigger-sync", { method: "POST" });
-      const data = await res.json();
-      if (res.ok) {
+
+      // Zabezpieczenie przed non-JSON odpowiedzią (np. timeout HTML z Vercel)
+      const text = await res.text();
+      let data: SyncResult;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        data = { error: `Serwer zwrócił nieoczekiwaną odpowiedź (HTTP ${res.status}). Możliwy timeout (>60s) lub błąd serwera. Sprawdź logi Vercel.` };
+      }
+
+      if (res.ok && !data.error) {
         setLastResult(data);
         fetchLogs();
       } else {
         setLastResult({ error: data.error || "Nieznany błąd" });
-        setError(data.error || "Sync failed");
       }
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "Nie udało się uruchomić sync.";
+      const msg = err instanceof Error ? err.message : "Nie udało się połączyć z serwerem.";
       setLastResult({ error: msg });
-      setError(msg);
     } finally {
       setSyncing(false);
     }

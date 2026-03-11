@@ -24,6 +24,10 @@ function getTextContent(element: Element, tagName: string): string {
 }
 
 export async function fetchLeadStarOffers(): Promise<LeadStarOffer[]> {
+  if (!LEADSTAR_URL) {
+    throw new Error("LEADSTAR_FEED_URL nie jest ustawione w zmiennych środowiskowych Vercel.");
+  }
+
   const response = await fetch(LEADSTAR_URL, {
     headers: { "User-Agent": "CebulaZysku/1.0" },
   });
