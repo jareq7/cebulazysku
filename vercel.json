@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/cron/quality-check",
-      "schedule": "0,30 2-5 * * *"
+      "schedule": "0,30 2-7 * * *"
     }
   ]
 }
