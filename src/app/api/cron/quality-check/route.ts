@@ -13,9 +13,11 @@ const MAX_PER_RUN = 5;
 // Minimalna różnica premii (PLN) uznawana za niezgodność
 const MISMATCH_THRESHOLD = 50;
 
-// Ile dni może minąć zanim oferta wymaga ponownego sprawdzenia
-// 4 uruchomienia/dzień × 5 ofert = 20 ofert/dzień → cały feed sprawdzony każdego dnia
-const RECHECK_DAYS = 1;
+// Po ilu godzinach oferta może być sprawdzona ponownie.
+// Cron: co 30 min w godz. 2–5 UTC = 8 uruchomień × 5 ofert = 40 ofert/noc.
+// Przy > 40 ofertach rotacja rozciąga się na kolejne noce automatycznie.
+// 22h gwarantuje że ta sama oferta nie zostanie sprawdzona dwa razy tej samej nocy.
+const RECHECK_HOURS = 22;
 
 function isAuthorized(request: NextRequest): boolean {
   const authHeader = request.headers.get("authorization");
@@ -40,7 +42,7 @@ export async function GET(request: NextRequest) {
   const supabase = createAdminClient();
 
   // Pobierz oferty do sprawdzenia: najdawniej sprawdzane (lub nigdy) → aktywne z URL-em
-  const recheckBefore = new Date(Date.now() - RECHECK_DAYS * 24 * 60 * 60 * 1000).toISOString();
+  const recheckBefore = new Date(Date.now() - RECHECK_HOURS * 60 * 60 * 1000).toISOString();
 
   const { data: offers, error } = await supabase
     .from("offers")

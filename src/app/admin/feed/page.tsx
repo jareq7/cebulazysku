@@ -544,7 +544,7 @@ export default function AdminFeedPage() {
           <span>
             {issuesCount > 0 && <><strong>{issuesCount} ofert</strong> ma braki w danych (premia 0 lub pusty opis). </>}
             {mismatchCount > 0 && <><strong className="text-red-600">{mismatchCount} ofert</strong> ma niezgodność premii między naszą bazą a stroną banku. </>}
-            Quality check działa codziennie 4× (2:00–3:30 UTC), pokrywa do 20 ofert dziennie.
+            Quality check: co 30 min w godz. 2–5 UTC (8 uruchomień × 5 ofert = 40/noc). Przy większej liczbie ofert rotacja automatyczna.
           </span>
         </div>
       )}
