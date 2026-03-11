@@ -66,6 +66,7 @@
 | 0m | AI reward parser (Gemini) | [24-ai-reward-parser.md](./24-ai-reward-parser.md) | ✅ Gotowe | — |
 | 0n | Audyt bezpieczeństwa + poprawki | [25-audyt-bezpieczenstwa.md](./25-audyt-bezpieczenstwa.md), [26-security-fixes.md](./26-security-fixes.md) | ✅ Gotowe | — |
 | 0o | Audyt wizualny (favicon, logo, OG) | [27-audyt-wizualny.md](./27-audyt-wizualny.md) | ✅ Gotowe | — |
+| 0p | Feed Quality Monitor (walidacja + scraping + admin spreadsheet) | [28-feed-quality-monitor.md](./28-feed-quality-monitor.md) | ✅ Gotowe | — |
 | 3 | Auto-generowanie opisów (AI + cebulowy ton) | [05-fazy-planowane.md](./05-fazy-planowane.md#faza-3) | 🔲 Do zrobienia | Wysoki |
 | 4 | Filtr „mam konto" + onboarding | [05-fazy-planowane.md](./05-fazy-planowane.md#faza-4) | 🔲 Do zrobienia | Średni |
 | 5 | Powiadomienia email (Resend) | [05-fazy-planowane.md](./05-fazy-planowane.md#faza-5) | 🔲 Do zrobienia | Średni |

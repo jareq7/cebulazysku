@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchLeadStarOffers, generateSlug, generateOfferId } from "@/lib/leadstar";
 import { parseRewardFromDescription } from "@/lib/parse-reward";
+import { scrapeOfferPage } from "@/lib/scrape-offer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -30,10 +31,15 @@ export async function runSync() {
   let updated = 0;
   let deactivated = 0;
   let rewardsUpdated = 0;
+  let qualityIssues = 0;
+  let scraped = 0;
   const errors: string[] = [];
   const rewardChanges: { id: string; bank: string; old: number; new: number }[] = [];
   const activeLeadstarIds: string[] = [];
   const hasGemini = !!process.env.GEMINI_API_KEY;
+  // Ogranicz scraping do max 5 ofert per sync (ochrona przed timeoutem Vercel)
+  const MAX_SCRAPE_PER_SYNC = 5;
+  let scrapeAttempts = 0;
 
   for (const ls of leadstarOffers) {
     try {
@@ -82,7 +88,7 @@ export async function runSync() {
       // Check if offer exists
       const { data: existing } = await supabase
         .from("offers")
-        .select("id, source, reward")
+        .select("id, source, reward, locked_fields, quality_flags")
         .eq("leadstar_id", ls.id)
         .single();
 
@@ -90,28 +96,32 @@ export async function runSync() {
         // Update — preserve manually enriched fields
         // For "hybrid" offers (manually enriched), don't overwrite offer_name
         // since admin may have corrected it
-        const updateData: Record<string, unknown> = {
-          bank_logo: offerData.bank_logo,
-          leadstar_description_html: offerData.leadstar_description_html,
-          leadstar_benefits_html: offerData.leadstar_benefits_html,
-          leadstar_logo_url: offerData.leadstar_logo_url,
-          leadstar_affiliate_url: offerData.leadstar_affiliate_url,
-          affiliate_url: offerData.affiliate_url,
-          free_first: offerData.free_first,
-          is_active: true,
-          updated_at: offerData.updated_at,
-        };
+        const lockedFields: string[] = existing.locked_fields || [];
 
-        // Only overwrite offer_name and bank_name for pure leadstar offers
+        const updateData: Record<string, unknown> = {};
+
+        // Pola z feedu — dodaj tylko jeśli nie są zablokowane
+        if (!lockedFields.includes("bank_logo")) updateData.bank_logo = offerData.bank_logo;
+        if (!lockedFields.includes("leadstar_description_html")) updateData.leadstar_description_html = offerData.leadstar_description_html;
+        if (!lockedFields.includes("leadstar_benefits_html")) updateData.leadstar_benefits_html = offerData.leadstar_benefits_html;
+        updateData.leadstar_logo_url = offerData.leadstar_logo_url;
+        updateData.leadstar_affiliate_url = offerData.leadstar_affiliate_url;
+        if (!lockedFields.includes("affiliate_url")) updateData.affiliate_url = offerData.affiliate_url;
+        updateData.free_first = offerData.free_first;
+        updateData.is_active = true;
+        updateData.updated_at = offerData.updated_at;
+
+        // Only overwrite offer_name and bank_name for pure leadstar offers (jeśli niezablokowane)
         if (existing.source === "leadstar") {
-          updateData.bank_name = offerData.bank_name;
-          updateData.offer_name = offerData.offer_name;
+          if (!lockedFields.includes("bank_name")) updateData.bank_name = offerData.bank_name;
+          if (!lockedFields.includes("offer_name")) updateData.offer_name = offerData.offer_name;
         }
 
         // Update reward via AI parser:
         // - For "leadstar" source: always update if AI parsed a value
-        // - For "hybrid" source: only update if current reward is 0 (never overwrite manual edits)
-        if (parsedReward !== null && parsedReward >= 0) {
+        // - For "hybrid" source: only update if current reward is 0
+        // - Never update if "reward" is in locked_fields
+        if (parsedReward !== null && parsedReward >= 0 && !lockedFields.includes("reward")) {
           const shouldUpdateReward =
             existing.source === "leadstar" ||
             (existing.source === "hybrid" && (existing.reward === 0 || existing.reward === null));
@@ -128,6 +138,70 @@ export async function runSync() {
           }
         }
 
+        // Wykryj problemy jakości i zaktualizuj quality_flags
+        const effectiveReward = (updateData.reward as number) ?? existing.reward ?? 0;
+        const newQualityFlags: Record<string, unknown> = {
+          ...(existing.quality_flags || {}),
+        };
+
+        const rewardZero = effectiveReward === 0 || effectiveReward === null;
+        const descEmpty = !ls.description || ls.description.trim().length < 30;
+        const benefitsEmpty = !ls.benefits || ls.benefits.trim().length < 30;
+
+        newQualityFlags.reward_zero = rewardZero;
+        newQualityFlags.description_empty = descEmpty;
+        newQualityFlags.benefits_empty = benefitsEmpty;
+
+        if (rewardZero || descEmpty) {
+          qualityIssues++;
+
+          // Próbuj scrapować stronę docelową jeśli jeszcze nie dzisiaj i mamy limit
+          const today = new Date().toISOString().slice(0, 10);
+          const lastScraped = newQualityFlags.last_scraped_at as string | undefined;
+          const alreadyScrapedToday = lastScraped?.startsWith(today);
+
+          if (!alreadyScrapedToday && scrapeAttempts < MAX_SCRAPE_PER_SYNC && ls.url) {
+            scrapeAttempts++;
+            try {
+              const scrapeResult = await scrapeOfferPage(ls.url);
+              if (scrapeResult) {
+                newQualityFlags.last_scraped_at = new Date().toISOString();
+                newQualityFlags.scrape_final_url = scrapeResult.finalUrl;
+
+                if (scrapeResult.skipped) {
+                  newQualityFlags.scrape_failed = true;
+                  newQualityFlags.scrape_failed_reason = scrapeResult.skipped;
+                } else if (scrapeResult.reward !== null && !lockedFields.includes("reward")) {
+                  newQualityFlags.scraped_from_page = true;
+                  newQualityFlags.scrape_failed = false;
+                  newQualityFlags.scrape_reward = scrapeResult.reward;
+                  if (scrapeResult.reward > 0 && effectiveReward === 0) {
+                    updateData.reward = scrapeResult.reward;
+                    rewardsUpdated++;
+                    scraped++;
+                    newQualityFlags.reward_zero = false;
+                  }
+                } else {
+                  newQualityFlags.scrape_failed = true;
+                  newQualityFlags.scrape_failed_reason = "no_reward_found";
+                }
+              } else {
+                newQualityFlags.scrape_failed = true;
+                newQualityFlags.scrape_failed_reason = "fetch_error";
+              }
+            } catch (scrapeErr) {
+              newQualityFlags.scrape_failed = true;
+              newQualityFlags.scrape_failed_reason = String(scrapeErr).slice(0, 100);
+            }
+          }
+        } else {
+          // Oferta jest OK — wyczyść flagi problemów
+          newQualityFlags.reward_zero = false;
+          newQualityFlags.scrape_failed = false;
+        }
+
+        updateData.quality_flags = newQualityFlags;
+
         const { error } = await supabase
           .from("offers")
           .update(updateData)
@@ -137,9 +211,20 @@ export async function runSync() {
         updated++;
       } else {
         // Insert new offer — include AI-parsed reward if available
+        const initialReward = parsedReward ?? 0;
+        const initialQualityFlags: Record<string, unknown> = {
+          reward_zero: initialReward === 0,
+          description_empty: !ls.description || ls.description.trim().length < 30,
+          benefits_empty: !ls.benefits || ls.benefits.trim().length < 30,
+        };
+
+        if (initialReward === 0 || initialQualityFlags.description_empty) qualityIssues++;
+
         const insertData = {
           ...offerData,
-          reward: parsedReward ?? 0,
+          reward: initialReward,
+          locked_fields: [],
+          quality_flags: initialQualityFlags,
         };
         const { error } = await supabase.from("offers").insert(insertData);
         if (error) throw error;
@@ -195,6 +280,8 @@ export async function runSync() {
     deactivated,
     rewards_updated: rewardsUpdated,
     reward_changes: rewardChanges,
+    quality_issues: qualityIssues,
+    scraped_from_pages: scraped,
     ai_parser: hasGemini ? "gemini-flash" : "disabled",
     errors: errors.length,
     duration_ms: duration,

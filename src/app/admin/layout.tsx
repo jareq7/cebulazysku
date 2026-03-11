@@ -16,11 +16,13 @@ import {
   Users,
   Lock,
   Loader2,
+  Table2,
 } from "lucide-react";
 
 const NAV_ITEMS = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
   { href: "/admin/oferty", label: "Oferty", icon: Package },
+  { href: "/admin/feed", label: "Feed / Jakość", icon: Table2 },
   { href: "/admin/uzytkownicy", label: "Użytkownicy", icon: Users },
   { href: "/admin/blog", label: "Blog", icon: FileText },
   { href: "/admin/sync", label: "Sync logi", icon: RefreshCw },
