@@ -234,6 +234,170 @@ function useResizableColumns() {
   return { widths, startResize };
 }
 
+// Wspólny wiersz tabeli
+function OfferRow({
+  offer,
+  widths,
+  onSave,
+  onToggleLock,
+  idx,
+}: {
+  offer: FeedOffer;
+  widths: Record<string, number>;
+  onSave: (id: string, field: EditableField, value: string | number | boolean) => Promise<void>;
+  onToggleLock: (id: string, field: EditableField, locked: boolean) => Promise<void>;
+  idx: number;
+}) {
+  const locked = (field: EditableField) => offer.locked_fields.includes(field);
+  const hasRewardIssue = !!offer.quality_flags.reward_zero;
+  const hasDescIssue = !!offer.quality_flags.description_empty;
+  const offerIsNew = isNew(offer.first_seen_at);
+
+  return (
+    <tr className={`border-b transition-colors hover:bg-muted/30 ${idx % 2 === 0 ? "" : "bg-muted/10"}`}>
+      <td className="px-3 py-2" style={{ width: widths.first_seen_at, minWidth: widths.first_seen_at }}>
+        <div className="flex flex-col gap-0.5">
+          <span className="text-xs text-muted-foreground">
+            {offer.first_seen_at ? new Date(offer.first_seen_at).toLocaleDateString("pl-PL") : "–"}
+          </span>
+          {offerIsNew && (
+            <Badge className="text-[10px] py-0 px-1.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 w-fit">
+              Nowa
+            </Badge>
+          )}
+        </div>
+      </td>
+      <EditableCell offerId={offer.id} field="bank_name" value={offer.bank_name} locked={locked("bank_name")} width={widths.bank_name} onSave={onSave} onToggleLock={onToggleLock} />
+      <EditableCell offerId={offer.id} field="offer_name" value={offer.offer_name} locked={locked("offer_name")} width={widths.offer_name} onSave={onSave} onToggleLock={onToggleLock} />
+      <EditableCell offerId={offer.id} field="reward" value={offer.reward} locked={locked("reward")} hasIssue={hasRewardIssue} width={widths.reward} onSave={onSave} onToggleLock={onToggleLock} />
+      <EditableCell offerId={offer.id} field="short_description" value={offer.short_description || ""} locked={locked("short_description")} hasIssue={hasDescIssue} width={widths.short_description} onSave={onSave} onToggleLock={onToggleLock} />
+      <EditableCell offerId={offer.id} field="difficulty" value={offer.difficulty} locked={locked("difficulty")} width={widths.difficulty} onSave={onSave} onToggleLock={onToggleLock} />
+      <EditableCell offerId={offer.id} field="is_active" value={offer.is_active} locked={false} width={widths.is_active} onSave={onSave} onToggleLock={onToggleLock} />
+      <td className={`px-3 py-2 ${hasDescIssue ? "bg-red-50 dark:bg-red-950/20" : ""}`} style={{ width: widths.leadstar_description_html, minWidth: widths.leadstar_description_html, maxWidth: widths.leadstar_description_html }}>
+        <span className="text-xs text-muted-foreground truncate block" title={offer.leadstar_description_html ? stripHtml(offer.leadstar_description_html) : ""}>
+          {offer.leadstar_description_html ? stripHtml(offer.leadstar_description_html) : <span className="text-red-400 italic">brak</span>}
+        </span>
+      </td>
+      <td className={`px-3 py-2 ${offer.quality_flags.benefits_empty ? "bg-amber-50 dark:bg-amber-950/20" : ""}`} style={{ width: widths.leadstar_benefits_html, minWidth: widths.leadstar_benefits_html, maxWidth: widths.leadstar_benefits_html }}>
+        <span className="text-xs text-muted-foreground truncate block" title={offer.leadstar_benefits_html ? stripHtml(offer.leadstar_benefits_html) : ""}>
+          {offer.leadstar_benefits_html ? stripHtml(offer.leadstar_benefits_html) : <span className="text-amber-400 italic">brak</span>}
+        </span>
+      </td>
+      <td className="px-3 py-2" style={{ width: widths.quality_flags, minWidth: widths.quality_flags }}>
+        <QualityBadges flags={offer.quality_flags} />
+      </td>
+      <td className="px-3 py-2 text-center" style={{ width: widths.affiliate_url, minWidth: widths.affiliate_url }}>
+        {offer.affiliate_url && (
+          <a href={offer.affiliate_url} target="_blank" rel="noopener noreferrer">
+            <ExternalLink className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground mx-auto" />
+          </a>
+        )}
+      </td>
+    </tr>
+  );
+}
+
+function TableHeader({
+  widths,
+  startResize,
+}: {
+  widths: Record<string, number>;
+  startResize: (col: string, e: React.MouseEvent) => void;
+}) {
+  return (
+    <thead>
+      <tr className="border-b bg-muted/50 text-xs text-muted-foreground">
+        {COLUMNS.map((col) => (
+          <th key={col.key} className="relative px-3 py-2 text-left font-medium select-none" style={{ width: widths[col.key], minWidth: widths[col.key] }}>
+            <span className="truncate block pr-2">{col.label}</span>
+            <div className="absolute right-0 top-0 h-full w-2 cursor-col-resize hover:bg-primary/40 active:bg-primary/60 transition-colors" onMouseDown={(e) => startResize(col.key, e)} />
+          </th>
+        ))}
+      </tr>
+    </thead>
+  );
+}
+
+function OffersTable({
+  offers,
+  widths,
+  startResize,
+  onSave,
+  onToggleLock,
+  emptyMessage,
+}: {
+  offers: FeedOffer[];
+  widths: Record<string, number>;
+  startResize: (col: string, e: React.MouseEvent) => void;
+  onSave: (id: string, field: EditableField, value: string | number | boolean) => Promise<void>;
+  onToggleLock: (id: string, field: EditableField, locked: boolean) => Promise<void>;
+  emptyMessage: string;
+}) {
+  return (
+    <div className="overflow-x-auto rounded-lg border">
+      <table className="border-collapse" style={{ tableLayout: "fixed", width: COLUMNS.reduce((s, c) => s + widths[c.key], 0) }}>
+        <TableHeader widths={widths} startResize={startResize} />
+        <tbody>
+          {offers.map((offer, idx) => (
+            <OfferRow key={offer.id} offer={offer} widths={widths} onSave={onSave} onToggleLock={onToggleLock} idx={idx} />
+          ))}
+        </tbody>
+      </table>
+      {offers.length === 0 && (
+        <div className="py-8 text-center text-sm text-muted-foreground">{emptyMessage}</div>
+      )}
+    </div>
+  );
+}
+
+function InactiveOffersTable({
+  offers,
+  widths,
+  onSave,
+  onToggleLock,
+}: {
+  offers: FeedOffer[];
+  widths: Record<string, number>;
+  onSave: (id: string, field: EditableField, value: string | number | boolean) => Promise<void>;
+  onToggleLock: (id: string, field: EditableField, locked: boolean) => Promise<void>;
+}) {
+  const [expanded, setExpanded] = useState(false);
+
+  return (
+    <div className="space-y-2">
+      <button
+        onClick={() => setExpanded((v) => !v)}
+        className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+      >
+        <span className={`transition-transform inline-block ${expanded ? "rotate-90" : ""}`}>▶</span>
+        Nieaktywne / wycofane z feedu ({offers.length})
+        <span className="text-xs font-normal">— ukryte na stronie, nie ma ich w aktualnym feedzie LeadStar</span>
+      </button>
+
+      {expanded && (
+        <div className="overflow-x-auto rounded-lg border border-dashed border-muted-foreground/30">
+          <table className="border-collapse opacity-70" style={{ tableLayout: "fixed", width: COLUMNS.reduce((s, c) => s + widths[c.key], 0) }}>
+            <thead>
+              <tr className="border-b bg-muted/30 text-xs text-muted-foreground">
+                {COLUMNS.map((col) => (
+                  <th key={col.key} className="px-3 py-2 text-left font-medium" style={{ width: widths[col.key], minWidth: widths[col.key] }}>
+                    {col.label}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {offers.map((offer, idx) => (
+                <OfferRow key={offer.id} offer={offer} widths={widths} onSave={onSave} onToggleLock={onToggleLock} idx={idx} />
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function AdminFeedPage() {
   const [offers, setOffers] = useState<FeedOffer[]>([]);
   const [loading, setLoading] = useState(true);
@@ -275,12 +439,12 @@ export default function AdminFeedPage() {
     setOffers((prev) => prev.map((o) => o.id === offerId ? { ...o, locked_fields: newLocked } : o));
   }, [offers]);
 
-  const filtered = offers.filter((o) => {
-    const matchSearch =
-      !search ||
-      o.bank_name.toLowerCase().includes(search.toLowerCase()) ||
-      o.offer_name.toLowerCase().includes(search.toLowerCase());
-    if (!matchSearch) return false;
+  const matchesSearch = (o: FeedOffer) =>
+    !search ||
+    o.bank_name.toLowerCase().includes(search.toLowerCase()) ||
+    o.offer_name.toLowerCase().includes(search.toLowerCase());
+
+  const matchesFilter = (o: FeedOffer) => {
     switch (filter) {
       case "issues": return !!(o.quality_flags.reward_zero || o.quality_flags.description_empty);
       case "new": return isNew(o.first_seen_at);
@@ -288,7 +452,10 @@ export default function AdminFeedPage() {
       case "scraped": return !!o.quality_flags.scraped_from_page;
       default: return true;
     }
-  });
+  };
+
+  const activeOffers = offers.filter((o) => o.is_active && matchesSearch(o) && matchesFilter(o));
+  const inactiveOffers = offers.filter((o) => !o.is_active && matchesSearch(o) && matchesFilter(o));
 
   const issuesCount = offers.filter((o) => o.quality_flags.reward_zero || o.quality_flags.description_empty).length;
   const newCount = offers.filter((o) => isNew(o.first_seen_at)).length;
@@ -355,102 +522,25 @@ export default function AdminFeedPage() {
         </div>
       )}
 
-      {/* Tabela */}
-      <div className="overflow-x-auto rounded-lg border">
-        <table className="border-collapse" style={{ tableLayout: "fixed", width: COLUMNS.reduce((s, c) => s + widths[c.key], 0) }}>
-          <thead>
-            <tr className="border-b bg-muted/50 text-xs text-muted-foreground">
-              {COLUMNS.map((col) => (
-                <th
-                  key={col.key}
-                  className="relative px-3 py-2 text-left font-medium select-none"
-                  style={{ width: widths[col.key], minWidth: widths[col.key] }}
-                >
-                  <span className="truncate block pr-2">{col.label}</span>
-                  {/* Drag handle */}
-                  <div
-                    className="absolute right-0 top-0 h-full w-2 cursor-col-resize hover:bg-primary/40 active:bg-primary/60 transition-colors"
-                    onMouseDown={(e) => startResize(col.key, e)}
-                  />
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((offer, idx) => {
-              const locked = (field: EditableField) => offer.locked_fields.includes(field);
-              const hasRewardIssue = !!offer.quality_flags.reward_zero;
-              const hasDescIssue = !!offer.quality_flags.description_empty;
-              const offerIsNew = isNew(offer.first_seen_at);
+      {/* Tabela aktywnych */}
+      <OffersTable
+        offers={activeOffers}
+        widths={widths}
+        startResize={startResize}
+        onSave={saveField}
+        onToggleLock={toggleLock}
+        emptyMessage="Brak aktywnych ofert pasujących do filtrów."
+      />
 
-              return (
-                <tr
-                  key={offer.id}
-                  className={`border-b transition-colors hover:bg-muted/30 ${idx % 2 === 0 ? "" : "bg-muted/10"} ${!offer.is_active ? "opacity-50" : ""}`}
-                >
-                  {/* Pierwsza data */}
-                  <td className="px-3 py-2" style={{ width: widths.first_seen_at, minWidth: widths.first_seen_at }}>
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-xs text-muted-foreground">
-                        {offer.first_seen_at
-                          ? new Date(offer.first_seen_at).toLocaleDateString("pl-PL")
-                          : "–"}
-                      </span>
-                      {offerIsNew && (
-                        <Badge className="text-[10px] py-0 px-1.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 w-fit">
-                          Nowa
-                        </Badge>
-                      )}
-                    </div>
-                  </td>
-
-                  <EditableCell offerId={offer.id} field="bank_name" value={offer.bank_name} locked={locked("bank_name")} width={widths.bank_name} onSave={saveField} onToggleLock={toggleLock} />
-                  <EditableCell offerId={offer.id} field="offer_name" value={offer.offer_name} locked={locked("offer_name")} width={widths.offer_name} onSave={saveField} onToggleLock={toggleLock} />
-                  <EditableCell offerId={offer.id} field="reward" value={offer.reward} locked={locked("reward")} hasIssue={hasRewardIssue} width={widths.reward} onSave={saveField} onToggleLock={toggleLock} />
-                  <EditableCell offerId={offer.id} field="short_description" value={offer.short_description || ""} locked={locked("short_description")} hasIssue={hasDescIssue} width={widths.short_description} onSave={saveField} onToggleLock={toggleLock} />
-                  <EditableCell offerId={offer.id} field="difficulty" value={offer.difficulty} locked={locked("difficulty")} width={widths.difficulty} onSave={saveField} onToggleLock={toggleLock} />
-                  <EditableCell offerId={offer.id} field="is_active" value={offer.is_active} locked={false} width={widths.is_active} onSave={saveField} onToggleLock={toggleLock} />
-
-                  {/* Opis z feedu (read-only) */}
-                  <td className={`px-3 py-2 ${hasDescIssue ? "bg-red-50 dark:bg-red-950/20" : ""}`} style={{ width: widths.leadstar_description_html, minWidth: widths.leadstar_description_html, maxWidth: widths.leadstar_description_html }}>
-                    <span className="text-xs text-muted-foreground truncate block" title={offer.leadstar_description_html ? stripHtml(offer.leadstar_description_html) : ""}>
-                      {offer.leadstar_description_html
-                        ? stripHtml(offer.leadstar_description_html)
-                        : <span className="text-red-400 italic">brak</span>}
-                    </span>
-                  </td>
-
-                  {/* Warunki z feedu (read-only) */}
-                  <td className={`px-3 py-2 ${offer.quality_flags.benefits_empty ? "bg-amber-50 dark:bg-amber-950/20" : ""}`} style={{ width: widths.leadstar_benefits_html, minWidth: widths.leadstar_benefits_html, maxWidth: widths.leadstar_benefits_html }}>
-                    <span className="text-xs text-muted-foreground truncate block" title={offer.leadstar_benefits_html ? stripHtml(offer.leadstar_benefits_html) : ""}>
-                      {offer.leadstar_benefits_html
-                        ? stripHtml(offer.leadstar_benefits_html)
-                        : <span className="text-amber-400 italic">brak</span>}
-                    </span>
-                  </td>
-
-                  {/* Flagi */}
-                  <td className="px-3 py-2" style={{ width: widths.quality_flags, minWidth: widths.quality_flags }}>
-                    <QualityBadges flags={offer.quality_flags} />
-                  </td>
-
-                  {/* Link */}
-                  <td className="px-3 py-2 text-center" style={{ width: widths.affiliate_url, minWidth: widths.affiliate_url }}>
-                    {offer.affiliate_url && (
-                      <a href={offer.affiliate_url} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="h-3.5 w-3.5 text-muted-foreground hover:text-foreground mx-auto" />
-                      </a>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-        {filtered.length === 0 && (
-          <div className="py-10 text-center text-sm text-muted-foreground">Brak ofert pasujących do filtrów.</div>
-        )}
-      </div>
+      {/* Tabela nieaktywnych */}
+      {inactiveOffers.length > 0 && (
+        <InactiveOffersTable
+          offers={inactiveOffers}
+          widths={widths}
+          onSave={saveField}
+          onToggleLock={toggleLock}
+        />
+      )}
 
       <p className="text-[10px] text-muted-foreground">
         🔒 Zablokowane pola nie są nadpisywane przez sync z LeadStar. Hover na komórce → kliknij kłódkę żeby zablokować/odblokować.

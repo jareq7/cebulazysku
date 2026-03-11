@@ -71,7 +71,7 @@ export default async function Home() {
             {[
               { label: "Do obrania", value: `${totalEarnings} zł`, icon: TrendingUp },
               { label: "Ofert do łupienia", value: `${bankOffers.length}`, icon: Sparkles },
-              { label: "Darmowych kont", value: `${bankOffers.filter(o => o.monthlyFee === 0).length}`, icon: Shield },
+              { label: "Darmowych kont", value: `${bankOffers.filter(o => o.monthlyFee === 0 && o.freeIf === null).length}`, icon: Shield },
               { label: "Min. czas", value: "2 mies.", icon: Clock },
             ].map((stat) => (
               <div
