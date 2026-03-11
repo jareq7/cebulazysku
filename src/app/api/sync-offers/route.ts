@@ -69,28 +69,35 @@ export async function runSync() {
         updated_at: new Date().toISOString(),
       };
 
+      // Sprawdź czy oferta istnieje — PRZED wywołaniem AI
+      const { data: existing } = await supabase
+        .from("offers")
+        .select("id, source, reward, locked_fields, quality_flags")
+        .eq("leadstar_id", ls.id)
+        .single();
+
       // Parse reward using Gemini AI (if available)
+      // Wywołuj AI tylko gdy: nowa oferta LUB istniejąca z reward = 0
+      // Dzięki temu sync nie przekracza 60s limitu Vercel
       let parsedReward: number | null = null;
-      if (hasGemini) {
+      const needsAiParsing = hasGemini && (
+        !existing ||                                    // nowa oferta
+        existing.reward === 0 ||                        // brak kwoty
+        existing.reward === null                        // brak kwoty
+      );
+      if (needsAiParsing) {
         try {
           parsedReward = await parseRewardFromDescription(
             ls.programName || ls.product,
             ls.description || "",
             ls.benefits || ""
           );
-          // Rate limit: wait 4s between AI calls (free tier = 20 req/min)
+          // Rate limit: wait 4s between AI calls (free tier = 15 req/min)
           await new Promise((r) => setTimeout(r, 4000));
         } catch (err) {
           errors.push(`AI parse error for ${ls.institution}: ${err instanceof Error ? err.message : String(err)}`);
         }
       }
-
-      // Check if offer exists
-      const { data: existing } = await supabase
-        .from("offers")
-        .select("id, source, reward, locked_fields, quality_flags")
-        .eq("leadstar_id", ls.id)
-        .single();
 
       if (existing) {
         // Update — preserve manually enriched fields
