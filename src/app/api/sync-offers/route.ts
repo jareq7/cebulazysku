@@ -225,6 +225,7 @@ export async function runSync() {
           reward: initialReward,
           locked_fields: [],
           quality_flags: initialQualityFlags,
+          first_seen_at: new Date().toISOString(),
         };
         const { error } = await supabase.from("offers").insert(insertData);
         if (error) throw error;
