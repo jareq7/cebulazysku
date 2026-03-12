@@ -24,7 +24,9 @@ function mapDbOffer(row: any): BankOffer {
     bankColor: row.bank_color || "#6B7280",
     offerName: row.offer_name,
     shortDescription: row.short_description || "",
-    fullDescription: row.full_description || (row.leadstar_description_html ? decodeAndStripHtml(row.leadstar_description_html) : ""),
+    fullDescription: row.full_description
+      ? decodeAndStripHtml(row.full_description)
+      : (row.leadstar_description_html ? decodeAndStripHtml(row.leadstar_description_html) : ""),
     reward: row.reward || 0,
     difficulty: row.difficulty || "medium",
     conditions: Array.isArray(row.conditions) ? row.conditions as Condition[] : [],
