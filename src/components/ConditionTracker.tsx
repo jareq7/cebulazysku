@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useTracker, TrackedOffer } from "@/context/TrackerContext";
+import { useConfetti } from "@/hooks/useConfetti";
 import {
   BankOffer,
   conditionTypeLabels,
@@ -31,6 +32,7 @@ import {
   LogIn,
   Globe,
   Wifi,
+  PartyPopper,
 } from "lucide-react";
 
 const conditionIcons: Record<ConditionType, React.ReactNode> = {
@@ -77,10 +79,14 @@ interface ConditionTrackerProps {
 }
 
 export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
-  const { incrementCondition, decrementCondition, getConditionCount, stopTracking } =
+  const { incrementCondition, decrementCondition, getConditionCount, stopTracking, markPayoutReceived } =
     useTracker();
+  const { fire: fireConfetti } = useConfetti();
   const [expanded, setExpanded] = useState(true);
   const [selectedMonth, setSelectedMonth] = useState(getCurrentMonth());
+  const [showPayoutInput, setShowPayoutInput] = useState(false);
+  const [payoutAmount, setPayoutAmount] = useState<string>("");
+  const prevCompleteRef = useRef<boolean | null>(null);
 
   const maxMonths = Math.max(...offer.conditions.map((c) => c.monthsRequired));
   const months = getMonthsRange(tracked.startedAt, maxMonths);
@@ -103,6 +109,26 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
 
   const progressPercent = totalRequired > 0 ? Math.round((totalDone / totalRequired) * 100) : 0;
   const isComplete = progressPercent === 100;
+  const payoutReceived = !!tracked.payoutReceivedAt;
+
+  // Fire confetti when conditions are first completed in this session
+  useEffect(() => {
+    if (prevCompleteRef.current === null) {
+      prevCompleteRef.current = isComplete;
+      return;
+    }
+    if (isComplete && !prevCompleteRef.current) {
+      fireConfetti("complete");
+    }
+    prevCompleteRef.current = isComplete;
+  }, [isComplete, fireConfetti]);
+
+  const handlePayoutConfirm = async () => {
+    const amount = parseInt(payoutAmount) || offer.reward;
+    await markPayoutReceived(offer.id, amount);
+    fireConfetti("payout");
+    setShowPayoutInput(false);
+  };
 
   return (
     <Card className={`transition-all ${isComplete ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50/50 dark:bg-emerald-950/20" : ""}`}>
@@ -170,13 +196,61 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
           <span className="text-xl font-bold text-emerald-600">
             {offer.reward} zł
           </span>
-          {isComplete && (
+          {payoutReceived ? (
+            <Badge className="bg-amber-100 dark:bg-amber-900/40 text-amber-800 dark:text-amber-300">
+              🧅 Obrana!
+            </Badge>
+          ) : isComplete ? (
             <Badge className="bg-emerald-100 dark:bg-emerald-900/40 text-emerald-800 dark:text-emerald-300">
               <CheckCircle2 className="h-3 w-3 mr-1" />
               Ukończone
             </Badge>
-          )}
+          ) : null}
         </div>
+
+        {/* Payout status */}
+        {payoutReceived ? (
+          <div className="mt-3 flex items-center gap-2 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800 px-4 py-2.5">
+            <span className="text-lg">🧅</span>
+            <div>
+              <p className="text-sm font-semibold text-amber-800 dark:text-amber-300">
+                Premia obrana! +{tracked.payoutAmount ?? offer.reward} zł
+              </p>
+              <p className="text-xs text-amber-600 dark:text-amber-400">
+                {new Date(tracked.payoutReceivedAt!).toLocaleDateString("pl-PL")}
+              </p>
+            </div>
+          </div>
+        ) : isComplete && !showPayoutInput ? (
+          <div className="mt-3">
+            <Button
+              size="sm"
+              className="w-full gap-2 bg-amber-500 hover:bg-amber-600 text-white"
+              onClick={() => setShowPayoutInput(true)}
+            >
+              <PartyPopper className="h-4 w-4" />
+              Premia wpłynęła na konto!
+            </Button>
+          </div>
+        ) : isComplete && showPayoutInput ? (
+          <div className="mt-3 flex gap-2 items-center">
+            <input
+              type="number"
+              className="flex-1 rounded-lg border px-3 py-1.5 text-sm bg-background"
+              placeholder={`Kwota (domyślnie ${offer.reward} zł)`}
+              value={payoutAmount}
+              onChange={(e) => setPayoutAmount(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && handlePayoutConfirm()}
+              autoFocus
+            />
+            <Button size="sm" onClick={handlePayoutConfirm} className="shrink-0">
+              Potwierdź
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => setShowPayoutInput(false)} className="shrink-0">
+              Anuluj
+            </Button>
+          </div>
+        ) : null}
       </CardHeader>
 
       {expanded && (

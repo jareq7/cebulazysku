@@ -11,6 +11,10 @@
     {
       "path": "/api/cron/quality-check",
       "schedule": "0,30 2-7 * * *"
+    },
+    {
+      "path": "/api/cron/email-notifications",
+      "schedule": "0 8 * * *"
     }
   ]
 }

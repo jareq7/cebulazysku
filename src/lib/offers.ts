@@ -10,7 +10,9 @@ function mapDbOffer(row: any): BankOffer {
     id: row.id,
     slug: row.slug,
     bankName: row.bank_name,
-    bankLogo: row.bank_logo || "/banks/default.svg",
+    bankLogo: row.bank_logo
+      ? row.bank_logo.startsWith("//") ? `https:${row.bank_logo}` : row.bank_logo
+      : "/banks/default.svg",
     bankColor: row.bank_color || "#6B7280",
     offerName: row.offer_name,
     shortDescription: row.short_description || "",

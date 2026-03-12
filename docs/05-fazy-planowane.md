@@ -85,51 +85,33 @@
 
 ---
 
-## Faza 3 — Auto-generowanie opisów AI {#faza-3}
+## ~~Faza 3 — Auto-generowanie opisów AI~~ ✅ ZREALIZOWANA
 
-**Cel:** Unikalne, czytelne opisy ofert w cebulowym tonie, generowane automatycznie z surowych danych XML.
+Zaimplementowana 12 marca 2026. Szczegóły: [29-ai-descriptions.md](./29-ai-descriptions.md)
 
-**Podejście:**
-- Przy nowej/zmienionej ofercie → trigger generowania opisów
-- **Claude API** (user ma Claude Pro) z promptem:
-  ```
-  Jesteś copywriterem serwisu CebulaZysku. Pisz w humorystycznym, 
-  przystępnym tonie nawiązującym do cebuli i obierania warstw zysku.
-  
-  Na podstawie poniższych surowych danych z banku, napisz:
-  1. Krótki opis (2-3 zdania, max 200 znaków)
-  2. Pełny opis (3-5 akapitów, przystępny język)
-  3. Lista warunków (jako JSON z polami: label, description, type, requiredCount)
-  4. Lista zalet (3-5 punktów)
-  5. Lista wad (1-3 punktów)
-  
-  Surowe dane: [XML description + benefits]
-  ```
-- Wygenerowane opisy zapisywane w DB (`generated_description`, `generated_short_description`)
-- Regeneracja tylko gdy oferta się zmieni (porównanie hash benefits)
-- Rate limiting — max 5 generacji na minutę
-
-**Alternatywa:** Jeśli API Claude niedostępne, fallback na template engine z wariacjami.
+**Co zrobiono:** Gemini Flash generuje `short_description`, `full_description`, `pros`, `cons`, `faq`, `conditions` w cebulowym tonie. Cron 3× w nocy (1:15/1:30/1:45 UTC), max 3 oferty per run. Sync resetuje `ai_generated_at` gdy treść feedu zmieni się.
 
 ---
 
-## Faza 4 — Filtr „mam konto" + Onboarding {#faza-4}
+## ~~Faza 4 — Filtr „mam konto" + Onboarding~~ ✅ ZREALIZOWANA
 
-**Cel:** Użytkownik oznacza banki w których już ma konto → personalizacja ofert.
+Zaimplementowana 12 marca 2026. Szczegóły: [31-user-banks-onboarding.md](./31-user-banks-onboarding.md)
 
-**Zakres:**
-1. Ekran onboardingu po rejestracji:
-   - „W których bankach masz już konto?" — grid z logo banków + checkboxy
-   - Zapisywane do tabeli `user_banks`
-2. Logika filtrowania:
-   - Oferty na **nowe konto** w bankach z `has_account = true` → **ukryte**
-   - Inne promocje tego banku (karty, lokaty) → **nadal widoczne**
-3. Sekcja w ustawieniach profilu — edycja listy banków
-4. Badge „Masz już konto" na kartach ofert dla oznaczonych banków
+**Co zrobiono:** Tabela `user_banks`, `UserBanksContext`, ekran `/onboarding` po rejestracji, filtr „Ukryj: moje banki" w `OfferFilters`, badge „Masz konto" na kartach, sekcja w dashboardzie.
 
 ---
 
-## Faza 5 — System powiadomień {#faza-5}
+## ~~Faza 5 — System powiadomień~~ ✅ ZREALIZOWANA
+
+Zaimplementowana 12 marca 2026. Szczegóły: [32-email-notifications.md](./32-email-notifications.md)
+
+**Co zrobiono:** Resend API, deadline reminders (7/3/1 dzień), tygodniowy raport (poniedziałki), deduplication via `email_sends`, preferencje opt-in/out w `notification_preferences`. Cron codziennie o 8:00 UTC.
+
+**Wymagana konfiguracja:** `RESEND_API_KEY` + `RESEND_FROM_EMAIL` w Vercel env vars + weryfikacja domeny w Resend.
+
+---
+
+## Faza 5 — archiwum planu {#faza-5}
 
 **Cel:** Użytkownik dostaje maile i push notifications przypominające o warunkach do spełnienia.
 

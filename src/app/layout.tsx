@@ -6,6 +6,7 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { TrackingPixels } from "@/components/TrackingPixels";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
+import { InstallPrompt } from "@/components/InstallPrompt";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -71,6 +72,7 @@ export default function RootLayout({
           Przejdź do treści
         </a>
         <ServiceWorkerRegister />
+        <InstallPrompt />
         <Providers>
           <div className="flex min-h-screen flex-col">
             <Navbar />

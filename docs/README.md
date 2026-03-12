@@ -3,7 +3,7 @@
 > **Domena:** cebulazysku.pl  
 > **Repozytorium:** https://github.com/jareq7/cebulazysku  
 > **Deploy:** Vercel (automatyczny z brancha `main`)  
-> **Ostatnia aktualizacja:** 10 marca 2026 r.
+> **Ostatnia aktualizacja:** 12 marca 2026 r.
 
 ---
 
@@ -40,6 +40,12 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 25 | [Audyt bezpieczeństwa](./25-audyt-bezpieczenstwa.md) | Raport: sekrety, auth, RLS, XSS, dependencies |
 | 26 | [Security Fixes](./26-security-fixes.md) | Szczegółowy opis naprawek + troubleshooting |
 | 27 | [Audyt wizualny](./27-audyt-wizualny.md) | Favicon, logo, OG image, cleanup śmieci z boilerplate |
+| 28 | [Feed Quality Monitor](./28-feed-quality-monitor.md) | Walidacja danych feedu, scraping stron banków, locked_fields |
+| 29 | [AI Auto-generowanie opisów](./29-ai-descriptions.md) | Gemini generuje opisy, pros/cons, FAQ, warunki dla ofert |
+| 30 | [Quality Check Cron](./30-quality-cron.md) | Nocny cron sprawdzający zgodność premii na stronach banków |
+| 31 | [Onboarding + Moje Banki](./31-user-banks-onboarding.md) | Filtr „mam konto", ekran onboardingu, badge na kartach ofert |
+| 32 | [Email notifications](./32-email-notifications.md) | Deadline reminders, tygodniowy raport — Resend + cron |
+| 33 | [Gamifikacja rozszerzona](./33-gamifikacja-extended.md) | Konfetti, status wypłaty premii, program poleceń |
 
 ---
 

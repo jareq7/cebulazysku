@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { SlidersHorizontal } from "lucide-react";
+import { useUserBanks } from "@/context/UserBanksContext";
 
 type Difficulty = "easy" | "medium" | "hard";
 type SortOption = "reward-desc" | "reward-asc" | "deadline" | "difficulty";
@@ -35,6 +36,8 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
   const [activeDifficulties, setActiveDifficulties] = useState<Difficulty[]>([]);
   const [sort, setSort] = useState<SortOption>("reward-desc");
   const [hideYoung, setHideYoung] = useState(false);
+  const [hideMyBanks, setHideMyBanks] = useState(false);
+  const { userBanks, isLoaded: banksLoaded } = useUserBanks();
 
   const toggleDifficulty = (d: Difficulty) => {
     setActiveDifficulties((prev) =>
@@ -51,6 +54,10 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
 
     if (hideYoung) {
       result = result.filter((o) => !o.forYoung);
+    }
+
+    if (hideMyBanks && userBanks.length > 0) {
+      result = result.filter((o) => !userBanks.includes(o.bankName));
     }
 
     switch (sort) {
@@ -75,7 +82,7 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
     }
 
     return result;
-  }, [offers, activeDifficulties, sort, hideYoung]);
+  }, [offers, activeDifficulties, sort, hideYoung, hideMyBanks, userBanks]);
 
   return (
     <div>
@@ -100,6 +107,15 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
           >
             {hideYoung ? "✕ Dla młodych ukryte" : "Ukryj: dla młodych"}
           </Badge>
+          {banksLoaded && userBanks.length > 0 && (
+            <Badge
+              variant={hideMyBanks ? "default" : "outline"}
+              className="cursor-pointer select-none"
+              onClick={() => setHideMyBanks(!hideMyBanks)}
+            >
+              {hideMyBanks ? "✕ Moje banki ukryte" : "Ukryj: moje banki"}
+            </Badge>
+          )}
         </div>
 
         <div className="sm:ml-auto">

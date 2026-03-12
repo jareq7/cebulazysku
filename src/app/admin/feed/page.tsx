@@ -77,7 +77,11 @@ const COLUMNS = [
 ] as const;
 
 function stripHtml(html: string): string {
-  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  return html
+    .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"').replace(/&apos;/g, "'")
+    .replace(/&#?\w+;/g, " ")
+    .replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
 }
 
 function isNew(firstSeenAt: string | null): boolean {
@@ -299,12 +303,12 @@ function OfferRow({
       <EditableCell offerId={offer.id} field="difficulty" value={offer.difficulty} locked={locked("difficulty")} width={widths.difficulty} onSave={onSave} onToggleLock={onToggleLock} />
       <EditableCell offerId={offer.id} field="is_active" value={offer.is_active} locked={false} width={widths.is_active} onSave={onSave} onToggleLock={onToggleLock} />
       <td className={`px-3 py-2 ${hasDescIssue ? "bg-red-50 dark:bg-red-950/20" : ""}`} style={{ width: widths.leadstar_description_html, minWidth: widths.leadstar_description_html, maxWidth: widths.leadstar_description_html }}>
-        <span className="text-xs text-muted-foreground truncate block" title={offer.leadstar_description_html ? stripHtml(offer.leadstar_description_html) : ""}>
+        <span className="text-xs text-muted-foreground block whitespace-pre-wrap break-words">
           {offer.leadstar_description_html ? stripHtml(offer.leadstar_description_html) : <span className="text-red-400 italic">brak</span>}
         </span>
       </td>
       <td className={`px-3 py-2 ${offer.quality_flags.benefits_empty ? "bg-amber-50 dark:bg-amber-950/20" : ""}`} style={{ width: widths.leadstar_benefits_html, minWidth: widths.leadstar_benefits_html, maxWidth: widths.leadstar_benefits_html }}>
-        <span className="text-xs text-muted-foreground truncate block" title={offer.leadstar_benefits_html ? stripHtml(offer.leadstar_benefits_html) : ""}>
+        <span className="text-xs text-muted-foreground block whitespace-pre-wrap break-words">
           {offer.leadstar_benefits_html ? stripHtml(offer.leadstar_benefits_html) : <span className="text-amber-400 italic">brak</span>}
         </span>
       </td>

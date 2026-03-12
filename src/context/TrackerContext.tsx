@@ -13,6 +13,9 @@ export interface TrackedOffer {
   offerId: string;
   startedAt: string;
   conditions: TrackedCondition[];
+  completedAt?: string | null;
+  payoutReceivedAt?: string | null;
+  payoutAmount?: number | null;
 }
 
 interface TrackerContextType {
@@ -24,6 +27,8 @@ interface TrackerContextType {
   incrementCondition: (offerId: string, conditionId: string, month: string) => void;
   decrementCondition: (offerId: string, conditionId: string, month: string) => void;
   getConditionCount: (offerId: string, conditionId: string, month: string) => number;
+  markPayoutReceived: (offerId: string, amount: number) => Promise<void>;
+  totalEarned: number;
 }
 
 const TrackerContext = createContext<TrackerContextType | undefined>(undefined);
@@ -78,6 +83,9 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
           offerId: o.offer_id,
           startedAt: o.started_at,
           conditions,
+          completedAt: o.completed_at ?? null,
+          payoutReceivedAt: o.payout_received_at ?? null,
+          payoutAmount: o.payout_amount ?? null,
         };
       });
 
@@ -271,6 +279,31 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
     [user, supabase]
   );
 
+  const markPayoutReceived = useCallback(
+    async (offerId: string, amount: number) => {
+      if (!user) return;
+      const now = new Date().toISOString();
+      setTrackedOffers((prev) =>
+        prev.map((o) =>
+          o.offerId !== offerId
+            ? o
+            : { ...o, payoutReceivedAt: now, payoutAmount: amount }
+        )
+      );
+      await supabase
+        .from("tracked_offers")
+        .update({ payout_received_at: now, payout_amount: amount })
+        .eq("user_id", user.id)
+        .eq("offer_id", offerId);
+    },
+    [user, supabase]
+  );
+
+  const totalEarned = trackedOffers.reduce(
+    (sum, o) => sum + (o.payoutAmount ?? 0),
+    0
+  );
+
   const getConditionCount = useCallback(
     (offerId: string, conditionId: string, month: string) => {
       const offer = trackedOffers.find((o) => o.offerId === offerId);
@@ -292,6 +325,8 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
         incrementCondition,
         decrementCondition,
         getConditionCount,
+        markPayoutReceived,
+        totalEarned,
       }}
     >
       {children}

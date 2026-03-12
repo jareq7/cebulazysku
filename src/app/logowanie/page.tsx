@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Landmark, Loader2 } from "lucide-react";
+import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -79,6 +80,7 @@ export default function LoginPage() {
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Zaloguj się
             </Button>
+            <SocialAuthButtons />
             <p className="text-sm text-muted-foreground">
               Nie masz konta?{" "}
               <Link href="/rejestracja" className="text-emerald-600 font-medium hover:underline">

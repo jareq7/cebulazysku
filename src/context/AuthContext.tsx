@@ -11,11 +11,14 @@ export interface User {
   createdAt: string;
 }
 
+type OAuthProvider = "google" | "facebook" | "apple";
+
 interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
   register: (name: string, email: string, password: string) => Promise<boolean>;
+  loginWithProvider: (provider: OAuthProvider) => Promise<void>;
   logout: () => void;
 }
 
@@ -77,13 +80,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [supabase.auth]
   );
 
+  const loginWithProvider = useCallback(
+    async (provider: OAuthProvider) => {
+      await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+    },
+    [supabase.auth]
+  );
+
   const logout = useCallback(async () => {
     await supabase.auth.signOut();
     setUser(null);
   }, [supabase.auth]);
 
   return (
-    <AuthContext.Provider value={{ user, isLoading, login, register, logout }}>
+    <AuthContext.Provider value={{ user, isLoading, login, register, loginWithProvider, logout }}>
       {children}
     </AuthContext.Provider>
   );

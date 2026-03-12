@@ -67,10 +67,10 @@
 | 0n | Audyt bezpieczeństwa + poprawki | [25-audyt-bezpieczenstwa.md](./25-audyt-bezpieczenstwa.md), [26-security-fixes.md](./26-security-fixes.md) | ✅ Gotowe | — |
 | 0o | Audyt wizualny (favicon, logo, OG) | [27-audyt-wizualny.md](./27-audyt-wizualny.md) | ✅ Gotowe | — |
 | 0p | Feed Quality Monitor (walidacja + scraping + admin spreadsheet) | [28-feed-quality-monitor.md](./28-feed-quality-monitor.md) | ✅ Gotowe | — |
-| 3 | Auto-generowanie opisów (AI + cebulowy ton) | [05-fazy-planowane.md](./05-fazy-planowane.md#faza-3) | 🔲 Do zrobienia | Wysoki |
-| 4 | Filtr „mam konto" + onboarding | [05-fazy-planowane.md](./05-fazy-planowane.md#faza-4) | 🔲 Do zrobienia | Średni |
-| 5 | Powiadomienia email (Resend) | [05-fazy-planowane.md](./05-fazy-planowane.md#faza-5) | 🔲 Do zrobienia | Średni |
-| 6 | Rozszerzona gamifikacja (konfetti, rankingi, polecenia) | [06-gamifikacja.md](./06-gamifikacja.md) | 🔲 Do zrobienia | Średni |
+| 3 | Auto-generowanie opisów (AI + cebulowy ton) | [29-ai-descriptions.md](./29-ai-descriptions.md) | ✅ Gotowe | — |
+| 4 | Filtr „mam konto" + onboarding | [31-user-banks-onboarding.md](./31-user-banks-onboarding.md) | ✅ Gotowe | — |
+| 5 | Powiadomienia email (Resend) | [32-email-notifications.md](./32-email-notifications.md) | ✅ Gotowe | — |
+| 6 | Rozszerzona gamifikacja (konfetti, status wypłaty, polecenia) | [33-gamifikacja-extended.md](./33-gamifikacja-extended.md) | ✅ Gotowe | — |
 | 7 | Rozbudowa admin panelu (wykresy, logi AI) | [07-admin-panel.md](./07-admin-panel.md) | 🔲 Do zrobienia | Średni |
 | 8 | Aplikacje mobilne (iOS + Android) | [08-mobile.md](./08-mobile.md) | 🔲 Do zrobienia | Planowane |
 | 9 | White-label + multi-branża | [09-white-label.md](./09-white-label.md) | 🔲 Do zrobienia | Planowane |

@@ -223,6 +223,50 @@
 
 ---
 
+## Faza 3 — AI Auto-generowanie opisów ofert
+
+**Co zrobiono:**
+- Moduł `src/lib/generate-offer-content.ts` — prompt Gemini generuje `short_description`, `full_description`, `pros`, `cons`, `faq`, `conditions` w tonie „CebulaZysku"
+- Endpoint `GET/POST /api/cron/generate-descriptions` — przetwarza 3 oferty per run, 4s delay między wywołaniami
+- Schedule: 3× w nocy (1:15, 1:30, 1:45 UTC) = 9 ofert na noc
+- Sync resetuje `ai_generated_at = null` gdy treść feedu zmieni się — oferta trafia do ponownej generacji
+- Migracja `013_ai_descriptions.sql`: kolumna `ai_generated_at` + indeks na oferty czekające na generację
+- Parametr `maxOutputTokens: 3000` w `askGemini()` — rozwiązuje problem ucinania JSON przez Gemini
+- Admin: kolumna „AI opisy", filtr „Bez AI (N)", przycisk ręcznej generacji przeniesiony do zakładki Feed / Jakość
+
+📄 Szczegóły: [29-ai-descriptions.md](./29-ai-descriptions.md)
+
+---
+
+## Faza 4 — Filtr „mam konto" + Onboarding
+
+**Co zrobiono:**
+- Tabela `user_banks` (migracja `014_user_banks.sql`) z RLS — każdy user zarządza tylko swoją listą banków
+- `UserBanksContext` — context z `hasBank()`, `addBank()`, `removeBank()`, `setBanks()`, `isLoaded`
+- Ekran onboardingu `/onboarding` — grid z bankami po rejestracji, zapis w bulk, możliwość pominięcia
+- `rejestracja/page.tsx` — redirect po rejestracji zmieniony z `/dashboard` na `/onboarding`
+- `OfferFilters.tsx` — filtr „Ukryj: moje banki" (widoczny tylko gdy user ma zapisane banki)
+- `OfferCard.tsx` — szara wstążka „Masz konto" na kartach ofert z banków z listy
+- `dashboard/page.tsx` — sekcja „Moje banki" z możliwością usuwania banków i linkiem do edycji
+
+📄 Szczegóły: [31-user-banks-onboarding.md](./31-user-banks-onboarding.md)
+
+---
+
+## Faza 0p — Nocny Quality Check Cron
+
+**Co zrobiono:**
+- Endpoint `GET /api/cron/quality-check` — scraping 5 ofert per run, porównanie kwoty premii ze strony banku vs. bazy
+- 12 uruchomień na noc (co 30 min, 2:00–7:00 UTC) × 5 ofert = 60 sprawdzeń — skaluje się dla dowolnej liczby ofert
+- Flagi wynikowe: `reward_mismatch`, `page_unreachable`, `page_js_only`, `checked_reward`, `last_checked_at`
+- Próg niezgodności: 50 zł (mniejsze różnice ignorowane)
+- Rercheck: oferty sprawdzane nie częściej niż raz na 22h
+- Admin: filtr „Niezgodności" w Feed / Jakość pokazuje oferty z `reward_mismatch` lub `page_unreachable`
+
+📄 Szczegóły: [30-quality-cron.md](./30-quality-cron.md)
+
+---
+
 ## Faza 0n — Audyt bezpieczeństwa + poprawki
 
 **Co zrobiono:**

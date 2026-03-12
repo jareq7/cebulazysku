@@ -23,6 +23,7 @@ import {
   getDifficultyColor,
   ConditionType,
 } from "@/data/banks";
+import { useUserBanks } from "@/context/UserBanksContext";
 
 const iconMap: Record<ConditionType, React.ReactNode> = {
   transfer: <ArrowRightLeft className="h-3.5 w-3.5" />,
@@ -37,6 +38,8 @@ const iconMap: Record<ConditionType, React.ReactNode> = {
 };
 
 export function OfferCard({ offer }: { offer: BankOffer }) {
+  const { hasBank } = useUserBanks();
+  const userHasBank = hasBank(offer.bankName);
   const dlMs = offer.deadline ? new Date(offer.deadline).getTime() : NaN;
   const daysLeft = !isNaN(dlMs)
     ? Math.max(0, Math.ceil((dlMs - Date.now()) / (1000 * 60 * 60 * 24)))
@@ -44,9 +47,14 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
 
   return (
     <Card className="group relative overflow-hidden transition-all hover:shadow-lg hover:-translate-y-1 flex flex-col">
-      {offer.featured && (
+      {offer.featured && !userHasBank && (
         <div className="absolute top-0 right-0 bg-gradient-to-l from-emerald-600 to-green-500 text-white text-xs font-semibold px-3 py-1 rounded-bl-lg">
           Polecane
+        </div>
+      )}
+      {userHasBank && (
+        <div className="absolute top-0 right-0 bg-gradient-to-l from-slate-500 to-slate-400 text-white text-xs font-semibold px-3 py-1 rounded-bl-lg">
+          Masz konto
         </div>
       )}
       <CardHeader className="pb-3">

@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Landmark, Loader2 } from "lucide-react";
+import { SocialAuthButtons } from "@/components/SocialAuthButtons";
 import { Checkbox } from "@/components/ui/checkbox";
 
 export default function RegisterPage() {
@@ -38,7 +39,7 @@ export default function RegisterPage() {
     setLoading(true);
     const success = await register(name, email, password);
     if (success) {
-      router.push("/dashboard");
+      router.push("/onboarding");
     } else {
       setError("Konto z tym adresem email już istnieje.");
     }
@@ -122,6 +123,7 @@ export default function RegisterPage() {
               {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Zarejestruj się
             </Button>
+            <SocialAuthButtons />
             <p className="text-sm text-muted-foreground">
               Masz już konto?{" "}
               <Link href="/logowanie" className="text-emerald-600 font-medium hover:underline">
