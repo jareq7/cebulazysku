@@ -4,6 +4,14 @@ import { bankOffers as staticOffers } from "@/data/banks";
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
+function decodeAndStripHtml(html: string): string {
+  return html
+    .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"').replace(/&apos;/g, "'")
+    .replace(/&#?\w+;/g, " ")
+    .replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapDbOffer(row: any): BankOffer {
   return {
@@ -16,7 +24,7 @@ function mapDbOffer(row: any): BankOffer {
     bankColor: row.bank_color || "#6B7280",
     offerName: row.offer_name,
     shortDescription: row.short_description || "",
-    fullDescription: row.full_description || row.leadstar_description_html || "",
+    fullDescription: row.full_description || (row.leadstar_description_html ? decodeAndStripHtml(row.leadstar_description_html) : ""),
     reward: row.reward || 0,
     difficulty: row.difficulty || "medium",
     conditions: Array.isArray(row.conditions) ? row.conditions as Condition[] : [],
