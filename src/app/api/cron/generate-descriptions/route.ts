@@ -6,8 +6,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-// 3 oferty × ~15s (Gemini + 4s opóźnienie) = ~45s — bezpiecznie w limicie 60s Vercel
-const MAX_PER_RUN = 3;
+// 1 oferta × ~15s generowanie + ~15s weryfikacja (double-check) = ~35s — bezpiecznie w limicie 60s Vercel
+const MAX_PER_RUN = 1;
 
 function isAuthorized(request: NextRequest): boolean {
   const authHeader = request.headers.get("authorization");

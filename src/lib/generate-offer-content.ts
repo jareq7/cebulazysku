@@ -116,30 +116,99 @@ ZASADY:
       return null;
     }
 
-    // Sanitize
-    return {
-      short_description: parsed.short_description.slice(0, 300),
-      full_description: parsed.full_description.slice(0, 3000),
-      pros: parsed.pros.slice(0, 5).map((p) => String(p)),
-      cons: parsed.cons.slice(0, 4).map((c) => String(c)),
-      faq: parsed.faq.slice(0, 6).map((f) => ({
-        question: String(f.question || ""),
-        answer: String(f.answer || ""),
-      })),
-      conditions: parsed.conditions.slice(0, 10).map((c, i) => ({
-        id: String(c.id || `cond_${i + 1}`),
-        label: String(c.label || ""),
-        description: String(c.description || ""),
-        type: (["transaction", "deposit", "login", "setup", "other"].includes(c.type)
-          ? c.type
-          : "other") as GeneratedOfferContent["conditions"][0]["type"],
-        requiredCount: Number(c.requiredCount) || 1,
-        perMonth: Boolean(c.perMonth),
-        monthsRequired: Number(c.monthsRequired) || 1,
-      })),
-    };
+    const sanitized = sanitize(parsed);
+
+    // Double-check: Gemini weryfikuje własną robotę
+    const verified = await verifyOfferContent(
+      sanitized,
+      bankName,
+      offerName,
+      reward,
+      descPlain,
+      benPlain
+    );
+
+    return verified ?? sanitized;
   } catch (err) {
     console.error("generateOfferContent error:", err);
+    return null;
+  }
+}
+
+function sanitize(parsed: GeneratedOfferContent): GeneratedOfferContent {
+  return {
+    short_description: parsed.short_description.slice(0, 300),
+    full_description: parsed.full_description.slice(0, 3000),
+    pros: parsed.pros.slice(0, 5).map((p) => String(p)),
+    cons: parsed.cons.slice(0, 4).map((c) => String(c)),
+    faq: parsed.faq.slice(0, 6).map((f) => ({
+      question: String(f.question || ""),
+      answer: String(f.answer || ""),
+    })),
+    conditions: parsed.conditions.slice(0, 10).map((c, i) => ({
+      id: String(c.id || `cond_${i + 1}`),
+      label: String(c.label || ""),
+      description: String(c.description || ""),
+      type: (["transaction", "deposit", "login", "setup", "other"].includes(c.type)
+        ? c.type
+        : "other") as GeneratedOfferContent["conditions"][0]["type"],
+      requiredCount: Number(c.requiredCount) || 1,
+      perMonth: Boolean(c.perMonth),
+      monthsRequired: Number(c.monthsRequired) || 1,
+    })),
+  };
+}
+
+async function verifyOfferContent(
+  draft: GeneratedOfferContent,
+  bankName: string,
+  offerName: string,
+  reward: number,
+  descPlain: string,
+  benPlain: string
+): Promise<GeneratedOfferContent | null> {
+  const verifyPrompt = `Jesteś redaktorem CebulaZysku.pl. Sprawdź poniższy opis oferty bankowej i popraw ewentualne błędy.
+
+DANE ŹRÓDŁOWE:
+Bank: ${bankName}
+Nazwa oferty: ${offerName}
+Premia: ${reward} zł
+Opis z feedu: ${descPlain}
+Warunki z feedu: ${benPlain}
+
+WYGENEROWANY OPIS DO WERYFIKACJI:
+${JSON.stringify(draft, null, 2)}
+
+SPRAWDŹ I POPRAW:
+1. Czy kwota premii (${reward} zł) jest podana poprawnie wszędzie gdzie się pojawia?
+2. Czy warunki (conditions) są zgodne z "Warunki z feedu"? Czy żadnego nie pominięto?
+3. Czy pros/cons są oparte na faktach z feedu, a nie wymyślone?
+4. Czy short_description mieści się w 220 znakach?
+
+Jeśli wszystko się zgadza — zwróć dokładnie ten sam JSON bez zmian.
+Jeśli są błędy — zwróć poprawiony JSON.
+Odpowiedz WYŁĄCZNIE poprawnym JSON (bez tekstu przed ani po), zachowując dokładnie ten sam schemat.`;
+
+  try {
+    const raw = await askGemini(verifyPrompt, 3000);
+    const jsonStr = extractJson(raw);
+    const parsed = JSON.parse(jsonStr) as GeneratedOfferContent;
+
+    if (
+      typeof parsed.short_description !== "string" ||
+      typeof parsed.full_description !== "string" ||
+      !Array.isArray(parsed.pros) ||
+      !Array.isArray(parsed.cons) ||
+      !Array.isArray(parsed.faq) ||
+      !Array.isArray(parsed.conditions)
+    ) {
+      console.warn("verifyOfferContent: invalid shape, using draft");
+      return null;
+    }
+
+    return sanitize(parsed);
+  } catch (err) {
+    console.warn("verifyOfferContent failed, using draft:", err);
     return null;
   }
 }
