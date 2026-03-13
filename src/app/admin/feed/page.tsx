@@ -79,12 +79,27 @@ const COLUMNS = [
   { key: "affiliate_url", label: "Link", defaultWidth: 50 },
 ] as const;
 
-function stripHtml(html: string): string {
+function decodeHtmlEntities(html: string): string {
+  const namedEntities: Record<string, string> = {
+    "&nbsp;": " ", "&lt;": "<", "&gt;": ">", "&amp;": "&",
+    "&quot;": '"', "&apos;": "'", "&ndash;": "–", "&mdash;": "—",
+    "&laquo;": "«", "&raquo;": "»", "&bull;": "•", "&hellip;": "…",
+    "&trade;": "™", "&copy;": "©", "&reg;": "®", "&euro;": "€",
+    "&pound;": "£", "&yen;": "¥", "&cent;": "¢", "&deg;": "°",
+    "&times;": "×", "&divide;": "÷", "&plusmn;": "±",
+  };
   return html
-    .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"').replace(/&apos;/g, "'")
-    .replace(/&#?\w+;/g, " ")
-    .replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+    .replace(/&[a-zA-Z]+;/g, (match) => namedEntities[match.toLowerCase()] ?? match)
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+}
+
+function stripHtml(html: string): string {
+  return decodeHtmlEntities(html)
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function isNew(firstSeenAt: string | null): boolean {

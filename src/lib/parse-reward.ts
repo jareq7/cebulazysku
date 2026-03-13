@@ -53,18 +53,25 @@ Odpowiedz TYLKO liczbą (bez "zł", bez spacji). Przykłady: 900, 650, 0`;
   }
 }
 
+function decodeHtmlEntities(html: string): string {
+  const namedEntities: Record<string, string> = {
+    "&nbsp;": " ", "&lt;": "<", "&gt;": ">", "&amp;": "&",
+    "&quot;": '"', "&apos;": "'", "&ndash;": "–", "&mdash;": "—",
+    "&bull;": "•", "&hellip;": "…", "&euro;": "€", "&reg;": "®",
+    "&trade;": "™", "&copy;": "©",
+  };
+  return html
+    .replace(/&[a-zA-Z]+;/g, (match) => namedEntities[match.toLowerCase()] ?? " ")
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+}
+
 function stripHtml(html: string): string {
   if (!html) return "";
-  return html
+  return decodeHtmlEntities(html)
     .replace(/<br\s*\/?>/gi, "\n")
     .replace(/<\/?(p|div|li|ul|ol|h[1-6])[^>]*>/gi, "\n")
     .replace(/<[^>]+>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, '"')
-    .replace(/&#?\w+;/g, "")
     .replace(/\s+/g, " ")
     .trim();
 }

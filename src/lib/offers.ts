@@ -4,12 +4,32 @@ import { bankOffers as staticOffers } from "@/data/banks";
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-function decodeAndStripHtml(html: string): string {
+function decodeHtmlEntities(html: string): string {
+  const namedEntities: Record<string, string> = {
+    "&nbsp;": " ", "&lt;": "<", "&gt;": ">", "&amp;": "&",
+    "&quot;": '"', "&apos;": "'", "&ndash;": "–", "&mdash;": "—",
+    "&laquo;": "«", "&raquo;": "»", "&bull;": "•", "&hellip;": "…",
+    "&trade;": "™", "&copy;": "©", "&reg;": "®", "&euro;": "€",
+    "&pound;": "£", "&yen;": "¥", "&cent;": "¢", "&deg;": "°",
+    "&times;": "×", "&divide;": "÷", "&plusmn;": "±",
+    "&frac12;": "½", "&frac14;": "¼", "&frac34;": "¾",
+    "&rarr;": "→", "&larr;": "←", "&uarr;": "↑", "&darr;": "↓",
+    "&szlig;": "ß", "&micro;": "µ",
+  };
   return html
-    .replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"').replace(/&apos;/g, "'")
-    .replace(/&#?\w+;/g, " ")
-    .replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+    // Named entities → proper characters
+    .replace(/&[a-zA-Z]+;/g, (match) => namedEntities[match.toLowerCase()] ?? match)
+    // Numeric entities (decimal &#8217; and hex &#x2019;)
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+}
+
+function decodeAndStripHtml(html: string): string {
+  return decodeHtmlEntities(html)
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,7 +40,7 @@ function mapDbOffer(row: any): BankOffer {
     bankName: row.bank_name,
     bankLogo: row.bank_logo
       ? row.bank_logo.startsWith("//") ? `https:${row.bank_logo}` : row.bank_logo
-      : "/banks/default.svg",
+      : "",
     bankColor: row.bank_color || "#6B7280",
     offerName: row.offer_name,
     shortDescription: row.short_description || "",
@@ -54,18 +74,23 @@ async function supabaseGet(path: string): Promise<unknown[] | null> {
       },
       next: { revalidate: 300 },
     });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      console.error(`[offers] Supabase error: ${res.status} ${res.statusText} for ${path}`);
+      return null;
+    }
     return res.json();
-  } catch {
+  } catch (err) {
+    console.error("[offers] Supabase fetch failed:", err);
     return null;
   }
 }
 
 export async function fetchOffersFromDB(): Promise<BankOffer[]> {
   const data = await supabaseGet(
-    "offers?is_active=eq.true&reward=gt.0&order=reward.desc&select="
+    "offers?is_active=eq.true&reward=gt.0&order=reward.desc&select=*"
   );
   if (!data || !Array.isArray(data) || data.length === 0) {
+    console.warn("[offers] Supabase returned no data, falling back to static offers");
     return staticOffers.filter((o) => o.reward > 0);
   }
   return data.map(mapDbOffer);

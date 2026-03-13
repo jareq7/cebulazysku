@@ -4,17 +4,38 @@ import { useState, useEffect } from "react";
 import type { BankOffer, Condition } from "@/data/banks";
 import { bankOffers as staticOffers } from "@/data/banks";
 
+function decodeAndStripHtml(html: string): string {
+  const namedEntities: Record<string, string> = {
+    "&nbsp;": " ", "&lt;": "<", "&gt;": ">", "&amp;": "&",
+    "&quot;": '"', "&apos;": "'", "&ndash;": "–", "&mdash;": "—",
+    "&bull;": "•", "&hellip;": "…", "&euro;": "€",
+  };
+  return html
+    .replace(/&[a-zA-Z]+;/g, (match) => namedEntities[match.toLowerCase()] ?? match)
+    .replace(/&#(\d+);/g, (_, code) => String.fromCharCode(Number(code)))
+    .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)))
+    .replace(/<br\s*\/?>/gi, "\n")
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function mapDbOffer(row: any): BankOffer {
+  const logo = row.bank_logo
+    ? row.bank_logo.startsWith("//") ? `https:${row.bank_logo}` : row.bank_logo
+    : "";
   return {
     id: row.id,
     slug: row.slug,
     bankName: row.bank_name,
-    bankLogo: row.bank_logo || "/banks/default.svg",
+    bankLogo: logo,
     bankColor: row.bank_color || "#6B7280",
     offerName: row.offer_name,
     shortDescription: row.short_description || "",
-    fullDescription: row.full_description || row.leadstar_description_html || "",
+    fullDescription: row.full_description
+      ? decodeAndStripHtml(row.full_description)
+      : (row.leadstar_description_html ? decodeAndStripHtml(row.leadstar_description_html) : ""),
     reward: row.reward || 0,
     difficulty: row.difficulty || "medium",
     conditions: Array.isArray(row.conditions) ? (row.conditions as Condition[]) : [],
@@ -29,6 +50,7 @@ function mapDbOffer(row: any): BankOffer {
     lastUpdated: row.last_updated || row.updated_at || "",
     bannerUrl: row.banner_url || null,
     forYoung: row.for_young || false,
+    isBusiness: row.is_business || false,
   };
 }
 
