@@ -1,6 +1,8 @@
-// LeadStar XML feed parser
+// LeadStar REST API client (v0.4.3)
 
-const LEADSTAR_URL = process.env.LEADSTAR_FEED_URL || "";
+const PARTNER_ID = process.env.LEADSTAR_PARTNER_ID || "";
+const API_KEY = process.env.LEADSTAR_API_KEY || "";
+const BASE_URL = "https://leadstar.pl/api";
 
 export interface LeadStarOffer {
   id: string;
@@ -11,69 +13,85 @@ export interface LeadStarOffer {
   institution: string;
   programName: string;
   description: string; // HTML
-  benefits: string; // HTML
+  benefits: string;    // HTML
   freeFirst: boolean;
   logo: string;
   url: string; // affiliate link
 }
 
-function getTextContent(element: Element, tagName: string): string {
-  const el = element.getElementsByTagName(tagName)[0];
-  if (!el) return "";
-  return el.textContent?.trim() ?? "";
+interface ApiRow {
+  id: number;
+  product_id: number;
+  product: string;
+  institution: string;
+  logo: string;
+  program_name: string;
+  description?: string;
+  benefits?: string;
+  free_first: number;
+  only_mailing: number;
+  settlement_type: string;
+  url: string;
+  rate1: string;
+  rate2: string;
+  status_txt: string;
+  status: number;
 }
 
-export async function fetchLeadStarOffers(): Promise<LeadStarOffer[]> {
-  if (!LEADSTAR_URL) {
-    throw new Error("LEADSTAR_FEED_URL nie jest ustawione w zmiennych środowiskowych Vercel.");
+interface ApiResponse {
+  info: { status: string; error_msg?: string; rows_count?: number };
+  rows?: ApiRow[];
+}
+
+async function apiPost(endpoint: string, extraParams: Record<string, string | number> = {}): Promise<ApiRow[]> {
+  if (!PARTNER_ID || !API_KEY) {
+    throw new Error("LEADSTAR_PARTNER_ID lub LEADSTAR_API_KEY nie jest ustawione w zmiennych środowiskowych.");
   }
 
-  const response = await fetch(LEADSTAR_URL, {
-    headers: { "User-Agent": "CebulaZysku/1.0" },
+  const params = new URLSearchParams({
+    partner_id: PARTNER_ID,
+    api_key: API_KEY,
+    ...Object.fromEntries(Object.entries(extraParams).map(([k, v]) => [k, String(v)])),
+  });
+
+  const response = await fetch(`${BASE_URL}/${endpoint}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: params.toString(),
   });
 
   if (!response.ok) {
-    throw new Error(`LeadStar fetch failed: ${response.status} ${response.statusText}`);
+    throw new Error(`LeadStar API error: ${response.status} ${response.statusText}`);
   }
 
-  const xmlText = await response.text();
+  const data: ApiResponse = await response.json();
 
-  // Parse XML using DOMParser (available in Edge Runtime / Node 18+)
-  // We use a simple regex-based approach for maximum compatibility
-  const offers: LeadStarOffer[] = [];
-  const itemRegex = /<item>([\s\S]*?)<\/item>/g;
-  let match;
-
-  while ((match = itemRegex.exec(xmlText)) !== null) {
-    const block = match[1];
-    const get = (tag: string): string => {
-      // Handle CDATA
-      const cdataRegex = new RegExp(`<${tag}><!\\[CDATA\\[([\\s\\S]*?)\\]\\]></${tag}>`);
-      const cdataMatch = cdataRegex.exec(block);
-      if (cdataMatch) return cdataMatch[1].trim();
-
-      const simpleRegex = new RegExp(`<${tag}>([\\s\\S]*?)</${tag}>`);
-      const simpleMatch = simpleRegex.exec(block);
-      return simpleMatch ? simpleMatch[1].trim() : "";
-    };
-
-    offers.push({
-      id: get("id"),
-      branchId: get("branch_id"),
-      branch: get("branch"),
-      productId: get("product_id"),
-      product: get("product"),
-      institution: get("institution"),
-      programName: get("program_name"),
-      description: get("description"),
-      benefits: get("benefits"),
-      freeFirst: get("free_first") === "1",
-      logo: get("logo"),
-      url: get("url"),
-    });
+  if (data.info.status !== "ok") {
+    throw new Error(`LeadStar API error: ${data.info.error_msg || "unknown error"}`);
   }
 
-  return offers;
+  return data.rows || [];
+}
+
+export async function fetchLeadStarOffers(): Promise<LeadStarOffer[]> {
+  const rows = await apiPost("programs", { product_id: 0 });
+
+  return rows
+    .filter((row) => row.status === 1 && !row.only_mailing)
+    .map((row): LeadStarOffer => ({
+      id: String(row.id),
+      branchId: "",
+      branch: "",
+      productId: String(row.product_id),
+      product: row.product,
+      institution: row.institution,
+      programName: row.program_name || "",
+      description: row.description || "",
+      benefits: row.benefits || "",
+      freeFirst: row.free_first === 1,
+      logo: row.logo || "",
+      url: row.url || "",
+    }));
 }
 
 // Generate a URL-friendly slug from institution + product
