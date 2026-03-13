@@ -3,7 +3,7 @@
 > **Domena:** cebulazysku.pl  
 > **Repozytorium:** https://github.com/jareq7/cebulazysku  
 > **Deploy:** Vercel (automatyczny z brancha `main`)  
-> **Ostatnia aktualizacja:** 12 marca 2026 r.
+> **Ostatnia aktualizacja:** 13 marca 2026 r.
 
 ---
 
@@ -46,6 +46,9 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 31 | [Onboarding + Moje Banki](./31-user-banks-onboarding.md) | Filtr „mam konto", ekran onboardingu, badge na kartach ofert |
 | 32 | [Email notifications](./32-email-notifications.md) | Deadline reminders, tygodniowy raport — Resend + cron |
 | 33 | [Gamifikacja rozszerzona](./33-gamifikacja-extended.md) | Konfetti, status wypłaty premii, program poleceń |
+| 34 | [Migracja LeadStar API](./34-leadstar-api-migration.md) | Z XML feed na REST API v0.4.3 |
+| 35 | [AI Double-Check](./35-ai-double-check.md) | Weryfikacja wygenerowanych opisów przez drugie wywołanie Gemini |
+| 36 | [Typy ofert i filtry](./36-offer-types-filters.md) | Osobiste / firmowe / dla młodych — filtry i preferencje |
 
 ---
 
