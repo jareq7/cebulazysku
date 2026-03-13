@@ -44,9 +44,12 @@ interface FeedOffer {
   short_description: string | null;
   difficulty: string;
   is_active: boolean;
+  is_business: boolean;
+  for_young: boolean;
   source: string;
   affiliate_url: string | null;
   leadstar_id: string | null;
+  leadstar_product_id: string | null;
   leadstar_description_html: string | null;
   leadstar_benefits_html: string | null;
   locked_fields: string[];
@@ -445,6 +448,8 @@ export default function AdminFeedPage() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "issues" | "new" | "locked" | "scraped" | "mismatch" | "no_ai">("all");
+  const [categoryFilter, setCategoryFilter] = useState<"all" | "personal" | "business" | "young">("all");
+  const [rewardFilter, setRewardFilter] = useState<"all" | "user_reward" | "partner_only">("all");
   const [generating, setGenerating] = useState(false);
   const [generateResult, setGenerateResult] = useState<{ generated?: number; failed?: number; error?: string } | null>(null);
   const { widths, startResize } = useResizableColumns();
@@ -519,8 +524,25 @@ export default function AdminFeedPage() {
     }
   };
 
-  const activeOffers = offers.filter((o) => o.is_active && matchesSearch(o) && matchesFilter(o));
-  const inactiveOffers = offers.filter((o) => !o.is_active && matchesSearch(o) && matchesFilter(o));
+  const matchesCategory = (o: FeedOffer) => {
+    switch (categoryFilter) {
+      case "personal": return !o.is_business && !o.for_young;
+      case "business": return o.is_business;
+      case "young": return o.for_young;
+      default: return true;
+    }
+  };
+
+  const matchesReward = (o: FeedOffer) => {
+    switch (rewardFilter) {
+      case "user_reward": return o.reward > 0;
+      case "partner_only": return o.reward === 0;
+      default: return true;
+    }
+  };
+
+  const activeOffers = offers.filter((o) => o.is_active && matchesSearch(o) && matchesFilter(o) && matchesCategory(o) && matchesReward(o));
+  const inactiveOffers = offers.filter((o) => !o.is_active && matchesSearch(o) && matchesFilter(o) && matchesCategory(o) && matchesReward(o));
 
   const issuesCount = offers.filter((o) => o.quality_flags.reward_zero || o.quality_flags.description_empty).length;
   const newCount = offers.filter((o) => isNew(o.first_seen_at)).length;
@@ -572,34 +594,73 @@ export default function AdminFeedPage() {
       )}
 
       {/* Filtry */}
-      <div className="flex flex-wrap gap-2 items-center">
-        {[
-          { key: "all", label: `Wszystkie (${offers.length})`, color: "" },
-          { key: "new", label: `Nowe (${newCount})`, color: newCount > 0 ? "text-emerald-600" : "" },
-          { key: "issues", label: `Problemy (${issuesCount})`, color: issuesCount > 0 ? "text-red-600" : "" },
-          { key: "locked", label: `Zablokowane (${lockedCount})`, color: "text-amber-600" },
-          { key: "mismatch", label: `Niezgodności (${mismatchCount})`, color: mismatchCount > 0 ? "text-red-600" : "" },
-          { key: "no_ai", label: `Bez AI (${noAiCount})`, color: noAiCount > 0 ? "text-violet-600" : "" },
-          { key: "scraped", label: "Scrapowane", color: "" },
-        ].map(({ key, label, color }) => (
-          <button
-            key={key}
-            onClick={() => setFilter(key as typeof filter)}
-            className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
-              filter === key ? "border-primary bg-primary/5" : "hover:bg-muted/50"
-            } ${color}`}
-          >
-            {label}
-          </button>
-        ))}
-        <div className="relative ml-auto">
-          <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
-          <Input
-            placeholder="Szukaj..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="h-7 pl-7 text-xs w-48"
-          />
+      <div className="space-y-2">
+        <div className="flex flex-wrap gap-2 items-center">
+          {[
+            { key: "all", label: `Wszystkie (${offers.length})`, color: "" },
+            { key: "new", label: `Nowe (${newCount})`, color: newCount > 0 ? "text-emerald-600" : "" },
+            { key: "issues", label: `Problemy (${issuesCount})`, color: issuesCount > 0 ? "text-red-600" : "" },
+            { key: "locked", label: `Zablokowane (${lockedCount})`, color: "text-amber-600" },
+            { key: "mismatch", label: `Niezgodności (${mismatchCount})`, color: mismatchCount > 0 ? "text-red-600" : "" },
+            { key: "no_ai", label: `Bez AI (${noAiCount})`, color: noAiCount > 0 ? "text-violet-600" : "" },
+            { key: "scraped", label: "Scrapowane", color: "" },
+          ].map(({ key, label, color }) => (
+            <button
+              key={key}
+              onClick={() => setFilter(key as typeof filter)}
+              className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                filter === key ? "border-primary bg-primary/5" : "hover:bg-muted/50"
+              } ${color}`}
+            >
+              {label}
+            </button>
+          ))}
+          <div className="relative ml-auto">
+            <Search className="absolute left-2 top-1/2 -translate-y-1/2 h-3 w-3 text-muted-foreground" />
+            <Input
+              placeholder="Szukaj..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="h-7 pl-7 text-xs w-48"
+            />
+          </div>
+        </div>
+
+        {/* Filtry kategorii i nagrody */}
+        <div className="flex flex-wrap gap-2 items-center">
+          <span className="text-xs text-muted-foreground">Kategoria:</span>
+          {([
+            { key: "all", label: "Wszystkie" },
+            { key: "personal", label: "🏠 Osobiste" },
+            { key: "business", label: "🏢 Firmowe" },
+            { key: "young", label: "🎓 Dla młodych" },
+          ] as const).map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => setCategoryFilter(key)}
+              className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                categoryFilter === key ? "border-blue-500 bg-blue-50 dark:bg-blue-950/20 text-blue-700" : "hover:bg-muted/50"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+          <span className="text-xs text-muted-foreground ml-3">Nagroda:</span>
+          {([
+            { key: "all", label: "Wszystkie" },
+            { key: "user_reward", label: "✅ Coś dla usera" },
+            { key: "partner_only", label: "❌ Tylko dla mnie" },
+          ] as const).map(({ key, label }) => (
+            <button
+              key={key}
+              onClick={() => setRewardFilter(key)}
+              className={`rounded-lg border px-3 py-1.5 text-xs font-medium transition-colors ${
+                rewardFilter === key ? "border-emerald-500 bg-emerald-50 dark:bg-emerald-950/20 text-emerald-700" : "hover:bg-muted/50"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
         </div>
       </div>
 
