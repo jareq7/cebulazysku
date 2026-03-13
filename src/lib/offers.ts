@@ -41,6 +41,7 @@ function mapDbOffer(row: any): BankOffer {
     lastUpdated: row.last_updated || row.first_seen_at || row.updated_at || "",
     bannerUrl: row.banner_url || null,
     forYoung: row.for_young || false,
+    isBusiness: row.is_business || false,
   };
 }
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { BankOffer, getDifficultyLabel } from "@/data/banks";
 import { OfferCard } from "@/components/OfferCard";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,8 @@ import {
 } from "@/components/ui/select";
 import { SlidersHorizontal } from "lucide-react";
 import { useUserBanks } from "@/context/UserBanksContext";
+import { useAuth } from "@/context/AuthContext";
+import { createClient } from "@/lib/supabase/client";
 
 type Difficulty = "easy" | "medium" | "hard";
 type SortOption = "reward-desc" | "reward-asc" | "deadline" | "difficulty";
@@ -36,8 +38,48 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
   const [activeDifficulties, setActiveDifficulties] = useState<Difficulty[]>([]);
   const [sort, setSort] = useState<SortOption>("reward-desc");
   const [hideYoung, setHideYoung] = useState(false);
+  const [showBusiness, setShowBusiness] = useState(false);
   const [hideMyBanks, setHideMyBanks] = useState(false);
   const { userBanks, isLoaded: banksLoaded } = useUserBanks();
+  const { user } = useAuth();
+
+  // Wczytaj preferencje użytkownika
+  useEffect(() => {
+    if (!user) return;
+    const supabase = createClient();
+    supabase
+      .from("notification_preferences")
+      .select("show_business, show_young")
+      .eq("user_id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data) {
+          setShowBusiness(data.show_business ?? false);
+          setHideYoung(!(data.show_young ?? true));
+        }
+      });
+  }, [user]);
+
+  const savePrefs = async (key: "show_business" | "show_young", value: boolean) => {
+    if (!user) return;
+    const supabase = createClient();
+    await supabase.from("notification_preferences").upsert(
+      { user_id: user.id, [key]: value },
+      { onConflict: "user_id" }
+    );
+  };
+
+  const toggleBusiness = () => {
+    const next = !showBusiness;
+    setShowBusiness(next);
+    savePrefs("show_business", next);
+  };
+
+  const toggleYoung = () => {
+    const next = !hideYoung;
+    setHideYoung(next);
+    savePrefs("show_young", !next);
+  };
 
   const toggleDifficulty = (d: Difficulty) => {
     setActiveDifficulties((prev) =>
@@ -50,6 +92,11 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
 
     if (activeDifficulties.length > 0) {
       result = result.filter((o) => activeDifficulties.includes(o.difficulty));
+    }
+
+    // Ukryj biznesowe jeśli user nie chce ich widzieć
+    if (!showBusiness) {
+      result = result.filter((o) => !o.isBusiness);
     }
 
     if (hideYoung) {
@@ -101,9 +148,16 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
             </Badge>
           ))}
           <Badge
+            variant={showBusiness ? "default" : "outline"}
+            className="cursor-pointer select-none"
+            onClick={toggleBusiness}
+          >
+            {showBusiness ? "✕ Firmowe widoczne" : "Pokaż: firmowe"}
+          </Badge>
+          <Badge
             variant={hideYoung ? "default" : "outline"}
             className="cursor-pointer select-none"
-            onClick={() => setHideYoung(!hideYoung)}
+            onClick={toggleYoung}
           >
             {hideYoung ? "✕ Dla młodych ukryte" : "Ukryj: dla młodych"}
           </Badge>

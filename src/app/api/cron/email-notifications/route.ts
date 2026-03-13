@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
         user_id,
         offer_id,
         offers!inner (
-          id, slug, bank_name, offer_name, reward, deadline
+          id, slug, bank_name, offer_name, reward, deadline, is_business, for_young
         )
       `)
       .not("offers.deadline", "is", null)
@@ -68,11 +68,15 @@ export async function GET(request: NextRequest) {
       // Fetch notification preferences
       const { data: prefs } = await supabase
         .from("notification_preferences")
-        .select("user_id, email_deadline_reminders")
+        .select("user_id, email_deadline_reminders, show_business, show_young")
         .in("user_id", userIds);
 
       const prefMap = new Map(
-        (prefs || []).map((p) => [p.user_id, p.email_deadline_reminders !== false])
+        (prefs || []).map((p) => [p.user_id, {
+          deadlineReminders: p.email_deadline_reminders !== false,
+          showBusiness: p.show_business === true,
+          showYoung: p.show_young !== false,
+        }])
       );
 
       // Fetch emails + names from auth admin in one pass
@@ -111,8 +115,15 @@ export async function GET(request: NextRequest) {
         const dedupKey = `${row.user_id}|${type}|${row.offer_id}`;
         if (sentSet.has(dedupKey)) { stats.skipped++; continue; }
 
-        const wantsEmail = prefMap.get(row.user_id) !== false; // default true
+        const prefs = prefMap.get(row.user_id);
+        const wantsEmail = prefs ? prefs.deadlineReminders : true;
         if (!wantsEmail) { stats.skipped++; continue; }
+
+        // Pomiń oferty biznesowe/dla młodych jeśli user nie chce ich widzieć
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const offerObj = row.offers as any;
+        if (offerObj?.is_business && prefs && !prefs.showBusiness) { stats.skipped++; continue; }
+        if (offerObj?.for_young && prefs && !prefs.showYoung) { stats.skipped++; continue; }
 
         const email = emailMap.get(row.user_id);
         if (!email) { stats.skipped++; continue; }

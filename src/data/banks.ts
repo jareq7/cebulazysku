@@ -42,6 +42,7 @@ export interface BankOffer {
   lastUpdated: string;
   bannerUrl: string | null;
   forYoung: boolean;
+  isBusiness: boolean;
 }
 
 export const conditionTypeLabels: Record<ConditionType, string> = {
@@ -147,6 +148,7 @@ export const bankOffers: BankOffer[] = [
     lastUpdated: "2026-03-01",
     bannerUrl: null,
     forYoung: false,
+    isBusiness: false,
   },
   {
     id: "ing-konto-promo",
@@ -221,6 +223,7 @@ export const bankOffers: BankOffer[] = [
     lastUpdated: "2026-03-01",
     bannerUrl: null,
     forYoung: false,
+    isBusiness: false,
   },
   {
     id: "santander-promo",
@@ -306,6 +309,7 @@ export const bankOffers: BankOffer[] = [
     lastUpdated: "2026-02-28",
     bannerUrl: null,
     forYoung: false,
+    isBusiness: false,
   },
   {
     id: "pkobp-promo",
@@ -374,6 +378,7 @@ export const bankOffers: BankOffer[] = [
     lastUpdated: "2026-02-25",
     bannerUrl: null,
     forYoung: false,
+    isBusiness: false,
   },
   {
     id: "millennium-promo",
@@ -466,6 +471,7 @@ export const bankOffers: BankOffer[] = [
     lastUpdated: "2026-03-03",
     bannerUrl: null,
     forYoung: false,
+    isBusiness: false,
   },
   {
     id: "bnp-promo",
@@ -525,6 +531,7 @@ export const bankOffers: BankOffer[] = [
     lastUpdated: "2026-02-20",
     bannerUrl: null,
     forYoung: false,
+    isBusiness: false,
   },
   {
     id: "citi-promo",
@@ -594,6 +601,7 @@ export const bankOffers: BankOffer[] = [
     lastUpdated: "2026-02-15",
     bannerUrl: null,
     forYoung: false,
+    isBusiness: false,
   },
   {
     id: "credit-agricole-promo",
@@ -653,6 +661,7 @@ export const bankOffers: BankOffer[] = [
     lastUpdated: "2026-03-05",
     bannerUrl: null,
     forYoung: false,
+    isBusiness: false,
   },
 ];
 

@@ -51,6 +51,7 @@ export async function runSync() {
         leadstar_affiliate_url: ls.url,
         affiliate_url: ls.url,
         free_first: ls.freeFirst,
+        is_business: ls.productId === "12",
         source: "leadstar" as const,
         is_active: true,
         updated_at: new Date().toISOString(),
