@@ -125,17 +125,11 @@ ZASADY:
 
     const sanitized = sanitize(parsed);
 
-    // Double-check: Gemini weryfikuje własną robotę
-    const verified = await verifyOfferContent(
-      sanitized,
-      bankName,
-      offerName,
-      reward,
-      descPlain,
-      benPlain
-    );
+    // Double-check wyłączony — oszczędność tokenów Gemini i czasu (Hobby 60s limit)
+    // const verified = await verifyOfferContent(sanitized, bankName, offerName, reward, descPlain, benPlain);
+    // return verified ?? sanitized;
 
-    return verified ?? sanitized;
+    return sanitized;
   } catch (err) {
     console.error("generateOfferContent error:", err);
     return null;

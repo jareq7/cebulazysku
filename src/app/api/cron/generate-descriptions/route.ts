@@ -6,8 +6,8 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-// Hobby plan: 1 cron/dzień, 60s limit → 1 oferta z double-checkiem (~35s)
-const MAX_PER_RUN = 1;
+// Hobby plan: 1 cron/dzień, 60s limit → 3 oferty bez double-checka (~15s każda)
+const MAX_PER_RUN = 3;
 
 function isAuthorized(request: NextRequest): boolean {
   const authHeader = request.headers.get("authorization");
