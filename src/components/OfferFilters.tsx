@@ -18,6 +18,7 @@ import { createClient } from "@/lib/supabase/client";
 
 type Difficulty = "easy" | "medium" | "hard";
 type SortOption = "reward-desc" | "reward-asc" | "deadline" | "difficulty";
+type AccountType = "personal" | "business" | "both";
 
 const difficulties: Difficulty[] = ["easy", "medium", "hard"];
 
@@ -34,11 +35,17 @@ const difficultyOrder: Record<Difficulty, number> = {
   hard: 3,
 };
 
+const accountTypeLabels: Record<AccountType, string> = {
+  personal: "Osobiste",
+  business: "Firmowe",
+  both: "Oba",
+};
+
 export function OfferFilters({ offers }: { offers: BankOffer[] }) {
   const [activeDifficulties, setActiveDifficulties] = useState<Difficulty[]>([]);
   const [sort, setSort] = useState<SortOption>("reward-desc");
   const [hideYoung, setHideYoung] = useState(false);
-  const [showBusiness, setShowBusiness] = useState(false);
+  const [accountType, setAccountType] = useState<AccountType>("personal");
   const [hideMyBanks, setHideMyBanks] = useState(false);
   const { userBanks, isLoaded: banksLoaded } = useUserBanks();
   const { user } = useAuth();
@@ -49,36 +56,35 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
     const supabase = createClient();
     supabase
       .from("notification_preferences")
-      .select("show_business, show_young")
+      .select("account_type, show_young")
       .eq("user_id", user.id)
       .single()
       .then(({ data }) => {
         if (data) {
-          setShowBusiness(data.show_business ?? false);
+          setAccountType((data.account_type as AccountType) ?? "personal");
           setHideYoung(!(data.show_young ?? true));
         }
       });
   }, [user]);
 
-  const savePrefs = async (key: "show_business" | "show_young", value: boolean) => {
+  const savePrefs = async (updates: Record<string, unknown>) => {
     if (!user) return;
     const supabase = createClient();
     await supabase.from("notification_preferences").upsert(
-      { user_id: user.id, [key]: value },
+      { user_id: user.id, ...updates },
       { onConflict: "user_id" }
     );
   };
 
-  const toggleBusiness = () => {
-    const next = !showBusiness;
-    setShowBusiness(next);
-    savePrefs("show_business", next);
+  const handleAccountType = (type: AccountType) => {
+    setAccountType(type);
+    savePrefs({ account_type: type });
   };
 
   const toggleYoung = () => {
     const next = !hideYoung;
     setHideYoung(next);
-    savePrefs("show_young", !next);
+    savePrefs({ show_young: !next });
   };
 
   const toggleDifficulty = (d: Difficulty) => {
@@ -94,10 +100,12 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
       result = result.filter((o) => activeDifficulties.includes(o.difficulty));
     }
 
-    // Ukryj biznesowe jeśli user nie chce ich widzieć
-    if (!showBusiness) {
+    if (accountType === "personal") {
       result = result.filter((o) => !o.isBusiness);
+    } else if (accountType === "business") {
+      result = result.filter((o) => o.isBusiness);
     }
+    // "both" — bez filtrowania
 
     if (hideYoung) {
       result = result.filter((o) => !o.forYoung);
@@ -129,14 +137,32 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
     }
 
     return result;
-  }, [offers, activeDifficulties, sort, hideYoung, hideMyBanks, userBanks]);
+  }, [offers, activeDifficulties, sort, hideYoung, hideMyBanks, userBanks, accountType]);
 
   return (
     <div>
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-8">
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm font-medium text-muted-foreground">Filtruj:</span>
+
+          {/* Typ konta */}
+          <div className="flex items-center rounded-lg border overflow-hidden">
+            {(["personal", "business", "both"] as AccountType[]).map((type) => (
+              <button
+                key={type}
+                onClick={() => handleAccountType(type)}
+                className={`px-3 py-1 text-xs font-medium transition-colors ${
+                  accountType === type
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted/50 text-muted-foreground"
+                }`}
+              >
+                {accountTypeLabels[type]}
+              </button>
+            ))}
+          </div>
+
           {difficulties.map((d) => (
             <Badge
               key={d}
@@ -147,13 +173,6 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
               {getDifficultyLabel(d)}
             </Badge>
           ))}
-          <Badge
-            variant={showBusiness ? "default" : "outline"}
-            className="cursor-pointer select-none"
-            onClick={toggleBusiness}
-          >
-            {showBusiness ? "✕ Firmowe widoczne" : "Pokaż: firmowe"}
-          </Badge>
           <Badge
             variant={hideYoung ? "default" : "outline"}
             className="cursor-pointer select-none"

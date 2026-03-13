@@ -68,13 +68,13 @@ export async function GET(request: NextRequest) {
       // Fetch notification preferences
       const { data: prefs } = await supabase
         .from("notification_preferences")
-        .select("user_id, email_deadline_reminders, show_business, show_young")
+        .select("user_id, email_deadline_reminders, account_type, show_young")
         .in("user_id", userIds);
 
       const prefMap = new Map(
         (prefs || []).map((p) => [p.user_id, {
           deadlineReminders: p.email_deadline_reminders !== false,
-          showBusiness: p.show_business === true,
+          accountType: (p.account_type as string) ?? "personal",
           showYoung: p.show_young !== false,
         }])
       );
@@ -119,10 +119,12 @@ export async function GET(request: NextRequest) {
         const wantsEmail = prefs ? prefs.deadlineReminders : true;
         if (!wantsEmail) { stats.skipped++; continue; }
 
-        // Pomiń oferty biznesowe/dla młodych jeśli user nie chce ich widzieć
+        // Pomiń oferty niezgodne z typem konta użytkownika
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const offerObj = row.offers as any;
-        if (offerObj?.is_business && prefs && !prefs.showBusiness) { stats.skipped++; continue; }
+        const accountType = prefs?.accountType ?? "personal";
+        if (offerObj?.is_business && accountType === "personal") { stats.skipped++; continue; }
+        if (!offerObj?.is_business && accountType === "business") { stats.skipped++; continue; }
         if (offerObj?.for_young && prefs && !prefs.showYoung) { stats.skipped++; continue; }
 
         const email = emailMap.get(row.user_id);
