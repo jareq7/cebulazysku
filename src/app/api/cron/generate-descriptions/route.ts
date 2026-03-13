@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 60;
 
-// 1 oferta × ~15s generowanie + ~15s weryfikacja (double-check) = ~35s — bezpiecznie w limicie 60s Vercel
+// Hobby plan: 1 cron/dzień, 60s limit → 1 oferta z double-checkiem (~35s)
 const MAX_PER_RUN = 1;
 
 function isAuthorized(request: NextRequest): boolean {

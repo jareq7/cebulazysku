@@ -6,11 +6,11 @@
     },
     {
       "path": "/api/cron/generate-descriptions",
-      "schedule": "15,30,45 1 * * *"
+      "schedule": "0 2 * * *"
     },
     {
       "path": "/api/cron/quality-check",
-      "schedule": "0,30 2-7 * * *"
+      "schedule": "0 3 * * *"
     },
     {
       "path": "/api/cron/email-notifications",
