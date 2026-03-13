@@ -1,4 +1,4 @@
-import { askGemini } from "./gemini";
+import { askGemini } from "./ai-client";
 
 export interface GeneratedOfferContent {
   short_description: string;

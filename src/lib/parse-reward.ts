@@ -1,4 +1,4 @@
-import { askGemini } from "./gemini";
+import { askGemini } from "./ai-client";
 
 /**
  * Extracts the maximum cash bonus (premia) from a LeadStar offer
