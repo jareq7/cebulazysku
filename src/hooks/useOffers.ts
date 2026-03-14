@@ -72,7 +72,7 @@ export function useOffers() {
       .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
-          setOffers(data.map(mapDbOffer));
+          setOffers(data.map(mapDbOffer).filter((o: BankOffer) => o.conditions.length > 0));
         } else {
           setOffers(staticOffers.filter((o) => o.reward > 0));
         }

@@ -93,7 +93,7 @@ export async function fetchOffersFromDB(): Promise<BankOffer[]> {
     console.warn("[offers] Supabase returned no data, falling back to static offers");
     return staticOffers.filter((o) => o.reward > 0);
   }
-  return data.map(mapDbOffer);
+  return data.map(mapDbOffer).filter((o) => o.conditions.length > 0);
 }
 
 export async function fetchOfferBySlug(slug: string): Promise<BankOffer | null> {

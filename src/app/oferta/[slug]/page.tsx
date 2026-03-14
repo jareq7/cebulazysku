@@ -13,6 +13,7 @@ import { Separator } from "@/components/ui/separator";
 import { JsonLd } from "@/components/JsonLd";
 import { OfferTrackingActions } from "@/components/OfferTrackingActions";
 import { OfferCard } from "@/components/OfferCard";
+import { OfferVideoPlayer } from "@/components/OfferVideoPlayer";
 import {
   Clock,
   CheckCircle,
@@ -321,6 +322,18 @@ export default async function OfferDetailPage({
               />
             </CardContent>
           </Card>
+          {offer.conditions.length > 0 && (
+            <OfferVideoPlayer
+              offer={{
+                bankName: offer.bankName,
+                offerName: offer.offerName,
+                reward: offer.reward,
+                conditions: offer.conditions.map((c) => ({ label: c.label })),
+                pros: offer.pros,
+                bankLogo: offer.bankLogo,
+              }}
+            />
+          )}
         </div>
       </div>
 
