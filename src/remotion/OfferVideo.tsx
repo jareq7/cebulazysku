@@ -39,6 +39,29 @@ function hashString(str: string): number {
   return Math.abs(h);
 }
 
+// Map leadmax logo URLs to local files in public/
+const LOGO_MAP: Record<string, string> = {
+  "11ba433a754ca70f6aed29d4f790e85c": "bank-alior.png",
+  "3c8e8b8a1dd9b04abc97a26027b73031": "bank-bnp-paribas.png",
+  "cf160e1084af2f72787e810a48befe4e": "bank-millennium.png",
+  "a463726fae92f533dd737b9385d63c1e": "bank-pekao.png",
+  "10dfa56de1960ea008c2be652b17f69c": "bank-citi.png",
+  "b40e03d2e593ec3b33e22bb56841b13a": "bank-mbank.png",
+  "35c483954cedd015922f0625ad2389b0": "bank-pko.png",
+  "5514d018626451fc12bdd1cbd6a475a2": "bank-santander.png",
+  "41fe60ec1c2758530c172b95cf38d215": "bank-velobank.png",
+};
+
+function resolveLogoSrc(bankLogo: string): string {
+  // Already a local filename
+  if (!bankLogo.includes("/")) return staticFile(bankLogo);
+  // Extract hash from leadmax URL and map to local file
+  const match = bankLogo.match(/([a-f0-9]{32})\.png$/);
+  if (match && LOGO_MAP[match[1]]) return staticFile(LOGO_MAP[match[1]]);
+  // Fallback to URL
+  return bankLogo.startsWith("//") ? `https:${bankLogo}` : bankLogo;
+}
+
 /** Bank logo — local staticFile or letter fallback */
 const BankLogo: React.FC<{
   bankLogo: string; bankName: string; size: number; borderRadius: number; padding?: number;
@@ -55,9 +78,8 @@ const BankLogo: React.FC<{
       </div>
     );
   }
-  const src = bankLogo.startsWith("http") ? bankLogo : staticFile(bankLogo);
   return (
-    <Img src={src} style={{
+    <Img src={resolveLogoSrc(bankLogo)} style={{
       width: size, height: size, borderRadius,
       objectFit: "contain", backgroundColor: "white", padding,
     }} />
