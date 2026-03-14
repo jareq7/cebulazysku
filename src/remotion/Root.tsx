@@ -15,7 +15,8 @@ const defaultProps: OfferVideoProps = {
     "Darmowa karta wielowalutowa",
     "Premia w 30 dni od spełnienia warunków",
   ],
-  bankLogo: "https://leadstar.pl/img/programs/mbank.png",
+  bankLogo: "bank-mbank.png",
+  voiceoverUrl: "/audio/voiceovers/test-mbank.mp3",
 };
 
 export const RemotionRoot: React.FC = () => {
@@ -24,7 +25,7 @@ export const RemotionRoot: React.FC = () => {
       <Composition
         id="OfferVideo"
         component={OfferVideo}
-        durationInFrames={450}
+        durationInFrames={2100}
         fps={30}
         width={1080}
         height={1920}

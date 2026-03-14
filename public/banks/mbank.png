@@ -1,0 +1,850 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml" xml:lang="pl" lang="pl">
+    <head>
+                    <title>LeadStar.pl - najlepszy program partnerski na rynku</title>
+                            <meta name="description" content="Program Partnerski LeadStar.pl oferuje Ci możliwość zarabiania przez Internet. Promuj oferty finansowe i pozafinansowe i zarabiaj wynagrodzenie. Wystarczy że posiadasz swój serwis www, bloga lub jesteś aktywny na jednym z portali społecznościowych. Sprawdź ile możesz z nami zarobić.">
+                            <meta name="keywords" content="program partnerski, afiliacja, zarabianie przez internet, marketing afiliacyjny, program afiliacyjny, system partnerski, praca, oferty, zarabianie, pośrednictwo finansowe, instytucje finansowe, banki, zakupy, telekomunikacja">
+                <link rel="canonical" href="https://leadstar.pl/" />
+        <meta content="LeadStar" name="author">       
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    	<meta name="robots" content="index, follow"/>
+    	<meta content="1 days" name="revisit-after"/>
+    	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <meta property="og:site_name" content="LeadStar.pl" />
+        <meta property="og:url" content="https://leadstar.pl/" />
+        <meta property="og:title" content="LeadStar.pl" />
+        <meta property="og:description" content="Program Partnerski LeadStar.pl oferuje Ci możliwość zarabiania przez Internet. Promuj oferty finansowe i pozafinansowe i zarabiaj wynagrodzenie. Wystarczy że posiadasz swój serwis www, bloga lub jesteś aktywny na jednym z portali społecznościowych. Sprawdź ile możesz z nami zarobić." />
+        <meta property="og:image" content="https://leadstar.pl/images/screen.jpg" />
+                <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+                        <link href="/css/ct_css_92f519b396a33f0f10962901b9e8420b.css" type="text/css" rel="stylesheet" />
+                <link href="//fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;1,400;1,700&family=Barlow:ital,wght@0,400;0,700;1,400;1,700&family=League+Gothic&display=swap" type="text/css" rel="stylesheet" />
+                                        <script type="text/javascript" src="/js/ct_lib_fcef9738f95efba0f2de0b6d15f171b9.js" ></script>
+                
+                                    <script src="https://d3ufa9rkamatdh.cloudfront.net/chatbot.bundle.js?rnd=20250110" defer onload="Chatbot.initChatbot(null)"></script>
+                    
+    </head>
+    <body>
+   
+<header id="header">
+    <div class="container-full mb-5 bg-gray-dark">
+        <div class="container-1200 bg-gray-dark">
+            <div id="header-content">
+                <div class="logo">
+                    <a href="/" title="Strpma główna" aria-label="Strona główna">
+                        <img src="/images/v4/logo.png" alt="LeadStar logo" width="135" height="40">
+                    </a>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <nav id="main-menu">
+                    <ul>
+                        <li><a href="/wydawcy" title="Wydawcy">Wydawcy</a></li>
+                        <li><a href="/reklamodawcy" title="Reklamodawcy">Reklamodawcy</a></li>
+                        <li data-href="kontakt" id="li-kontakt">Kontakt</li>
+                        <li><a href="/baza-wiedzy" title="Wiedza">Baza wiedzy</a></li>
+                        <li class="login menu-link-popup" title="Logowanie" aria-label="Logowanie">Zaloguj się</li>
+                        <li class="menu-link-subpage"><a href="/logowanie" title="Logowanie" aria-label="Logowanie">Zaloguj się</a></li>
+                         
+                            <li class="register menu-registration ">Zarejestruj się</li>
+                                            </ul>
+                </nav>
+            </div>
+        </div>
+    </div>
+<input type="hidden" name="redirect" value="/img/programs/mbank.png" />
+</header><div class="display-none overlay-container"></div>
+<div class="display-none register-window">
+    <a href="#" class="close-popup"></a>
+    <span>Rejestracja</span>
+    <div class="choose-account-type pt-2">Wybierz typ konta:</div>
+    <div class="register-choice pt-2">
+        <ul>
+            <li><a href="/rejestracja_os_fizycznej">osoba<br />fizyczna</a></li><li><a href="/rejestracja_firmy">firma zarejestrowana<br />w Polsce</a></li><li><a href="/rejestracja_firmy_zagr">firma zarejestrowana<br />poza terytorium<br />Polski</a></li>
+        </ul>
+    </div>
+</div>
+
+<div class="display-none login-window">    
+    <div class="login-form login-screen1">
+        <div class="display-none page-after-login-warning">
+        <a href="#" class="close-login-popup"></a>
+        <div class="title">Uwaga</div>
+        <div class="content">Aby otworzyć wybraną stronę zaloguj się najpierw do panelu.</div>
+    </div>
+            <form id="mainForm">
+            <label>Adres e-mail</label>
+            <input type="text" class="border radius padded" name="usr_name" />
+            <label>Hasło <small>(wielkość liter ma znaczenie)</small></label>
+            <input type="password" class="border radius padded" name="usr_pass" maxlength="50" />
+            
+            <div><button id="submit">Zaloguj się</button></div>
+            <div class="recovery-link text-center"><a id="recovery-link">Nie pamiętasz hasła?</a></div>
+            <div class="pt-2 registartion-text-row">Nie masz jeszcze konta? <span class="register">Zarejestruj się!</span></div>
+        </form>
+        <div class="display-none login-important-info">Uwaga: proszę wyłączyć dla naszej strony AdBlocka (uBlock itp.) - może on powodować niepoprawne działanie panelu lub w ogóle brak możliwości zalogowania się.</div>
+    </div>
+    <div class="display-none login-form login-screen2">
+        <form id="recoveryForm">
+            <label>Adres e-mail</label>
+            <input type="text" class="border radius padded" name="email" />
+            <div><button id="submit2">Odzyskaj hasło</button></div>
+        </form>
+        <div class="recovery-link"><a href="#" class="return-link">Powrót do logowania</a></div>
+    </div>
+    <div class="display-none login-form login-screen3">
+        <form id="recoveryForm2">
+            <label>Gdzie przesłać hasło tymczasowe?</label>
+            <button data-id="2" class="constant-width recovery-method">SMSem na mój numer</button>
+            <button data-id="1" class="constant-width recovery-method">Mailem na podany adres</button>
+        </form>
+        <div class="recovery-link"><a href="#" class="return-link">Powrót do logowania</a></div>
+    </div>
+    <div class="display-none login-form login-screen4">
+        <div class="recovery-message"></div>
+        <div class="recovery-link"><a href="#" class="return-link">Powrót do logowania</a></div>
+    </div>
+    <div class="display-none login-form login-screen5">
+        <form id="gaForm">
+            <label>Kod Google Authenticator</label>
+            <input type="text" class="border radius padded" name="ga_code" maxlength="6" />
+            <label><small>Korzystając z aplikacji na swoim smartfonie wprowadź kod Google Authenticatora (6 cyfr).</small></label>
+            <div><button id="submit3">Zaloguj się</button></div>
+        </form>
+        <div class="recovery-link"><a href="#" class="return-link">Powrót</a></div>
+    </div>
+     <div class="display-none login-form login-screen6">
+        <button id="btn-log-mobile">Mobilna</button>
+        <button id="btn-log-desktop">Na komputer</button>
+    </div>
+</div>
+<main id="main-content">
+        <section id="welcome">
+            <div class="container-full pb-5">
+                <div class="container-1200">
+                    <div class="row">
+                        <div class="col-50 col-left">
+                            <h1>Witaj w leadstar</h1>
+                            <p>Nowoczesnym programie partnerskim, <br /><span>który umożliwi Ci zarabianie w internecie</span></p>
+                            <a href="#" class="btn btn-orange register">Przejdź do rejestracji</a>
+                        </div>
+                        <div class="col-50 col-right">
+                            <div class="img-container">
+                                <img src="/images/v4/sg-main-header.png" class="img-welcome" alt="Człowiek z laptopem" width="577" height="595" loading="lazy">
+                                <div class="squares-absolute text-uppercase">
+                                    <div class="square-info bg-burgundy">Wypłata środków <br />już <strong>od&nbsp;1 zł,<br /> nawet w 15 minut</strong></div>
+                                    <div class="square-info bg-white mt-4">Dostęp do około <br /><strong>600 kampanii <br />reklamowych</strong></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- earning Section -->
+        <section id="earning">
+            <div class="container-full">
+                <div class="container-1200">
+                    <div class="row">
+                        <div class="col-50 col-left">
+                            <div class="wrapper bg-gray-dark">
+                                <a href="/wydawcy"><h2>Chcesz zarabiać w internecie?</h2></a>
+
+                                
+                                <div class="mb-4">
+                                    <p>Prosty i intuicyjny panel umożliwia <strong>szybkie rozpoczęcie działalności</strong>, a nasza obsługa gwarantuje <strong>profesjonalne wsparcie</strong>.</p>
+                                </div>
+                                <a href="/wydawcy" class="btn btn-orange">Przejdź do sekcji dla wydawców</a>
+                            </div>
+                        </div>
+                        <div class="col-50 col-right">
+                            <div class="wrapper bg-burgundy">
+                                <a href="/rejestracja" class="register"><h2>Zarabiaj bez wychodzenia z domu!</h2></a>
+                                <div class="mb-4">
+                                    <p>Rejestracja jest <strong>darmowa</strong> – nie czekaj, zacznij budować swoje dodatkowe źródło dochodu z nami!</p>
+                                </div>
+                                <a href="" class="btn btn-orange register">Zarejestruj się już dziś!</a>
+                            </div>  
+                        </div>
+                    </div>
+
+                    <div class="row row-icons pt-5 pb-5">
+                            <div class="col-50">
+                                <div class="col-50">
+                                    <div class="col icon">
+                                        <div class="icon-sprite hammer-icon"></div>
+                                    </div>
+                                    <div class="col text">
+                                        <p>Działamy <strong>zgodnie z prawem</strong></p>
+                                    </div>
+                                </div>
+
+                                <div class="col-50">
+                                    <div class="col icon">
+                                        <div class="icon-sprite money-envelope-icon"></div>
+                                    </div>
+                                    <div class="col text">
+                                        <p>Wypłacamy środki <strong>od razu <br />po akceptacji</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-50">
+                                <div class="col-50">
+                                    <div class="col icon">
+                                        <div class="icon-sprite payout-icon"></div>
+                                    </div>
+                                    <div class="col text">
+                                        <p>Oferujemy <strong>różne formy wypłaty</strong></p>
+                                    </div>
+                                </div>
+                                <div class="col-50">
+                                    <div class="col icon">
+                                        <div class="icon-sprite humans-icon"></div>
+                                    </div>
+                                    <div class="col text">
+                                        <p>Zaufało nam już <strong>kilkadziesiąt tysięcy wydawców</strong></p>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits Section -->
+        <section id="benefits">
+          <div class="container-full bg-gray-dark">
+            <div class="container-1200">
+                    <h2 class="section-h2">Co zyskujesz?</h2>
+                <div class="row">
+                    <div class="col-33 bg-white">
+                        <div class="row">
+                            <div class="col number">
+                                <span>1</span>
+                            </div>
+                            <div class="col text">
+                                <p>Stały dostęp do ok. <strong>600 kampanii reklamowych.</strong></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col number">
+                                <span>2</span>
+                            </div>
+                            <div class="col text">
+                                <p>Możliwość wypłaty środków <strong>już&nbsp;od&nbsp;1 zł, nawet w 15 minut.</strong></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col number">
+                                <span>3</span>
+                            </div>
+                            <div class="col text">
+                                <p>Możliwość wypłaty środków w różnych formach: <strong>przelew zwykły, przelew ekspresowy, karty podarunkowe.</strong></p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col number">
+                                <span>4</span>
+                            </div>
+                            <div class="col text">
+                                <div>Dostęp do <strong>kilkunastu bezpłatnych narzędzi</strong>, które wesprą Twoją promocję.</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-33 col-image">
+                        <div class="bg-gray-medium">
+                            <div class="img-container">
+                                <img src="/images/v4/img-section-benefits.png" alt="Kobieta przed laptopem"  width="336" height="502" loading="lazy">
+                                <div class="icon-sprite icon-coins"></div> 
+                            </div>
+                            <div class="square-info bg-burgundy">Leadstar to <strong>jeden z&nbsp;największych</strong> programów afiliacyjnych</div>
+                        </div>
+                    </div>
+                    <div class="col-33 bg-burgundy">
+                        <div class="row">
+                            <div class="col number">
+                                <span>5</span>
+                            </div>
+                            <div class="col text">
+                                <p><strong>Poradniki na temat narzędzi AI</strong>, które pomogą Ci rozwijać Twój biznes.</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col number">
+                                <span>6</span>
+                            </div>
+                            <div class="col text">
+                                <p>Dostęp do <strong>autorskiego systemu</strong>, który pomoże Ci w zarabianiu.</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col number">
+                                <span>7</span>
+                            </div>
+                            <div class="col text">
+                                <p><strong>Jasne zasady działania</strong> i&nbsp;raportowania.</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col number">
+                                <span>8</span>
+                            </div>
+                            <div class="col text">
+                                <p>Dostęp do <strong>indywidualnych rabatów</strong> dla naszych wydawców.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <a href="#" class="btn btn-orange mt-5 mb-5 register">
+                        <span>Zarejestruj się za darmo!</span>
+                    </a>
+                </div>
+            </div>
+          </div>
+        </section>
+                    <section id="main-page-knowledge-base">
+                <div class="container-full bg-gray-light pb-5">
+                    <div class="container-1200">
+                        <h2 class="section-h2">Baza Wiedzy</h2>
+                        <div class="row">
+                            <div class="carousel-container carousel-burgundy">
+    <div class="carousel-track">
+                                <div class="carousel-item">
+                <div class="article-wrapper">
+                    <article>
+                        <div class="article-header">
+                                                                                                <div class="article-icon">
+                                        <div class="icon-sprite icon-money-monitor"></div>
+                                    </div>
+                                                                                                                            <div class="article-title">
+                                <h3>Jak zarabiać w mediach społecznościowych z programem partnerskim LeadStar</h3>
+                            </div>
+                        </div>
+                        <div class="article-content">
+                            Chcesz przekształcić swoje profile na Instagramie, TikToku, YouTube czy Facebooku w realne źródło dochodu? W artykule pokazujemy, jak zarabiać w mediach społecznościowych dzięki afiliacji z programem partnerskim LeadStar - od wyboru platformy, przez budowanie zaangażowania odbiorców, aż po konkretne strategie monetyzacji Twoich treści.
+                        </div>
+                    </article>
+                    <div class="read-more-wrapper pt-4">
+                        <a href="/baza-wiedzy/jak-zarabiac-w-mediach-spolecznosciowych-z-programem-partnerskim-leadstar,126">Czytaj dalej »</a>
+                    </div>
+                </div>
+            </div>
+                                            <div class="carousel-item">
+                <div class="article-wrapper">
+                    <article>
+                        <div class="article-header">
+                                                                                                <div class="article-icon">
+                                        <div class="icon-sprite icon-person-cash"></div>
+                                    </div>
+                                                                                                                            <div class="article-title">
+                                <h3>Na czym polega afiliacja</h3>
+                            </div>
+                        </div>
+                        <div class="article-content">
+                            Chcesz zarabiać w internecie, polecając produkty innych firm? Właśnie na tym polega afiliacja – promujesz wybrane produkty lub usługi, a w zamian otrzymujesz prowizję. Nie musisz niczego produkować, magazynować ani wysyłać. W tym artykule wyjaśniamy, jak działa marketing afiliacyjny, jakie role pełnią reklamodawcy, wydawcy i sieci afiliacyjne oraz jakie strategie promocji możesz zastosować – nawet jeśli dopiero zaczynasz i nie masz jeszcze własnej społeczności.
+                        </div>
+                    </article>
+                    <div class="read-more-wrapper pt-4">
+                        <a href="/baza-wiedzy/na-czym-polega-afiliacja,110">Czytaj dalej »</a>
+                    </div>
+                </div>
+            </div>
+                                            <div class="carousel-item">
+                <div class="article-wrapper">
+                    <article>
+                        <div class="article-header">
+                                                                                                <div class="article-icon">
+                                        <div class="icon-sprite icon-setting-second"></div>
+                                    </div>
+
+                                                                                                                            <div class="article-title">
+                                <h3>Narzędzia LeadStar dla osób bez własnej strony internetowej</h3>
+                            </div>
+                        </div>
+                        <div class="article-content">
+                            Brak własnej strony internetowej nie oznacza, że musisz rezygnować z marketingu afiliacyjnego. Dzięki narzędziom dostępnym w LeadStar, możesz z powodzeniem promować produkty i usługi, bez potrzeby inwestowania czasu i zasobów w budowę własnej witryny. W Panelu Wydawcy LeadStar znajdziesz rozwiązania, które pomogą Ci osiągnąć sukces i zwiększyć zarobki, nawet jeśli działasz tylko na platformach społecznościowych. W artykule przedstawiamy trzy sprawdzone metody, które możesz wykorzystać.
+                        </div>
+                    </article>
+                    <div class="read-more-wrapper pt-4">
+                        <a href="/baza-wiedzy/narzedzia-leadstar-dla-osob-bez-wlasnej-strony-internetowej,123">Czytaj dalej »</a>
+                    </div>
+                </div>
+            </div>
+                        </div>
+    <div class="carousel-buttons">
+        <button class="prev" aria-label="Poprzedni"><div class="icon-sprite icon-arrow-left"></div></button>
+        <button class="next" aria-label="Następny"><div class="icon-sprite icon-arrow-right"></div></button>
+    </div>
+</div>
+                        </div>
+                        <div class="row pt-5 pb-5">
+                            <a href="/baza-wiedzy" class="btn btn-orange">Przejdź do bazy wiedzy</a>
+                        </div>
+                        <div class="social-media container">
+<div class="row bg-gray-dark">
+    <div class="col text">Znajdziesz nas również na:</div>
+        <div class="col">
+    <a href="https://www.facebook.com/ProgramPartnerskiLeadStar" target="_blank" rel="noopener" title="Polub nas na Facebooku i bądź na bieżąco z najnowszymi promocjami" aria-label="Polub nas na Facebooku i bądź na bieżąco z najnowszymi promocjami">
+        <div class="icon-sprite icon-facebook"></div>
+    </a>
+</div>
+<div class="col">
+    <a href="https://www.instagram.com/leadstar.pl/" target="_blank" rel="noopener" title="Obserwuj nasz profil na Instagramie" aria-label="Obserwuj nasz profil na Instagramie">
+        <div class="icon-sprite icon-instagram"></div>
+    </a>
+</div>
+<div class="col">
+    <a href="https://www.youtube.com/@Leadstarpl" target="_blank" rel="noopener" title="Śledź nasz kanał na YouTube" aria-label="Śledź nasz kanał na YouTube">
+        <div class="icon-sprite icon-youtube"></div>
+    </a>
+</div>
+<div class="col">
+    <a href="https://www.tiktok.com/@leadstar.pl" target="_blank" rel="noopener" title="Obserwuj nasz profil na TikTok" aria-label="Obserwuj nasz profil na TikTok">
+        <div class="icon-sprite icon-tiktok"></div>
+    </a>
+</div>
+<div class="col">
+    <a href="https://blog-leadstar.pl/" target="_blank" rel="noopener" title="Zobacz nasz blog LeadStar" aria-label="Zobacz nasz blog LeadStar">
+        <div class="icon-sprite icon-blog"></div>
+    </a>
+</div>
+<div class="col">
+    <a href="https://linkedin.com/company/leadstarpl" target="_blank" rel="noopener" title="Zobacz nasz profil na Linkedin" aria-label="Zobacz nasz profil na linkedin">
+        <div class="icon-sprite icon-linkedin"></div>
+    </a>
+</div>
+            </div>
+</div>                    </div>
+                </div>
+            </section>
+                <section id="write-about-us">
+            <div class="container-full bg-gray-medium pb-5">
+                <div class="container-1200">
+                    <h2 class="section-h2">Piszą o nas</h2>
+                    <div class="row">
+                                        <div class="col-33 bg-gray-dark">
+                    <div class="quote icon-sprite icon-quote-top"></div>
+                        <div class="text">
+                            Program oferuje pomoc zarówno dla początkujących, jak i&nbsp;dla osób już działających w&nbsp;sieci. Na każdym etapie działania w&nbsp;programie ma się wsparcie opiekuna, który osoby początkujące wprowadzi w&nbsp;świat marketingu, zaś osoby już działające aktywnie w&nbsp;programie kieruje, w&nbsp;taki sposób, by odnosiły wysokie wyniki, a&nbsp;co za tym idzie zgarniały wysokie zarobki.
+                        </div>
+                        <div class="below-text">
+                            <div class="quote icon-sprite icon-quote-bottom"></div>
+                            <div class="sign">
+                                                                <a href="https://kreatywnezaglebie.pl/biznes/program-partnerski-leadstar-pl/" follow="noindex,nofollow" target="_blank" class="press-item">kreatywnezaglebie.pl, <span>2021-07-22</span></a>
+                                                            </div>
+                        </div>
+                    </div>
+                                        <div class="col-33 bg-gray-dark">
+                    <div class="quote icon-sprite icon-quote-top"></div>
+                        <div class="text">
+                            Na rynku działają od stycznia 2018 r., a&nbsp;już skupiają wokół siebie kilkadziesiąt tysięcy wydawców i&nbsp;kilkuset reklamodawców. Cierpliwie i&nbsp;wytrwale budowali swój wizerunek i&nbsp;markę. Dziś mogą szczerze powiedzieć, że epidemia koronawirusa nie miała żadnego wpływu na ich działania. Albo jednak miała: bezsprzecznie pozytywny.
+                        </div>
+                        <div class="below-text">
+                            <div class="quote icon-sprite icon-quote-bottom"></div>
+                            <div class="sign">
+                                                                <a href="https://marketingprzykawie.pl/espresso/recepta-epidemie-wg-leadstar/" follow="noindex,nofollow" target="_blank" class="press-item">marketingprzykawie.pl, <span>2020-06-22</span></a>
+                                                            </div>
+                        </div>
+                    </div>
+                                        <div class="col-33 bg-gray-dark">
+                    <div class="quote icon-sprite icon-quote-top"></div>
+                        <div class="text">
+                            Program partnerski Leadstar oferuje nie tylko dochód pasywny, ale również możliwość zarabiania bez wychodzenia w&nbsp;domu. Działania wykonujesz w&nbsp;domu, korzystając wyłącznie z&nbsp;internetu o&nbsp;dowolnej porze i&nbsp;7 dni w&nbsp;tygodniu. Nikt ani nic Cię nie ogranicza.
+                        </div>
+                        <div class="below-text">
+                            <div class="quote icon-sprite icon-quote-bottom"></div>
+                            <div class="sign">
+                                                                <a href="https://citymag.pl/leadstar-jak-dziala-ten-program-partnerski/" follow="noindex,nofollow" target="_blank" class="press-item">citymag.pl, <span>2020-12-28</span></a>
+                                                            </div>
+                        </div>
+                    </div>
+                                            
+                    </div>
+                </div>  
+            </div>
+        </section>
+        
+      
+
+                    <section id="blog">
+    <div class="container-full bg-white">
+        <div class="container-1200">
+            <h2 class="section-h2">OSTATNIE WPISY Z BLOGA</h2>
+            <div class="row blog-row">
+                                                    <div class="blog-post">
+                        <a href="https://blog-leadstar.pl/2026/03/03/kalkulator-obligacji-skarbowych/" target="_blank">
+                            <div class="post-title">
+                                <h3>Kalkulator obligacji skarbowych</h3>
+                                <div class="content">
+                                    <p>Obligacje Skarbu Państwa od lat niezmiennie są formą stabilnej i bezpiecznej formy lokowania kapitału w Polsce &#8211; gwarantem wypłaty środków jest Skarb Państwa. Oferują ochronę przed inflacją oraz konkurencyjne zyski, szczególnie dla inwestorów długoterminowych. W przypadku nagłej potrzeby wypłaty środków można zrealizować ją bez ponoszenia wysokich opłat. Co ważne, obligacje [&#8230;]</p>
+                                    <div class="read-more-wrapper">
+                                        <span>Czytaj dalej »</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                                                    <div class="blog-post">
+                        <a href="https://blog-leadstar.pl/2026/01/09/bonusy-w-leadstar-styczen-2026/" target="_blank">
+                            <div class="post-title">
+                                <h3>Bonusy w LeadStar – styczeń 2026</h3>
+                                <div class="content">
+                                    <p>Nowy rok to idealny moment, by uporządkować działania afiliacyjne i zacząć generować lepsze wyniki. W styczniu 2026 LeadStar przygotował aż 9 bonusów i konkurs, które pozwalają realnie zwiększyć zarobki bez zmiany strategii.</p>
+                                    <div class="read-more-wrapper">
+                                        <span>Czytaj dalej »</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                                                    <div class="blog-post">
+                        <a href="https://blog-leadstar.pl/2025/12/19/wstaw-i-dzialaj-wstawianie-kodu-narzedzia-w-wordpress/" target="_blank">
+                            <div class="post-title">
+                                <h3>Wstaw i działaj. Wstawianie kodu narzędzia w WordPress</h3>
+                                <div class="content">
+                                    <p>Jeżeli korzystasz z WordPressa oraz edytora blokowego i nie wiesz jak wstawić kod narzędzia, to ten wpis jest właśnie dla Ciebie. Przedstawiamy Ci kompletną instrukcję jak w kilku krokach wstawić kod naszego narzędzia na swojej stronie lub we wpisie blogowym. Instrukcja jest taka sama dla wszystkich narzędzi dostępnych w Panelu [&#8230;]</p>
+                                    <div class="read-more-wrapper">
+                                        <span>Czytaj dalej »</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                                            </div>
+        </div>
+    </div>
+</section>                
+
+                <section>
+            <div class="container-full bg-white pt-5 pb-5">
+                <div class="products-container" id="produkty">
+<div class='bg-gray-dark'>
+    <span>Współpracujemy z:</span>
+    <div class="logo-scroll">
+        <div class="logo-container">
+            <div class="logo-body" data-id="1">
+                <div class="logo-div logo-div1">
+                                                                <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/14a412e98ff6ebb72cc40d3285885edb_1c.png" alt="Vitalia" /></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/7e3f5c0276642ec2004f1bead9591a42_1c.png" alt="Cloth" /></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/377a8dd8ed3b218966d52404d5d7d140_1c.png" alt="Under Armour" /></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/65261abe171f181435ec9e20beb7e533_1c.png" alt="Planeta Klocków" /></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/f47c4124baf110c6a846ba498d698174_1c.png" alt="Just Paul" /></div>
+                                                        </div><div class="logo-div logo-div2">
+                                                                <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/97f2cac51d53382f6946f6d30143bf99_1c.png" alt="Prezent Życia" /></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/be86608636c7161f690693efe3c51fdf_1c.png" alt="Wrangler" /></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/2e8761b4202818116b8e31c5c876576f_1c.png" alt="mamyito.pl" /></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/a0759d757392dfe418854c4f90a873b8_1c.png" alt="Collagen Select" /></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/1450bc980501b7f64ea3ebd79a9fd97f_1c.png" alt="Sensu" /></div>
+                                                        </div><div class="logo-div logo-div3">
+                                                                <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/900d4b82767fbabe6d75a2a54b1a3966_1c.png" alt="Hunkemöller"/></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/69730286b6248bfb57abc2af39ff656c_1c.png" alt="Looktop"/></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/59807f19e334627a3560e6162ab3ac02_1c.png" alt="SweetSen"/></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/5fa13187595afcc805d2302f8b0c5f67_1c.png" alt="OROS"/></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/9f32e6c200b1f3b2bfcce2c84511d124_1c.png" alt="Kredty"/></div>
+                                                        </div><div class="logo-div logo-div4">
+                                                                <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/7f65d815f2fee06ec97fb5ed14baa531_1c.png" alt="Perfumy.pl"/></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/961bc9fcb5884e04de6fcb832e593948_1c.png" alt="Kocham Zabawki"/></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/6427bb5098594563645da6fc58086fa2_1c.png" alt="Coccine"/></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/a06476a7c9bc903972f7872255de521c_1c.png" alt="Musement"/></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/838906790e548c09479122d4d42b8d33_1c.png" alt="Human Lab"/></div>
+                                                        </div><div class="logo-div logo-div5">                                                                 <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/14a412e98ff6ebb72cc40d3285885edb_1c.png" alt="Vitalia"/></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/7e3f5c0276642ec2004f1bead9591a42_1c.png" alt="Cloth"/></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/377a8dd8ed3b218966d52404d5d7d140_1c.png" alt="Under Armour"/></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/65261abe171f181435ec9e20beb7e533_1c.png" alt="Planeta Klocków"/></div>
+                                            <div class="img-frame"><span class="img-helper"></span><img src="//img.leadmax.pl/logo/f47c4124baf110c6a846ba498d698174_1c.png" alt="Just Paul"/></div>
+                                                        </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</div>
+
+            </div>
+        </section>
+        
+        <!-- Sekcja dołącz do nas -->
+<section id="join-us">
+    <div class="container-full bg-gray-dark pt-5 pb-5">
+        <div class="container-1200">
+            <div class="bg-burgundy">
+                <div class="row">
+                    <div class="col">
+                        <div class="icon-sprite icon-person-pencil"></div>
+                    </div>
+                    <div class="col col-right">
+                        <div class="text">Dołącz do grona kilkudziesięciu tysięcy zadowolonych wydawców LeadStar</div>
+                        <div>
+                            <a href="#" class="btn btn-orange register">Zarejestruj się</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+        <!-- Advertiser Section -->
+        <section id="become-advertiser">
+            <div class="container-full bg-gray-medium pb-5">
+                <div class="container-1200">
+                    <h2 class="section-h2">Zostań naszym reklamodawcą</h2>
+                    <div class="row">
+                        <div class="col-50">
+                            <div class="wrapper-big bg-white"> 
+                                <div class="">
+                                    ▸Masz sklep internetowy i chciałbyś <strong>zwiększyć swoją sprzedaż i zyski</strong>?
+                                </div>
+                                <div class="mt-2">
+                                    ▸Masz usługę, którą chciałbyś dodatkowo promować i&nbsp;<strong>zwiększyć swoje zyski?</strong>
+                                </div>
+                            </div>
+                            <div class="wrapper-big bg-burgundy mt-4">
+                                <div>
+                                    Zyskasz <strong>dostęp do kilkudziesięciu tysięcy powierzchni reklamowych,</strong> których właścicielami są nasi wydawcy i&nbsp;na&nbsp;których mogą promować Twoje strony, produkty czy usługi.
+                                </div>
+                            </div>
+                            <div class="mt-5 text-center w-100">
+                                <a href="/reklamodawcy" class="btn btn-orange">Zostań naszym reklamodawcą</a>
+                            </div>
+                        </div>
+                        <div class="col-50 col-right">
+                           <div class="img-container">
+                                <img src="/images/v4/sg-bottom-with-shadow.png" alt="Grafika człowiek w garniturze" loading="lazy" width="459" height="772">
+                                <div class="squares-absolute text-uppercase">
+                                    <div class="square-info bg-burgundy">Zaufało nam już kilkaset firm</div>
+                                    <div class="square-info bg-white mt-4">Działamy na rynku od 2018</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="kontakt">
+    <div class="container-full bg-gray-dark pb-5">
+        <div class="container-1200 foot-container" id="container-contact">
+            <h2 class="section-h2">Kontakt</h2>
+            <div class="wrapper bg-burgundy">
+                <div class="text-above-form text-center text-uppercase bold">Masz pytania? Zapraszamy do kontaktu:</div>
+                <form id="contactForm">
+                    <div class="contactForm">
+                        <div class="contactFormFlex row inputs mt-4 mb-3">
+                            <div class="col-left">
+                                <div class="form-row">
+                                    <input type="text" name="data[name]" placeholder="Imię i nazwisko" tabindex="1">
+                                </div>
+                                <div class="form-row mt-1">
+                                    <input type="tel" name="data[phone]" placeholder="Telefon kontaktowy (opcjonalne)" maxlength="9" tabindex="2">
+                                </div>
+                                <div class="form-row mt-1">
+                                    <input type="text" name="data[email]" placeholder="E-mail" tabindex="3">
+                                </div>
+                            </div>
+                            <div class="col-right form-row">
+                                <textarea name="data[body]" placeholder="Treść wiadomości" tabindex="4"></textarea>
+                            </div>
+                        </div>
+                        <div class="agreement">
+                            Przesyłając do nas zapytanie zgadzasz się na przetwarzanie Twoich danych osobowych przez AJA Media Sp. z o.o., NIP 9542758519, w celu obsługi zapytania, na zasadach określonych w <a href="/politykaprywatnosci" target="_blank" title="Otworzy stronę z polityką prywatności w nowej karcie" aria-label="Zapoznaj się z naszą polityką prywatności">polityce prywatności</a>.
+                        </div>
+                        <div class="d-flex mt-4 justify-content-center">
+                            <button class="btn btn-orange prl-2em" tabindex="5">Wyślij wiadomość</button>
+                        </div>
+                    </div>
+                    <input type="hidden" name="data[subject]" value="">
+                </form>
+            </div>
+        </div>
+    </div>
+</section>        <section id="before-footer">
+    <div class="container-full bg-white pb-5 pt-5">
+        <div class="container-1200">
+            <div class="row">
+                <div class="header">
+                    <span class="toggle-button">Czy program partnerski LeadStar to sieć afiliacyjna?<span class="icon-sprite icon-arrow arrow"></span></span>
+                </div>
+                <div class="text">
+                    Program partnerski to system pośredniczący między wydawcą a reklamodawcą. Nazywany jest także siecią afiliacyjną – pojęcia te można używać wymiennie. Sieć afiliacyjna umożliwia natychmiastową współpracę bez konieczności bezpośredniego kontaktu pomiędzy stronami. Programy partnerskie, takie jak LeadStar, są miejscem dla tysięcy wydawców, którzy mogą promować aktualne oferty reklamodawców, otrzymując za to wynagrodzenie.                        
+                </div>
+            </div>
+            <div class="row pt-3">
+                <div class="header">
+                    <span class="toggle-button">Dla kogo jest współpraca z programem partnerskim?<span class="icon-sprite icon-arrow arrow"></span></span>
+                </div>
+                <div class="text">
+                    Współpraca z programem partnerskim jest dla każdego – niezależnie od tego, czy ma się doświadczenie w zarabianiu przez Internet, czy dopiero zaczyna się swoją przygodę z zarabianiem online. Aby promować marki współpracujące z programem partnerskim, ważne są pomysł i platforma, na której będzie się działać, czyli np. własny blog, kanał na YouTubie/Twitchu, swoje profile w social mediach itd. Należy również pamiętać, aby zawsze zapoznać się z dozwolonymi i zabronionymi działaniami, a także warunkami naliczania wynagrodzenia w kampanii reklamowej, którą chciałoby się promować za pomocą programu partnerskiego.
+                </div>
+            </div>
+            <div class="row pt-3">
+                <div class="header">
+                    <span class="toggle-button">Czy Program Partnerski LeadStar jest bezpieczny?<span class="icon-sprite icon-arrow arrow"></span></span>
+                </div>
+                <div class="text">
+                    LeadStar dba o bezpieczeństwo wszelkich danych podawanych na ich stronach. W tym celu posługuje się między innymi specjalnym certyfikatem SSL, który służy do szyfrowania danych. W adresie Programu Partnerskiego LeadStar można zauważyć "https" – takie oznaczenie gwarantuje przesyłanie danych bezpiecznym protokołem. Co więcej, AJA Media Sp. z o.o. (właściciel Programu Partnerskiego LeadStar.pl), stosuje się do polityki bezpieczeństwa zgodnej m.in. z RODO i aktualnymi przepisami o ochronie danych osobowych oraz innymi ustawami.
+                </div>
+            </div>
+            <div class="row pt-3">
+                <div class="header">
+                    <span class="toggle-button">Zarabianie w programie partnerskim to praca?<span class="icon-sprite icon-arrow arrow"></span></span>
+                </div>
+                <div class="text">
+                    Rejestracja w programie partnerskim i udział w nim nie jest pracą "na etat", a sposobem na dodatkowy zarobek. Program Partnerski LeadStar działa na zasadzie najmu powierzchni reklamowej, z którego należy samodzielnie rozliczyć się z Urzędem Skarbowym. W programie partnerskim chodzi o promowanie wybranych przez siebie produktów lub usług (dostępnych w <a href="https://leadstar.pl/programy/katalog_programow/">Panelu Partnera LeadStar</a>) poprzez swoją stronę www, fora internetowe, media społecznościowe (szczegółowe warunki wypisane są przy każdej kampanii). Za każdy wniosek, który spełni warunki naliczenia wynagrodzenia, otrzymuje się wynagrodzenie określone w panelu – widoczne po zalogowaniu.
+                </div>
+            </div>
+            <div class="row pt-3">
+                <div class="header">
+                    <span class="toggle-button">Najpopularniejsze narzędzia w programie partnerskim LeadStar<span class="icon-sprite icon-arrow arrow"></span></span>
+                </div>
+                <div class="text">
+                    LeadStar oferuje kilkanaście darmowych narzędzi do promowania – od tych najprostszych po te bardziej zaawansowane. Sukcesem promowania jest użycie odpowiednich narzędzi dla danej grupy odbiorców i określonej przestrzeni reklamowej. Oto kilka najbardziej popularnych <a href="https://leadstar.pl/narzedzia">narzędzi w naszej sieci afiliacyjnej</a>:
+                    <ul>
+                        <li>deeplinki</li>
+                        <li>widgety</li>
+                        <li>strony partnerskie</li>
+                        <li>pasaże ofert na stronę</li>
+                        <li>product feedy</li>
+                        <li>paczki XML</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row pt-3">
+                <div class="header">
+                    <span class="toggle-button">Ile można zarobić w programie partnerskim?<span class="icon-sprite icon-arrow arrow"></span></span>
+                </div>
+                <div class="text">
+                    Wydawcy Programu Partnerskiego LeadStar wypłacają miesięcznie nawet ponad 70 tysięcy złotych! Wysokość wynagrodzenia zależy od skali i sposobu pozyskiwania klientów na produkty marek współpracujących z programem partnerskim. Warto pamiętać, że najlepsi Wydawcy ciężko pracują na swoje wyniki, dlatego zaletą będzie chęć do działania i do ciągłego rozwoju. Wyniki najlepszych trzech wydawców można podejrzeć w <a href="https://leadstar.pl/programy/rankingi/">rankingach dostępnych po zalogowaniu</a> się na swoje konto w LeadStar.
+                </div>
+            </div>
+        </div>
+    </div>
+</section>        <div class="container-full pb-5 bg-white">
+        <div class="container-1200">
+        <div class="row">
+            <a href="" class="btn btn-orange register">Zarejestruj się</a>
+        </div>
+    </div>
+</div>
+        
+    </main>
+<div class="display-none message-overlay"></div>
+<div class="display-none message-window">
+    <a href="#" class="close-message"></a>
+    <span class="message-title"></span>
+    <div class="message-body"></div>
+</div>
+<div class="reklama banner adbox rek_kontener" id="block_visible"></div>
+
+<div class="container-full " id="ls-fixed-bottom">
+    <div class="container-1200 d-flex">
+        <div class="col click-hide">
+            <span class="icon-ls-fixed-arrow-down">
+                 <svg width="20" height="12" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg" fill="#F36F21">
+                    <path d="M0 0L5 6L10 0H0Z" />
+                </svg>
+            </span>
+            <span class="icon-ls-fixed-exit mr-1"></span>
+            <span class="ml-1 text-hide">Ukryj</span>
+        </div>
+        <div class="col col-content">
+            <span class="join ml-2">Zarejestruj się i zdobądź kurs za darmo!</span>
+                                    <a href="https://leadstar.pl/baza-wiedzy/dlaczego-warto-zarejestrowac-sie-w-leadstar,134?utm_source=leadstar&utm_content=pasek_leadstar" class="btn btn-orange" target="_blank">Kliknij</a>
+        </div>
+    </div>
+</div>
+
+<div class="container-full   display-none " id="ls-fixed-bottom-show-up">
+    <div class="container-1200">
+        <div class="click-show">
+            <span class=""><svg width="20" height="12" viewBox="0 0 20 12" xmlns="http://www.w3.org/2000/svg" fill="#FFFFFF">
+            <path d="M0 12L10 0L20 12H0Z" />
+          </svg>
+          </span>
+        </div>
+    </div>
+</div>
+
+<style>
+    .chat-button, .chat-box {
+        bottom: 65px;
+    }
+
+    #scrollToTopBtn {
+        bottom: 80px;
+    }
+
+
+</style><footer id="footer">
+    <button id="scrollToTopBtn" title="Do góry" aria-label="Do góry"><div class="icon-sprite icon-arrow-top"></div></button>
+    <div class="container-full bg-gray-dark">
+        <div class="container-1200 pt-2">
+            <div class="row pb-4">
+                <div class="col-25 col-logo"> 
+                    <div class="logo">
+                        <a href="/" title="Strona główna" aria-label="Strona główna">
+                            <img src="/images/v4/logo.png" alt="LeadStar logo"   width="200" height="59">
+                        </a>
+                    </div>
+                </div>
+                <div class="col-25 flex-column">  
+                    <div class="footer-col-header">Pomocne linki</div>
+
+                    <ul class="footer-menu">
+                        <li><a href="/regulamin" >Regulamin</a></li>
+                        <li><a href="/politykaprywatnosci" >Polityka prywatności</a></li>
+                        <li><a href="/faq" >FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="col-33 col-footer-social">
+                    <div class="footer-col-header">Znajdziesz nas również na</div>
+                    <div class="row footer-social">
+                        <div class="col">
+    <a href="https://www.facebook.com/ProgramPartnerskiLeadStar" target="_blank" rel="noopener" title="Polub nas na Facebooku i bądź na bieżąco z najnowszymi promocjami" aria-label="Polub nas na Facebooku i bądź na bieżąco z najnowszymi promocjami">
+        <div class="icon-sprite icon-facebook"></div>
+    </a>
+</div>
+<div class="col">
+    <a href="https://www.instagram.com/leadstar.pl/" target="_blank" rel="noopener" title="Obserwuj nasz profil na Instagramie" aria-label="Obserwuj nasz profil na Instagramie">
+        <div class="icon-sprite icon-instagram"></div>
+    </a>
+</div>
+<div class="col">
+    <a href="https://www.youtube.com/@Leadstarpl" target="_blank" rel="noopener" title="Śledź nasz kanał na YouTube" aria-label="Śledź nasz kanał na YouTube">
+        <div class="icon-sprite icon-youtube"></div>
+    </a>
+</div>
+<div class="col">
+    <a href="https://www.tiktok.com/@leadstar.pl" target="_blank" rel="noopener" title="Obserwuj nasz profil na TikTok" aria-label="Obserwuj nasz profil na TikTok">
+        <div class="icon-sprite icon-tiktok"></div>
+    </a>
+</div>
+<div class="col">
+    <a href="https://blog-leadstar.pl/" target="_blank" rel="noopener" title="Zobacz nasz blog LeadStar" aria-label="Zobacz nasz blog LeadStar">
+        <div class="icon-sprite icon-blog"></div>
+    </a>
+</div>
+<div class="col">
+    <a href="https://linkedin.com/company/leadstarpl" target="_blank" rel="noopener" title="Zobacz nasz profil na Linkedin" aria-label="Zobacz nasz profil na linkedin">
+        <div class="icon-sprite icon-linkedin"></div>
+    </a>
+</div>                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container-full bg-white">
+        <div class="container-1200">
+            <div class="copy">COPYRIGHT © 2026 AJA Media Sp. z o.o. ALL RIGHTS RESERVED.</div>
+        </div>
+    </div>
+</footer>
+    
+</body>
+</html>    
+

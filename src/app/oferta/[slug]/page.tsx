@@ -200,6 +200,29 @@ export default async function OfferDetailPage({
             </CardContent>
           </Card>
 
+          {/* Video */}
+          {offer.conditions.length > 0 && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Oferta w skrócie</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="mx-auto max-w-[360px] sm:max-w-[400px] lg:max-w-[440px]">
+                  <OfferVideoPlayer
+                    offer={{
+                      bankName: offer.bankName,
+                      offerName: offer.offerName,
+                      reward: offer.reward,
+                      conditions: offer.conditions.map((c) => ({ label: c.label })),
+                      pros: offer.pros,
+                      bankLogo: offer.bankLogo,
+                    }}
+                  />
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           {/* Banner */}
           {offer.bannerUrl && (
             <a
@@ -322,18 +345,6 @@ export default async function OfferDetailPage({
               />
             </CardContent>
           </Card>
-          {offer.conditions.length > 0 && (
-            <OfferVideoPlayer
-              offer={{
-                bankName: offer.bankName,
-                offerName: offer.offerName,
-                reward: offer.reward,
-                conditions: offer.conditions.map((c) => ({ label: c.label })),
-                pros: offer.pros,
-                bankLogo: offer.bankLogo,
-              }}
-            />
-          )}
         </div>
       </div>
 

@@ -9,7 +9,7 @@ export function OfferVideoPlayer({ offer }: { offer: OfferVideoProps }) {
       <Player
         component={OfferVideo}
         inputProps={offer}
-        durationInFrames={450}
+        durationInFrames={2100}
         fps={30}
         compositionWidth={1080}
         compositionHeight={1920}
