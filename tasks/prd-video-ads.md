@@ -78,11 +78,51 @@ Moduł generowania profesjonalnych wideo-reklam (9:16, vertical) dla każdej ofe
 
 ## Technical Notes
 
-- **ElevenLabs free tier:** Tylko premade voices (Daniel). Library voices (Rachel) zwracają 402.
+- **ElevenLabs free tier:** Tylko premade voices (Daniel). Library voices (Rachel) zwracają 402. Limit: 10k znaków/mies.
 - **Bank logos:** URL `leadstar.pl/img/programs/` wymaga auth — NIGDY nie używać. Tylko `img.leadmax.pl/logo/`.
 - **Kolumna DB:** `bank_name` (nie `institution`).
-- **Sync voiceover:** `ffmpeg -af silencedetect=noise=-28dB:d=0.5` → helper `s(sec)` w kodzie.
 - **Narracja:** Spokojny, profesjonalny ton. NIE jak baner HTML5. Tłumaczy jak przedszkolakowi.
+
+### Sanityzacja TTS
+
+ElevenLabs czyta skróty dosłownie! Funkcja `sanitizeForTTS()` (w `elevenlabs.ts` i `generate-all-voiceovers.mjs`) zamienia:
+- `5x` → `5 razy` (inaczej czyta "kracht")
+- `min.` → `minimum` (inaczej czyta "min")
+- `mies.` → `miesięcznie`, `zł` → `złotych`, `r.` → `roku`, itd.
+
+### Synchronizacja scen z lektorem
+
+**Problem:** Każdy voiceover ma inną długość (62–70s). Hardcoded timestamps z jednego voiceover nie pasują do innych.
+
+**Rozwiązanie:** Proporcjonalne timingi scen oparte na średniej ~66s:
+
+| Scena | % | Sekundy | Lektor |
+|-------|---|---------|--------|
+| Intro | 0–9% | 0–6s | "X złotych. Tyle możesz dostać..." |
+| Bank | 9–15% | 6–10s | "Żeby dostać premię..." |
+| Warunki | 15–35% | 10–23s | "Po pierwsze... To wszystko." |
+| Problem | 35–57% | 23–37.5s | "Ale... Premia przepada." |
+| Tracker | 57–92% | 37.5–61s | "Cebula Zysku... tracker..." |
+| CTA | 92–100% | 61–70s | "Wejdź na cebulazysku.pl" |
+
+Proporcje działają ponieważ wszystkie voiceovers używają tego samego szablonu skryptu — różnią się tylko nazwą banku i warunkami, więc struktura narracji jest proporcjonalnie spójna.
+
+**Debug:** `ffmpeg -i voiceover.mp3 -af silencedetect=noise=-28dB:d=0.5 -f null - 2>&1 | grep silence`
+
+### Procedura generowania voiceover
+
+1. Sprawdź czy `sanitizeForTTS()` obsługuje wszystkie skróty w warunkach oferty
+2. Uruchom: `ELEVENLABS_API_KEY=... NEXT_PUBLIC_SUPABASE_URL=... NEXT_PUBLIC_SUPABASE_ANON_KEY=... node scripts/generate-all-voiceovers.mjs`
+3. Script skipuje istniejące MP3, zatrzymuje się przy błędzie quota
+4. Pliki lądują w `public/audio/voiceovers/{slug}.mp3`
+5. Strona oferty automatycznie podpina voiceoverUrl (server-side `existsSync` check)
+6. Commit + push → deploy na Vercel (projekt `cebulazysku.pl`)
+
+### Dodawanie nowego banku
+
+1. Pobierz logo: `curl -sL "https://img.leadmax.pl/logo/{hash}.png" -o public/bank-{slug}.png`
+2. Sprawdź: `file public/bank-{slug}.png` (musi być PNG, nie HTML!)
+3. Dodaj hash do `LOGO_MAP` w `src/remotion/OfferVideo.tsx`
 
 ## Success Metrics
 

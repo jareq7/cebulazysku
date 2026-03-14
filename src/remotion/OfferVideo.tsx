@@ -119,53 +119,44 @@ export const OfferVideo: React.FC<any> = ({
       )}
 
       {/*
-        VOICEOVER SYNC MAP (ffmpeg silencedetect -28dB d=0.5):
-        0.0–1.8:   "Siedemset dwadzieścia złotych."
-        2.5–5.5:   "Tyle możesz dostać za założenie konta w mBanku."
-        6.3–9.9:   "Żeby dostać premię, musisz spełnić kilka prostych warunków."
-        10.6–15.3: "Po pierwsze: otwórz konto online. To dosłownie kilka minut."
-        17.1–20.2: "Po drugie: wykonaj cztery transakcje kartą."
-        20.7–22.3: "I po trzecie: ustaw przelew cykliczny."
-        22.9–23.4: "To wszystko."
-        25.2–26.7: "Ale... wiesz jak to jest."
-        26.7–29.3: "Promocja trwa miesiąc. Masz swoje sprawy."
-        30.0–33.6: "I nagle okazuje się, że zapomniałeś o jednym warunku."
-        34.3–38.2: "Premia przepada. A mogłeś mieć 720 złotych."
-        39.1–~42:  "Właśnie dlatego powstała Cebula Zysku."
-        42–51.3:   "Rejestrujesz się... tracker... widzisz co zrobiłeś."
-        52.0–55.4: "Bez podawania danych bankowych. Bez logowania do banku."
-        56.0–61.2: "Po prostu zaznaczasz co zrobiłeś — a my pilnujemy."
-        61.7–63.6: "Krok po kroku. Bez stresu. Za darmo."
-        65.3–68.9: "Wejdź na cebulazysku pe el i zacznij obierać premie."
+        PROPORTIONAL SCENE TIMING (works for voiceovers 62–70s)
+        All voiceovers use the same script template, so structure
+        is proportionally consistent. Based on average ~66s:
+        Intro:      0%–9%   (0–6s)
+        Bank:       9%–15%  (6–10s)
+        Conditions: 15%–35% (10–23s)
+        Problem:    35%–57% (23–37.5s)
+        Tracker:    57%–92% (37.5–61s)
+        CTA:        92%–100% (61–70s)
       */}
 
-      {/* 1. Intro — kwota (0–6.3s) */}
-      <Sequence from={s(0)} durationInFrames={s(6.3)}>
+      {/* 1. Intro — kwota (0–6s) */}
+      <Sequence from={s(0)} durationInFrames={s(6)}>
         <IntroScene reward={reward} />
       </Sequence>
 
-      {/* 2. Bank + "musisz spełnić warunki" (6.3–10.6s) */}
-      <Sequence from={s(6.3)} durationInFrames={s(4.3)}>
+      {/* 2. Bank + "musisz spełnić warunki" (6–10s) */}
+      <Sequence from={s(6)} durationInFrames={s(4)}>
         <BankScene bankName={bankName} bankLogo={bankLogo} offerName={offerName} />
       </Sequence>
 
-      {/* 3. Warunki po kolei (10.6–25.2s) */}
-      <Sequence from={s(10.6)} durationInFrames={s(14.6)}>
+      {/* 3. Warunki po kolei (10–23s) */}
+      <Sequence from={s(10)} durationInFrames={s(13)}>
         <ConditionsScene conditions={conditions} />
       </Sequence>
 
-      {/* 4. Problem — zapominasz (25.2–39.1s) */}
-      <Sequence from={s(25.2)} durationInFrames={s(13.9)}>
+      {/* 4. Problem — zapominasz (23–37.5s) */}
+      <Sequence from={s(23)} durationInFrames={s(14.5)}>
         <ProblemScene reward={reward} />
       </Sequence>
 
-      {/* 5. Rozwiązanie — Cebula Zysku + tracker (39.1–64.1s) */}
-      <Sequence from={s(39.1)} durationInFrames={s(25.0)}>
+      {/* 5. Rozwiązanie — Cebula Zysku + tracker (37.5–61s) */}
+      <Sequence from={s(37.5)} durationInFrames={s(23.5)}>
         <TrackerScene conditions={conditions} bankName={bankName} reward={reward} bankLogo={bankLogo} />
       </Sequence>
 
-      {/* 6. CTA (64.1–69s) */}
-      <Sequence from={s(64.1)} durationInFrames={s(4.9)}>
+      {/* 6. CTA (61–70s) */}
+      <Sequence from={s(61)} durationInFrames={s(9)}>
         <CtaScene reward={reward} />
       </Sequence>
 
@@ -178,18 +169,22 @@ export const OfferVideo: React.FC<any> = ({
 // ─── Watermark ───────────────────────────────────────────────────
 const Watermark: React.FC = () => {
   const frame = useCurrentFrame();
-  const opacity = interpolate(frame, [0, 90], [0, 0.35], { extrapolateRight: "clamp" });
+  const opacity = interpolate(frame, [0, 90], [0, 0.5], { extrapolateRight: "clamp" });
   return (
     <div style={{
-      position: "absolute", top: 40, right: 40,
-      display: "flex", alignItems: "center", gap: 12, opacity,
+      position: "absolute", top: 36, right: 36,
+      display: "flex", alignItems: "center", gap: 14, opacity,
     }}>
       <div style={{
-        width: 52, height: 52, borderRadius: 14,
-        backgroundColor: "rgba(255,255,255,0.9)",
-        display: "flex", alignItems: "center", justifyContent: "center", padding: 5,
+        width: 80, height: 80, borderRadius: 20,
+        backgroundColor: "rgba(255,255,255,0.95)",
+        display: "flex", alignItems: "center", justifyContent: "center", padding: 8,
+        boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
       }}>
-        <Img src={staticFile("logo-icon.png")} style={{ width: 42, height: 42 }} />
+        <Img src={staticFile("logo-icon.png")} style={{ width: 64, height: 64 }} />
+      </div>
+      <div style={{ fontSize: 28, fontWeight: 700, color: "rgba(255,255,255,0.7)" }}>
+        cebulazysku.pl
       </div>
     </div>
   );
@@ -204,7 +199,7 @@ const IntroScene: React.FC<{ reward: number }> = ({ reward }) => {
   const rewardFade = interpolate(frame, [s(0.5), s(1.5)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
   const progress = spring({ frame: Math.max(0, frame - s(0.5)), fps, config: { damping: 20, stiffness: 40 } });
   const displayReward = Math.round(interpolate(progress, [0, 1], [0, reward]));
-  const subtitleFade = interpolate(frame, [s(2.5), s(3.5)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const subtitleFade = interpolate(frame, [s(2), s(3)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   return (
     <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", padding: 80 }}>
@@ -265,12 +260,9 @@ const ConditionsScene: React.FC<{ conditions: { label: string }[] }> = ({ condit
   const { fps } = useVideoConfig();
 
   const items = conditions.slice(0, 4);
-  // Voiceover timing within this scene (scene starts at 10.6s global):
-  // 0s: "Po pierwsze: otwórz konto online." (10.6s global)
-  // 6.5s: "Po drugie: wykonaj transakcje." (17.1s global)
-  // 10.1s: "Po trzecie: ustaw przelew." (20.7s global)
-  // 12.3s: "To wszystko." (22.9s global)
-  const conditionStarts = [s(0), s(6.5), s(10.1), s(12.3)];
+  // Proportional timing within 13s scene
+  // Conditions appear at ~0s, ~4s, ~7s, "To wszystko" at ~10s
+  const conditionStarts = [s(0), s(4), s(7), s(10)];
 
   return (
     <AbsoluteFill style={{ justifyContent: "center", padding: "0 80px" }}>
@@ -311,10 +303,10 @@ const ConditionsScene: React.FC<{ conditions: { label: string }[] }> = ({ condit
         );
       })}
 
-      {/* "To wszystko." synced at ~12.3s */}
+      {/* "To wszystko." */}
       <div style={{
         fontSize: 56, color: "#10b981", fontWeight: 700, marginTop: 30, textAlign: "center",
-        opacity: interpolate(frame, [s(12.3), s(13.5)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+        opacity: interpolate(frame, [s(10), s(11)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
       }}>
         To wszystko.
       </div>
@@ -326,12 +318,12 @@ const ConditionsScene: React.FC<{ conditions: { label: string }[] }> = ({ condit
 const ProblemScene: React.FC<{ reward: number }> = ({ reward }) => {
   const frame = useCurrentFrame();
 
-  // Timing within this scene (starts at 25.2s global):
-  // 0s: "Ale... wiesz jak to jest." (25.2s)
-  // 1.5s: "Promocja trwa miesiąc. Masz swoje sprawy." (26.7s)
-  // 4.8s: "I nagle okazuje się, że zapomniałeś..." (30.0s)
-  // 9.1s: "Premia przepada." (34.3s)
-  // 10.6s: "A mogłeś mieć 720 zł." (35.8s)
+  // Proportional timing within 14.5s scene
+  // 0s: "Ale... wiesz jak to jest."
+  // 2s: "Promocja trwa miesiąc."
+  // 5s: "Zapomniałeś o jednym warunku."
+  // 9.5s: "Premia przepada."
+  // 11s: "A mogłeś mieć X zł."
 
   return (
     <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", padding: "0 80px" }}>
@@ -345,7 +337,7 @@ const ProblemScene: React.FC<{ reward: number }> = ({ reward }) => {
 
       <div style={{
         fontSize: 48, color: "#cbd5e1", textAlign: "center", lineHeight: 1.6,
-        opacity: interpolate(frame, [s(1.5), s(2.3)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+        opacity: interpolate(frame, [s(2), s(2.8)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
         marginBottom: 40,
       }}>
         Promocja trwa miesiąc.{"\n"}Masz swoje sprawy.
@@ -353,7 +345,7 @@ const ProblemScene: React.FC<{ reward: number }> = ({ reward }) => {
 
       <div style={{
         fontSize: 48, color: "#cbd5e1", textAlign: "center", lineHeight: 1.5,
-        opacity: interpolate(frame, [s(4.8), s(5.6)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+        opacity: interpolate(frame, [s(5), s(5.8)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
         marginBottom: 50,
       }}>
         Zapomniałeś o jednym warunku.
@@ -361,14 +353,14 @@ const ProblemScene: React.FC<{ reward: number }> = ({ reward }) => {
 
       <div style={{
         fontSize: 72, color: "#f87171", fontWeight: 800, textAlign: "center",
-        opacity: interpolate(frame, [s(9.1), s(10)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+        opacity: interpolate(frame, [s(9.5), s(10.3)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
       }}>
         Premia przepada.
       </div>
 
       <div style={{
         fontSize: 44, color: "#64748b", textAlign: "center", marginTop: 16,
-        opacity: interpolate(frame, [s(10.6), s(11.4)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
+        opacity: interpolate(frame, [s(11), s(11.8)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
       }}>
         A mogłeś mieć {reward} zł.
       </div>
@@ -383,36 +375,36 @@ const TrackerScene: React.FC<{
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
-  // Timing within this scene (starts at 39.1s global):
-  // 0–2.9s: "Właśnie dlatego powstała Cebula Zysku." (39.1s)
-  // 2.9–12.2s: "Rejestrujesz się... tracker..." (42.0s)
-  // 12.9–16.3s: "Bez podawania danych bankowych..." (52.0s)
-  // 16.9–22.1s: "Po prostu zaznaczasz co zrobiłeś..." (56.0s)
-  // 22.6–24.5s: "Krok po kroku. Bez stresu. Za darmo." (61.7s)
+  // Proportional timing within 23.5s scene
+  // 0–3s: "Właśnie dlatego powstała Cebula Zysku."
+  // 3–12s: Tracker demo (rejestrujesz się, tracker, widzisz postęp)
+  // 12–15s: "Bez podawania danych bankowych..."
+  // 15–20s: "Po prostu zaznaczasz co zrobiłeś..."
+  // 20–23.5s: "Krok po kroku. Bez stresu. Za darmo."
 
-  const phase1End = s(4.5);     // Logo reveal ends
-  const phase2Start = s(3.5);   // Tracker card starts sliding in
-  const objectionStart = s(12.9); // "Bez podawania danych..."
+  const phase1End = s(4);       // Logo reveal ends
+  const phase2Start = s(3);     // Tracker card starts sliding in
+  const objectionStart = s(12); // "Bez podawania danych..."
 
   const solutionFade = interpolate(frame, [0, s(0.8)], [0, 1], { extrapolateRight: "clamp" });
-  const solutionOut = interpolate(frame, [s(3.5), phase1End], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const solutionOut = interpolate(frame, [s(3), phase1End], [1, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   const cardSlide = spring({ frame: Math.max(0, frame - phase2Start), fps, config: { damping: 18, stiffness: 60 } });
-  const progressValue = interpolate(frame, [s(5), s(12)], [0, 66], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const progressValue = interpolate(frame, [s(5), s(11)], [0, 66], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
-  const headerFade = interpolate(frame, [phase2Start, s(4.5)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const headerFade = interpolate(frame, [phase2Start, s(4)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   // Objection busters
-  const obj1Fade = interpolate(frame, [objectionStart, s(13.9)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const obj2Fade = interpolate(frame, [s(16.9), s(17.9)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
-  const closerFade = interpolate(frame, [s(22.6), s(23.4)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const obj1Fade = interpolate(frame, [objectionStart, s(13)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const obj2Fade = interpolate(frame, [s(15), s(16)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const closerFade = interpolate(frame, [s(20), s(21)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
   const conditionItems = conditions.slice(0, 3);
 
   return (
     <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", padding: "0 50px" }}>
       {/* Phase 1: "Właśnie dlatego powstała Cebula Zysku" */}
-      {frame < s(4.5) && (
+      {frame < s(4) && (
         <div style={{
           position: "absolute", inset: 0,
           display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center",
@@ -482,7 +474,7 @@ const TrackerScene: React.FC<{
 
             <div style={{ padding: "12px 36px 24px 36px" }}>
               {conditionItems.map((c, i) => {
-                const itemDelay = s(5) + i * s(1.5);
+                const itemDelay = s(4.5) + i * s(1.5);
                 const itemFade = interpolate(frame, [itemDelay, itemDelay + s(0.5)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
                 const isDone = i < 2;
                 const count = isDone ? 5 : Math.round(interpolate(frame, [s(8), s(12)], [1, 3], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }));

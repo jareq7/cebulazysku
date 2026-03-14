@@ -57,14 +57,32 @@ function numberToPolish(n) {
   return parts.join(" ");
 }
 
+// --- Sanitize condition labels for TTS ---
+function sanitizeForTTS(text) {
+  return text
+    .replace(/(\d+)x\b/g, '$1 razy')           // "5x" → "5 razy"
+    .replace(/\bmin\.\s*/g, 'minimum ')          // "min." → "minimum"
+    .replace(/\bmaks\.\s*/g, 'maksimum ')        // "maks." → "maksimum"
+    .replace(/\bmies\.\s*/g, 'miesięcznie ')     // "mies." → "miesięcznie"
+    .replace(/\bzł\/mies\./g, 'złotych miesięcznie')
+    .replace(/\bzł\b/g, 'złotych')
+    .replace(/\bnr\.\s*/g, 'numer ')
+    .replace(/\btys\.\s*/g, 'tysięcy ')
+    .replace(/\bpł\.\s*/g, 'płatność ')
+    .replace(/\br\.\s*/g, 'roku ')               // "r." → "roku"
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 // --- Script generator ---
 function generateScript(bankName, reward, conditions, pros) {
   const rewardText = numberToPolish(reward);
   const conditionLines = conditions.slice(0, 4).map((c, i) => {
-    if (i === 0) return `Po pierwsze: ${c.label.toLowerCase()}.`;
-    if (i === 1) return `Po drugie: ${c.label.toLowerCase()}.`;
-    if (i === 2) return `Po trzecie: ${c.label.toLowerCase()}.`;
-    return `I jeszcze: ${c.label.toLowerCase()}.`;
+    const label = sanitizeForTTS(c.label.toLowerCase());
+    if (i === 0) return `Po pierwsze: ${label}.`;
+    if (i === 1) return `Po drugie: ${label}.`;
+    if (i === 2) return `Po trzecie: ${label}.`;
+    return `I jeszcze: ${label}.`;
   });
   const topPro = pros[0] || "wygodne konto online";
 

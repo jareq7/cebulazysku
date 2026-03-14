@@ -10,7 +10,7 @@ Portal pomagający użytkownikom śledzić warunki promocji bankowych i nie prze
 - **Video:** Remotion (programmatic video generation)
 - **TTS:** ElevenLabs (Polish voiceovers)
 - **AI:** Gemini free tier → OpenRouter fallback
-- **Hosting:** Vercel
+- **Hosting:** Vercel (projekt `cebulazysku.pl`)
 
 ## Architecture
 
@@ -36,21 +36,25 @@ src/
 ├── lib/                    # Business logic
 │   ├── offers.ts           # DB → frontend mapper
 │   ├── leadstar.ts         # Leadstar API client
-│   ├── elevenlabs.ts       # ElevenLabs TTS client
+│   ├── elevenlabs.ts       # ElevenLabs TTS client + sanitizeForTTS()
 │   ├── ai-client.ts        # AI provider (Gemini + OpenRouter)
 │   └── parse-leadstar-conditions.ts  # Condition parser
 ├── remotion/               # Video generation
-│   ├── OfferVideo.tsx      # Main video component (6 scenes, 70s)
+│   ├── OfferVideo.tsx      # Main video component (6 scenes, 70s, proportional sync)
 │   └── Root.tsx            # Remotion composition root
 └── data/                   # Types, constants
 public/
 ├── audio/
-│   ├── jingle.mp3          # Background music (Suno)
-│   └── voiceovers/         # Per-offer voiceover MP3s
-├── bank-*.png              # Bank logos (from img.leadmax.pl)
+│   ├── jingle.mp3          # Background music (Suno, ~4m18s)
+│   └── voiceovers/         # Per-offer voiceover MP3s ({slug}.mp3)
+├── bank-*.png              # Bank logos (9 banks, from img.leadmax.pl)
 └── logo-icon.png           # CebulaZysku logo
 scripts/
-└── generate-test-voiceover.mjs  # Test voiceover generator
+├── generate-test-voiceover.mjs   # Test voiceover generator (single offer)
+└── generate-all-voiceovers.mjs   # Batch voiceover generator (all offers)
+tasks/
+├── prd-video-ads.md        # PRD for video ads module
+└── tasks-video-ads.md      # Task tracking for video ads
 ```
 
 ## Dev Commands
@@ -58,6 +62,9 @@ scripts/
 ```bash
 npm run dev          # Next.js dev server
 npx remotion studio  # Remotion Studio (video preview)
+
+# Generate voiceovers (requires ELEVENLABS_API_KEY + Supabase env vars)
+node scripts/generate-all-voiceovers.mjs
 ```
 
 ## Important Notes
@@ -65,8 +72,10 @@ npx remotion studio  # Remotion Studio (video preview)
 - **Conditions come from feed parser, never AI.** AI only generates descriptions/pros/cons/FAQ.
 - **Bank logos:** use `img.leadmax.pl` URLs (from `bank_logo` DB column). Never `leadstar.pl/img/programs/` — requires auth, returns HTML.
 - **Supabase table `offers`:** bank name column is `bank_name` (not `institution`).
-- **Voiceover sync:** use `ffmpeg silencedetect` to find pauses, map scene boundaries to those timestamps.
-- **ElevenLabs:** Daniel voice (`onwK4e9ZLuTAKqWW03F9`) works on free tier. Rachel and other library voices require paid plan.
+- **ElevenLabs:** Daniel voice (`onwK4e9ZLuTAKqWW03F9`) works on free tier. Rachel requires paid plan. Free tier: 10k chars/month.
+- **TTS sanitization:** Always run condition labels through `sanitizeForTTS()` before sending to ElevenLabs. "5x" → "5 razy", "min." → "minimum", etc.
+- **Voiceover sync:** Proportional scene timing (not hardcoded timestamps). See `tasks/prd-video-ads.md` for details.
+- **Vercel:** Project `cebulazysku.pl` auto-deploys on push to main. Do NOT recreate `bank-afiliacje` project.
 
 ## Vercel Crons
 

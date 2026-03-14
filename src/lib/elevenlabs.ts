@@ -80,6 +80,21 @@ export async function listVoices(): Promise<{ voice_id: string; name: string; la
  * Returns text optimized for TTS (~25 seconds of speech for 30s video).
  * Numbers written as words for natural Polish pronunciation.
  */
+function sanitizeForTTS(text: string): string {
+  return text
+    .replace(/(\d+)x\b/g, '$1 razy')
+    .replace(/\bmin\.\s*/g, 'minimum ')
+    .replace(/\bmaks\.\s*/g, 'maksimum ')
+    .replace(/\bmies\.\s*/g, 'miesięcznie ')
+    .replace(/\bzł\/mies\./g, 'złotych miesięcznie')
+    .replace(/\bzł\b/g, 'złotych')
+    .replace(/\bnr\.\s*/g, 'numer ')
+    .replace(/\btys\.\s*/g, 'tysięcy ')
+    .replace(/\br\.\s*/g, 'roku ')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
 export function generateVoiceoverScript(
   bankName: string,
   reward: number,
@@ -90,10 +105,11 @@ export function generateVoiceoverScript(
 
   // Explain each condition naturally
   const conditionLines = conditions.slice(0, 4).map((c, i) => {
-    if (i === 0) return `Po pierwsze: ${c.label.toLowerCase()}.`;
-    if (i === 1) return `Po drugie: ${c.label.toLowerCase()}.`;
-    if (i === 2) return `Po trzecie: ${c.label.toLowerCase()}.`;
-    return `I jeszcze: ${c.label.toLowerCase()}.`;
+    const label = sanitizeForTTS(c.label.toLowerCase());
+    if (i === 0) return `Po pierwsze: ${label}.`;
+    if (i === 1) return `Po drugie: ${label}.`;
+    if (i === 2) return `Po trzecie: ${label}.`;
+    return `I jeszcze: ${label}.`;
   });
 
   const topPro = pros[0] || "wygodne konto online";
