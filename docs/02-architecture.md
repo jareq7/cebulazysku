@@ -4,227 +4,232 @@
 
 ---
 
-## Obecny stack (Faza 0)
+## Aktualny stack (marzec 2026)
 
 ```
-Frontend:     Next.js 16 (App Router, Server Components)
-Styling:      TailwindCSS v4 + shadcn/ui
-Ikony:        Lucide React
+Frontend:     Next.js 15 (App Router, Server Components, ISR)
+Styling:      TailwindCSS v4 + shadcn/ui + Lucide icons
 Język:        TypeScript
-Auth:         Mock (localStorage) — do wymiany na Supabase
-Tracker:      Mock (localStorage) — do wymiany na Supabase
-Dane ofert:   Hardcoded w banks.ts — do wymiany na DB
+Auth:         Supabase Auth (email/password, OAuth ready)
+DB:           Supabase (PostgreSQL, RLS, 18 migracji)
+Dane ofert:   LeadStar XML → sync → Supabase DB → ISR
+AI opisy:     Gemini free tier → OpenRouter (dynamic cheapest) fallback
+Parser:       parse-leadstar-conditions.ts (regex, bez AI)
+Video:        Remotion (9:16, 1080×1920, 30fps, ~70s per offer)
+TTS:          ElevenLabs (Daniel voice, Polish, free tier 10k chars/month)
+Email:        Resend.com (deadline reminders, weekly digest)
+Push:         Web Push (VAPID, service worker)
 Dark mode:    next-themes
-Deploy:       Vercel (auto-deploy z GitHub)
-```
-
-## Docelowy stack (po wszystkich fazach)
-
-```
-Frontend:     Next.js 16 (App Router, Server Components, ISR)
-Backend:      Supabase (PostgreSQL + Auth + Edge Functions)
-Mobile:       React Native (Expo) — osobne repo
-Styling:      TailwindCSS v4 + shadcn/ui
-Dane ofert:   LeadStar XML → Supabase DB → Next.js ISR
-Opisy:        Claude API (generowanie unikalnych opisów)
-Auth:         Supabase Auth (email/hasło, opcjonalnie Google)
-Tracker:      Supabase DB (per user, real-time)
-Powiadomienia: Resend.com (email) + Expo Push (mobile)
-Deploy:       Vercel (auto-deploy z GitHub)
-Monitoring:   Vercel Analytics
-White-label:  Konfiguracja per tenant (domena, branding, branża)
+PWA:          manifest.json + sw.js
+Deploy:       Vercel (auto-deploy z GitHub, projekt cebulazysku.pl)
+Cron:         Vercel Cron Jobs (4 joby: sync, AI, quality, email)
 ```
 
 ---
 
-## Struktura projektu — obecna (po Fazie 0)
+## Data Pipeline
 
 ```
-bank-afiliacje/
-├── docs/
-│   ├── README.md                 # Indeks dokumentacji
-│   ├── 01-overview.md            # Przegląd projektu
-│   ├── 02-architecture.md        # Ten dokument
-│   ├── ...                       # Pozostałe docs
-├── public/                       # Statyczne pliki
-├── src/
-│   ├── app/
-│   │   ├── globals.css           # Tailwind + paleta kolorów cebulowa
-│   │   ├── layout.tsx            # Root layout + metadata cebulazysku.pl
-│   │   ├── page.tsx              # Landing page z hero + ofertami
-│   │   ├── providers.tsx         # Auth + Tracker + Theme providers
-│   │   ├── sitemap.ts            # Dynamiczny sitemap XML
-│   │   ├── robots.ts             # robots.txt
-│   │   ├── not-found.tsx         # Custom 404
-│   │   ├── blog/
-│   │   │   ├── page.tsx          # Lista postów blogowych
-│   │   │   └── [slug]/page.tsx   # Post blogowy z JSON-LD
-│   │   ├── dashboard/
-│   │   │   └── page.tsx          # Dashboard użytkownika z trackerem
-│   │   ├── jak-to-dziala/
-│   │   │   └── page.tsx          # Strona informacyjna
-│   │   ├── kontakt/
-│   │   │   └── page.tsx          # Formularz kontaktowy
-│   │   ├── logowanie/
-│   │   │   └── page.tsx          # Strona logowania
-│   │   ├── o-nas/
-│   │   │   └── page.tsx          # O serwisie
-│   │   ├── oferta/
-│   │   │   └── [slug]/page.tsx   # Szczegóły oferty bankowej
-│   │   ├── polityka-prywatnosci/
-│   │   │   └── page.tsx          # Polityka prywatności
-│   │   ├── regulamin/
-│   │   │   └── page.tsx          # Regulamin
-│   │   └── rejestracja/
-│   │       └── page.tsx          # Rejestracja
-│   ├── components/
-│   │   ├── ui/                   # shadcn/ui (button, card, badge, input, etc.)
-│   │   ├── ConditionTracker.tsx  # Tracker warunków per oferta
-│   │   ├── DisclaimerBanner.tsx  # Banner informacyjny
-│   │   ├── Footer.tsx            # Stopka z nawigacją
-│   │   ├── JsonLd.tsx            # Komponent JSON-LD
-│   │   ├── Navbar.tsx            # Nawigacja + ThemeToggle
-│   │   ├── OfferCard.tsx         # Karta oferty na liście
-│   │   ├── OfferFilters.tsx      # Filtry i sortowanie ofert
-│   │   ├── OfferTrackingActions.tsx # Akcje trackingu na stronie oferty
-│   │   ├── ThemeToggle.tsx       # Przełącznik dark/light mode
-│   │   └── TrackingPixels.tsx    # Placeholder Google/Meta pixel
-│   ├── context/
-│   │   ├── AuthContext.tsx       # Mock auth (localStorage) — do wymiany
-│   │   └── TrackerContext.tsx    # Mock tracker (localStorage) — do wymiany
-│   ├── data/
-│   │   ├── banks.ts             # Hardcoded oferty — do wymiany na DB
-│   │   └── blog.ts              # Dane blogowe
-│   └── lib/
-│       └── utils.ts              # cn() utility
-├── tasks/
-│   ├── prd-bankpremie-v2.md     # Product Requirements Document
-│   └── tasks-bankpremie-v2.md   # Task breakdown
-├── package.json
-├── tsconfig.json
-├── tailwind.config.ts
-├── next.config.ts
-└── README.md
-```
-
-## Struktura projektu — docelowa (po wszystkich fazach)
-
-```
-src/
-├── app/
-│   ├── api/
-│   │   ├── sync-offers/route.ts    # Cron endpoint — sync XML → DB
-│   │   ├── generate-desc/route.ts  # Trigger generowania opisów AI
-│   │   └── cron/
-│   │       ├── check-deadlines/route.ts  # Cron sprawdzający deadliny
-│   │       └── weekly-summary/route.ts   # Cron tygodniowego podsumowania
-│   ├── auth/
-│   │   ├── callback/route.ts       # Supabase auth callback
-│   │   └── confirm/route.ts        # Email confirmation
-│   ├── (admin)/                    # Route group — panel admina
-│   │   ├── layout.tsx              # Admin layout z sidebar
-│   │   ├── admin/page.tsx          # Dashboard admina (statystyki)
-│   │   ├── admin/offers/page.tsx   # Zarządzanie ofertami
-│   │   ├── admin/users/page.tsx    # Zarządzanie użytkownikami
-│   │   ├── admin/blog/page.tsx     # Zarządzanie blogiem
-│   │   ├── admin/notifications/page.tsx # Kolejka powiadomień
-│   │   └── admin/settings/page.tsx # Ustawienia serwisu
-│   ├── onboarding/
-│   │   └── page.tsx                # „W których bankach masz konto?"
-│   └── ustawienia/
-│       └── page.tsx                # Profil użytkownika
-├── components/
-│   ├── gamification/
-│   │   ├── StreakCounter.tsx        # Licznik streaka z animacją 🔥
-│   │   ├── AchievementBadge.tsx    # Odznaka z animacją unlock
-│   │   ├── ConfettiCelebration.tsx # Konfetti po spełnieniu warunku
-│   │   └── ProgressTimeline.tsx    # Timeline postępu oferty
-│   └── admin/
-│       ├── AdminSidebar.tsx        # Nawigacja panelu admina
-│       ├── StatsCard.tsx           # Karta statystyk
-│       └── OfferEditor.tsx         # Edytor ofert (override AI)
-├── lib/
-│   ├── supabase/
-│   │   ├── client.ts               # Browser Supabase client
-│   │   ├── server.ts               # Server Supabase client
-│   │   └── middleware.ts            # Auth middleware (user + admin roles)
-│   ├── leadstar/
-│   │   └── parser.ts               # XML parser
-│   ├── ai/
-│   │   └── generate-description.ts # Claude API integration
-│   ├── email/
-│   │   └── send.ts                 # Resend.com integration
-│   ├── gamification/
-│   │   ├── achievements.ts         # Logika odznak i achievementów
-│   │   ├── streaks.ts              # Logika streaków
-│   │   └── referrals.ts            # System poleceń
-│   └── tenant/
-│       ├── config.ts               # White-label konfiguracja per tenant
-│       ├── theme.ts                # Dynamiczny theming per branża
-│       └── types.ts                # Typy tenant/branża
-└── ...
-
-# Osobne repo — aplikacja mobilna
-cebulazysku-mobile/                 # React Native (Expo)
-├── app/                            # Expo Router
-│   ├── (tabs)/
-│   │   ├── index.tsx               # Dashboard mobilny
-│   │   ├── offers.tsx              # Lista ofert
-│   │   ├── track.tsx               # Quick Track
-│   │   └── profile.tsx             # Profil + odznaki
-│   ├── offer/[id].tsx              # Szczegóły oferty
-│   └── login.tsx                   # Logowanie (Supabase Auth)
-├── components/                     # Komponenty mobilne
-├── lib/                            # Supabase client, notifications, offline sync
-└── app.json                        # Expo config
+LeadStar XML feed
+    ↓ (cron 01:00 UTC)
+/api/sync-offers
+    ↓ parse-leadstar-conditions.ts (regex parser, 12 typów warunków)
+    ↓ upsert do Supabase (offers table)
+    ↓ soft delete ofert nieobecnych w feedzie (is_active = false)
+    ↓ log do sync_log
+    ↓
+/api/cron/generate-descriptions (cron 02:00 UTC)
+    ↓ Gemini → short_description, full_description, pros, cons, faq
+    ↓ NIGDY conditions (te z parsera!)
+    ↓
+/api/cron/quality-check (cron 03:00 UTC)
+    ↓ scraping stron banków, porównanie reward z bazą
+    ↓ flagi: reward_mismatch, page_unreachable
+    ↓
+/api/cron/email-notifications (cron 08:00 UTC)
+    ↓ Resend → deadline reminders (7/3/1 dzień), weekly digest (poniedziałki)
 ```
 
 ---
 
-## Zmienne środowiskowe (docelowe)
+## Struktura projektu
+
+```
+cebulazysku.pl/
+├── CLAUDE.md                    # Instrukcje dla Claude Code
+├── GEMINI.md                    # Instrukcje dla Gemini CLI
+├── create-prd.md                # Szablon generowania PRD
+├── generate-tasks.md            # Szablon generowania tasków
+├── vercel.json                  # Konfiguracja Vercel Cron Jobs
+├── docs/                        # 44 pliki dokumentacji tematycznej
+├── tasks/                       # PRD + task tracking per feature
+├── supabase/migrations/         # 18 migracji SQL
+├── scripts/
+│   ├── generate-all-voiceovers.mjs  # Batch voiceover generator
+│   └── generate-test-voiceover.mjs  # Single voiceover test
+├── public/
+│   ├── audio/voiceovers/        # Per-offer MP3s ({slug}.mp3)
+│   ├── audio/jingle.mp3         # Background music (~4m18s)
+│   ├── bank-*.png               # 9 bank logos (Alior, BNP, Citi, mBank, Millennium, Pekao, PKO, Santander, VeloBank)
+│   ├── logo-icon.png            # CebulaZysku logo
+│   ├── manifest.json            # PWA manifest
+│   └── sw.js                    # Service worker
+└── src/
+    ├── app/
+    │   ├── layout.tsx           # Root layout + metadata cebulazysku.pl
+    │   ├── page.tsx             # Landing page (hero, stats, offers, social proof, CTA)
+    │   ├── providers.tsx        # Auth + Tracker + UserBanks + Theme providers
+    │   ├── sitemap.ts           # Dynamic sitemap XML
+    │   ├── robots.ts            # robots.txt
+    │   ├── not-found.tsx        # Custom 404
+    │   ├── middleware.ts        # Auth middleware
+    │   ├── api/                 # 22 API routes (sync, cron, admin, gamification, etc.)
+    │   ├── admin/               # 8 admin pages (dashboard, oferty, feed, sync, blog, push, users, messages)
+    │   ├── oferta/[slug]/       # Offer detail (SSR, JSON-LD, video, breadcrumbs, "Zobacz też")
+    │   ├── dashboard/           # User dashboard (tracker, streaks, achievements, referral, "moje banki")
+    │   ├── onboarding/          # Bank selection wizard post-signup
+    │   ├── zaproszenie/[code]/  # Referral invitation redirect
+    │   ├── blog/ + blog/[slug]/ # Blog listing + detail (ISR, JSON-LD Article)
+    │   ├── ranking/             # User leaderboard
+    │   └── (strony prawne/info) # polityka-prywatnosci, regulamin, o-nas, kontakt, jak-to-dziala, logowanie, rejestracja
+    ├── components/
+    │   ├── ui/                  # shadcn/ui (button, card, badge, input, label, checkbox, select, tabs, dropdown, avatar, progress, separator, sheet)
+    │   ├── ConditionTracker.tsx # Per-offer tracker (+/- per condition per month)
+    │   ├── OfferVideoPlayer.tsx # Remotion @remotion/player inline video
+    │   ├── OfferCard.tsx        # Offer card (logo, reward, difficulty, "Masz konto" badge, lastUpdated)
+    │   ├── OfferFilters.tsx     # Filter: bank, difficulty, type | Sort: reward, difficulty
+    │   ├── OfferTrackingActions.tsx # Track/untrack buttons on offer detail
+    │   ├── Navbar.tsx           # Navigation + ThemeToggle + mobile menu
+    │   ├── Footer.tsx           # Footer links (nawigacja + prawne)
+    │   ├── DisclaimerBanner.tsx # Legal disclaimer banner
+    │   ├── JsonLd.tsx           # JSON-LD structured data (WebSite, FAQPage, BreadcrumbList, Article)
+    │   ├── Breadcrumbs.tsx      # Breadcrumb navigation
+    │   ├── ThemeToggle.tsx      # Dark/light mode switch
+    │   ├── StreakBadge.tsx      # Daily streak display
+    │   ├── AchievementsList.tsx # User achievements/badges
+    │   ├── PushNotificationToggle.tsx # Enable/disable push
+    │   ├── SocialAuthButtons.tsx     # Google/Facebook/Apple login buttons
+    │   ├── ServiceWorkerRegister.tsx # PWA service worker registration
+    │   ├── InstallPrompt.tsx        # PWA install prompt
+    │   └── TrackingPixels.tsx       # GA4, Meta Pixel (conditional on env vars)
+    ├── context/
+    │   ├── AuthContext.tsx       # Supabase Auth state
+    │   ├── TrackerContext.tsx    # Offer tracking state
+    │   └── UserBanksContext.tsx  # User's bank list
+    ├── lib/
+    │   ├── offers.ts            # DB → frontend mapper (getActiveOffers, getOfferBySlug)
+    │   ├── leadstar.ts          # LeadStar API client
+    │   ├── parse-leadstar-conditions.ts  # Regex condition parser (12 types)
+    │   ├── generate-offer-content.ts     # AI prompt for descriptions
+    │   ├── ai-client.ts         # Gemini + dynamic OpenRouter fallback
+    │   ├── elevenlabs.ts        # ElevenLabs TTS + sanitizeForTTS()
+    │   ├── admin-auth.ts        # verifyAdmin() middleware
+    │   ├── admin-fetch.ts       # Frontend helper (auto x-admin-password header)
+    │   ├── blog.ts              # Blog post queries
+    │   ├── email-templates.ts   # Email HTML templates
+    │   └── supabase/            # Supabase client (browser + server)
+    ├── remotion/
+    │   ├── OfferVideo.tsx       # Main video (6 scenes, ~70s, proportional sync, LOGO_MAP)
+    │   └── Root.tsx             # Remotion composition root
+    ├── data/
+    │   ├── banks.ts             # BankOffer type + static fallback data + condition types
+    │   └── blog.ts              # BlogPost type + static fallback
+    └── hooks/
+        └── useOffers.ts         # Client-side offer fetching hook
+```
+
+---
+
+## Baza danych (Supabase)
+
+### Tabele (18 migracji)
+
+| # | Migracja | Tabela/zmiana |
+|---|----------|---------------|
+| 001 | tracker_tables | `tracked_offers`, `condition_progress` |
+| 002 | offers_table | `offers` (core) |
+| 003 | contact_messages | `contact_messages` |
+| 004 | blog_posts | `blog_posts` |
+| 005 | gamification | `user_achievements`, `user_streaks` |
+| 006 | push_subscriptions | `push_subscriptions` |
+| 007 | admin_user_stats | Admin views |
+| 008 | offer_banner | `offers.banner_url` column |
+| 009 | offer_for_young | `offers.for_young` column |
+| 010 | notification_preferences | `notification_preferences` |
+| 011 | quality_flags | `offers.quality_flags`, `locked_fields`, `checked_reward` |
+| 012 | first_seen_at | `offers.first_seen_at` |
+| 013 | ai_descriptions | `offers.ai_generated_at` + index |
+| 014 | user_banks | `user_banks` |
+| 015 | email_sends | `email_sends` |
+| 016 | payout_tracking | Payout status fields |
+| 017 | referrals | `user_referrals` |
+| 018 | offer_type_preferences | Offer type preferences |
+
+### Kluczowe kolumny tabeli `offers`
+
+```
+id, slug, bank_name, program_name, reward, conditions (JSONB),
+affiliate_url, bank_logo, description_html, benefits_html,
+short_description, full_description, pros, cons, faq,
+is_active, source, difficulty, offer_type,
+ai_generated_at, locked_fields, quality_flags,
+checked_reward, last_checked_at, first_seen_at,
+banner_url, for_young, created_at, updated_at
+```
+
+**Uwaga:** kolumna z nazwą banku to `bank_name`, NIE `institution`.
+
+---
+
+## Zmienne środowiskowe
 
 ```env
-# Supabase
+# Supabase (wymagane)
 NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIs...
-SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIs...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
+SUPABASE_SERVICE_ROLE_KEY=eyJ...
 
-# LeadStar
+# LeadStar feed (wymagane dla sync)
 LEADSTAR_FEED_URL=https://leadstar.pl/xml?pid=...&code=...&ha=...
 
-# Claude API (do generowania opisów)
-ANTHROPIC_API_KEY=sk-ant-...
+# AI (wymagane dla generowania opisów)
+GEMINI_API_KEY=AIzaSy...
+OPENROUTER_API_KEY=sk-or-... (opcjonalny fallback)
 
-# Resend (emailing)
+# Cron security
+SYNC_SECRET=...
+CRON_SECRET=...
+
+# Admin
+ADMIN_PASSWORD=...
+
+# Email (opcjonalne)
 RESEND_API_KEY=re_...
+RESEND_FROM_EMAIL=...
 
-# Cron secret (zabezpieczenie endpointów cron)
-CRON_SECRET=random-string-here
+# Analytics (opcjonalne)
+NEXT_PUBLIC_GA_MEASUREMENT_ID=G-...
+NEXT_PUBLIC_GSC_VERIFICATION=...
+NEXT_PUBLIC_META_PIXEL_ID=...
 
-# White-label / tenant
-NEXT_PUBLIC_TENANT_ID=cebulazysku
-NEXT_PUBLIC_APP_URL=https://cebulazysku.pl
+# Video/TTS (opcjonalne)
+ELEVENLABS_API_KEY=sk_...
+
+# Push notifications (opcjonalne)
+NEXT_PUBLIC_VAPID_PUBLIC_KEY=...
+VAPID_PRIVATE_KEY=...
 ```
 
 ---
 
-## Jak uruchomić projekt lokalnie
+## Jak uruchomić lokalnie
 
 ```bash
-# Klonowanie
 git clone https://github.com/jareq7/cebulazysku.git
 cd cebulazysku
-
-# Instalacja zależności
 npm install
-
-# Uruchomienie deweloperskie
-npm run dev
-# → http://localhost:3000
-
-# Build produkcyjny
-npm run build
-npm start
+cp .env.example .env.local  # uzupełnij zmienne
+npm run dev                  # → http://localhost:3000
 ```
 
 ### Wymagania

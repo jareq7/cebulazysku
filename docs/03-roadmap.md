@@ -71,10 +71,13 @@
 | 4 | Filtr „mam konto" + onboarding | [31-user-banks-onboarding.md](./31-user-banks-onboarding.md) | ✅ Gotowe | — |
 | 5 | Powiadomienia email (Resend) | [32-email-notifications.md](./32-email-notifications.md) | ✅ Gotowe | — |
 | 6 | Rozszerzona gamifikacja (konfetti, status wypłaty, polecenia) | [33-gamifikacja-extended.md](./33-gamifikacja-extended.md) | ✅ Gotowe | — |
-| 7 | Rozbudowa admin panelu (wykresy, logi AI) | [07-admin-panel.md](./07-admin-panel.md) | 🔲 Do zrobienia | Średni |
-| 8 | Aplikacje mobilne (iOS + Android) | [08-mobile.md](./08-mobile.md) | 🔲 Do zrobienia | Planowane |
-| 9 | White-label + multi-branża | [09-white-label.md](./09-white-label.md) | 🔲 Do zrobienia | Planowane |
+| 7 | CebulaZysku v2 (Compliance, SEO, UX, Growth) | [tasks/prd-cebulazysku-v2.md](../tasks/prd-cebulazysku-v2.md) | ✅ Gotowe | — |
+| 8 | Video Ads (Remotion + ElevenLabs TTS) | [tasks/prd-video-ads.md](../tasks/prd-video-ads.md) | ⚠️ 80% (voiceover regen pending) | — |
+| 9 | Rozbudowa admin panelu (wykresy, logi AI) | [07-admin-panel.md](./07-admin-panel.md) | 🔲 Do zrobienia | Średni |
+| 10 | Aplikacje mobilne (iOS + Android) | [08-mobile.md](./08-mobile.md) | 🔲 Do zrobienia | Planowane |
+| 11 | White-label + multi-branża | [09-white-label.md](./09-white-label.md) | 🔲 Do zrobienia | Planowane |
 
 > **Uwaga:** Fazy 1 (Supabase + auth) i 2 (XML parser) z oryginalnego planu zostały zrealizowane jako fazy 0b i 0d.
 > Fazy 5 (push), 6 (gamifikacja bazowa) i 7 (admin panel bazowy) też zrealizowane jako 0l, 0k, 0h.
-> Pozostałe fazy 3–9 dotyczą rozszerzeń ponad to co jest obecnie zaimplementowane.
+> V2 (compliance, SEO, UX, growth) i Video Ads zrealizowane w marcu 2026.
+> Pozostałe fazy dotyczą rozszerzeń ponad to co jest obecnie zaimplementowane.

@@ -1,8 +1,8 @@
-# PRD: BankPremie v2 – Compliance, SEO, UX & Growth
+# PRD: CebulaZysku v2 – Compliance, SEO, UX & Growth
 
 ## 1. Introduction / Overview
 
-BankPremie to serwis porównujący promocje bankowe w Polsce, umożliwiający użytkownikom śledzenie postępów spełniania warunków promocji. Wersja v1 zawiera landing page, strony ofert, auth, dashboard i tracker.
+CebulaZysku to serwis porównujący promocje bankowe w Polsce, umożliwiający użytkownikom śledzenie postępów spełniania warunków promocji. Wersja v1 zawiera landing page, strony ofert, auth, dashboard i tracker.
 
 **Problem:** Obecna wersja ma krytyczne braki uniemożliwiające uruchomienie płatnych reklam (Google Ads, Meta Ads) oraz ograniczenia SEO, które utrudniają organiczną widoczność.
 

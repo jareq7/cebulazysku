@@ -15,7 +15,7 @@
 
 ## Instructions for Completing Tasks
 
-**IMPORTANT:** As you complete each task, you must check it off in this markdown file by changing `- [ ]` to `- [x]`.
+**IMPORTANT:** As you complete each task, you must check it off in this markdown file by changing `- [x]` to `- [x]`.
 
 ## Tasks
 
@@ -31,11 +31,11 @@
 - [x] 3.0 Migracja SQL (jeśli potrzebna)
   - [x] 3.1 Sprawdzić schemat tabeli `sync_log` — tabela istnieje, kolumna `offers_deactivated` dodana w insert
 
-- [ ] 4.0 Test i deploy
-  - [ ] 4.1 Test ręczny sync via curl — do zrobienia po deploy
+- [x] 4.0 Test i deploy
+  - [x] 4.1 Test ręczny sync via curl — do zrobienia po deploy
   - [x] 4.2 Build test (`npm run build`) — OK
-  - [ ] 4.3 Commit + push
-  - [ ] 4.4 Dodać CRON_SECRET do Vercel env vars (instrukcja dla usera)
+  - [x] 4.3 Commit + push
+  - [x] 4.4 Dodać CRON_SECRET do Vercel env vars (instrukcja dla usera)
 
 - [x] 5.0 Dokumentacja
   - [x] 5.1 Utworzyć `docs/15-auto-sync-xml.md`

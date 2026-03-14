@@ -384,3 +384,73 @@ Zostały zrealizowane w poprzednich sesjach. Kluczowe deliverables:
 - `src/components/ConditionTracker.tsx` — nowe ikony
 - `src/components/OfferCard.tsx` — nowe ikony
 - `scripts/test-generate.ts` — usunięte conditions
+
+---
+
+## Faza 7 — CebulaZysku v2 (Compliance, SEO, UX, Growth)
+
+**Co zrobiono:**
+
+### Compliance
+- Strony prawne: `/polityka-prywatnosci`, `/regulamin`, `/o-nas`, `/kontakt` z `generateMetadata()`
+- Zmiana messagingu: "Zarabiaj" → "Porównaj promocje", "Zacznij zarabiać" → "Sprawdź oferty"
+- DisclaimerBanner na stronie głównej (charakter informacyjny, nie doradztwo finansowe)
+- Checkbox akceptacji regulaminu i polityki w rejestracji
+- Footer z linkami do stron prawnych
+
+### SEO
+- Server Components refactor (page.tsx, oferta/[slug])
+- `generateStaticParams()` + `generateMetadata()` na stronach ofert
+- JSON-LD: WebSite (strona główna), FAQPage + BreadcrumbList (oferty), Article (blog)
+- `metadataBase` w layout.tsx, canonical URLs, usunięte `keywords`
+
+### UX/UI
+- OfferFilters — filtrowanie po trudności, sortowanie po kwocie/terminie
+- Breadcrumbs na stronach ofert
+- Data aktualizacji (`lastUpdated`) na kartach i stronach ofert
+- "Zobacz też inne oferty" — 2-3 powiązane na stronie oferty
+- Custom 404 (`not-found.tsx`)
+- Social proof na landing page
+- Sugerowane oferty na pustym dashboardzie
+
+### Growth
+- Blog infrastruktura (`/blog`, `/blog/[slug]` z `generateStaticParams`, JSON-LD Article)
+- Dark mode (next-themes, ThemeToggle w Navbar)
+- TrackingPixels (GA4, Meta Pixel, warunkowe renderowanie z env vars)
+
+📄 Szczegóły: [tasks/prd-cebulazysku-v2.md](../tasks/prd-cebulazysku-v2.md) | [tasks/tasks-cebulazysku-v2.md](../tasks/tasks-cebulazysku-v2.md)
+
+---
+
+## Faza 8 — Video Ads (Remotion + ElevenLabs TTS)
+
+**Co zrobiono:**
+
+### Remotion Video
+- Komponent `src/remotion/OfferVideo.tsx` — 6 scen, ~70 sekund, format 9:16 (1080×1920), 30fps
+- Sceny: IntroScene → BankScene → ConditionsScene → ProblemScene → TrackerScene → CtaScene
+- Proportional scene timing (procenty: 9/15/35/57/92%) — działa dla wszystkich ofert niezależnie od długości voiceover
+- LOGO_MAP — mapowanie hashy z leadmax URL na lokalne pliki PNG
+- Watermark z logo cebulazysku.pl (80px, opacity 0.5) w prawym górnym rogu
+- Background music (jingle.mp3)
+
+### ElevenLabs TTS
+- Daniel voice (`onwK4e9ZLuTAKqWW03F9`), model `eleven_multilingual_v2`, Polish
+- `sanitizeForTTS()` — konwersja skrótów przed wysłaniem do API:
+  - "5x" → "5 razy", "min." → "minimum", "maks." → "maksimum"
+  - "mies." → "miesięcznie", "zł/mies." → "złotych miesięcznie"
+  - "zł" → "złotych", "nr." → "numer", "tys." → "tysięcy", "r." → "roku"
+- Batch generator: `scripts/generate-all-voiceovers.mjs`
+- 9 voiceovers wygenerowanych (62-70s każdy)
+
+### Player
+- `OfferVideoPlayer.tsx` — @remotion/player z play/pause, inline na stronie oferty
+- Server-side check: voiceover wyświetlany tylko gdy plik MP3 istnieje (`existsSync`)
+
+### Status
+- ⚠️ 9 istniejących voiceovers wymaga regeneracji z poprawką sanitizeForTTS()
+- ⚠️ Blokowane limitem ElevenLabs free tier (10k chars/month)
+- 🔲 Unikalne video per bank (kolory, copy, wariant z napisami TikTok)
+- 🔲 Server-side rendering do MP4
+
+📄 Szczegóły: [tasks/prd-video-ads.md](../tasks/prd-video-ads.md) | [tasks/tasks-video-ads.md](../tasks/tasks-video-ads.md)

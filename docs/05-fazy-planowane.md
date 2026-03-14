@@ -1,10 +1,12 @@
-# 5. Fazy planowane (1–5)
+# 5. Fazy planowane i zrealizowane
 
 [← Powrót do spisu treści](./README.md) | [Roadmapa](./03-roadmap.md)
 
 ---
 
-## Faza 1 — Supabase + Auth + DB Tracker {#faza-1}
+## ~~Faza 1 — Supabase + Auth + DB Tracker~~ ✅ ZREALIZOWANA
+
+Zaimplementowana jako faza 0b. Szczegóły: [13-migracja-supabase-offers.md](./13-migracja-supabase-offers.md)
 
 **Cel:** Zamiana mock auth/tracker na prawdziwy backend.
 
@@ -60,7 +62,9 @@
 
 ---
 
-## Faza 2 — XML Parser LeadStar {#faza-2}
+## ~~Faza 2 — XML Parser LeadStar~~ ✅ ZREALIZOWANA
+
+Zaimplementowana jako faza 0d + faza 5 (parser warunków). Szczegóły: [15-auto-sync-xml.md](./15-auto-sync-xml.md)
 
 **Cel:** Automatyczne pobieranie ofert z feedu XML LeadStar.
 

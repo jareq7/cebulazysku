@@ -3,7 +3,7 @@
 > **Domena:** cebulazysku.pl  
 > **Repozytorium:** https://github.com/jareq7/cebulazysku  
 > **Deploy:** Vercel (automatyczny z brancha `main`)  
-> **Ostatnia aktualizacja:** 13 marca 2026 r.
+> **Ostatnia aktualizacja:** 14 marca 2026 r.
 
 ---
 
@@ -49,6 +49,24 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 34 | [Migracja LeadStar API](./34-leadstar-api-migration.md) | Z XML feed na REST API v0.4.3 |
 | 35 | [AI Double-Check](./35-ai-double-check.md) | Weryfikacja wygenerowanych opisów przez drugie wywołanie Gemini |
 | 36 | [Typy ofert i filtry](./36-offer-types-filters.md) | Osobiste / firmowe / dla młodych — filtry i preferencje |
+| 37 | [API Endpoints](./37-api-endpoints.md) | Pełna lista wszystkich 22 API routes z opisami |
+
+### Pliki instrukcji dla AI
+
+| Plik | Opis |
+|------|------|
+| [CLAUDE.md](../CLAUDE.md) | Instrukcje dla Claude Code (automatycznie ładowane) |
+| [GEMINI.md](../GEMINI.md) | Instrukcje dla Gemini CLI / Gemini Code Assist |
+| [create-prd.md](../create-prd.md) | Szablon generowania PRD (Product Requirements Document) |
+| [generate-tasks.md](../generate-tasks.md) | Szablon generowania task listy z PRD |
+
+### PRD i Task Tracking
+
+| Feature | PRD | Tasks | Status |
+|---------|-----|-------|--------|
+| CebulaZysku v2 | [prd-cebulazysku-v2.md](../tasks/prd-cebulazysku-v2.md) | [tasks-cebulazysku-v2.md](../tasks/tasks-cebulazysku-v2.md) | ✅ Done |
+| Auto-sync XML | [prd-auto-sync-xml.md](../tasks/prd-auto-sync-xml.md) | [tasks-auto-sync-xml.md](../tasks/tasks-auto-sync-xml.md) | ✅ Done |
+| Video Ads | [prd-video-ads.md](../tasks/prd-video-ads.md) | [tasks-video-ads.md](../tasks/tasks-video-ads.md) | ⚠️ 80% |
 
 ---
 
