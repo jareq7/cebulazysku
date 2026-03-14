@@ -1,3 +1,5 @@
+import { existsSync } from "fs";
+import { join } from "path";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
@@ -216,6 +218,9 @@ export default async function OfferDetailPage({
                       conditions: offer.conditions.map((c) => ({ label: c.label })),
                       pros: offer.pros,
                       bankLogo: offer.bankLogo,
+                      voiceoverUrl: existsSync(join(process.cwd(), "public", "audio", "voiceovers", `${offer.slug}.mp3`))
+                        ? `/audio/voiceovers/${offer.slug}.mp3`
+                        : undefined,
                     }}
                   />
                 </div>

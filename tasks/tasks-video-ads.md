@@ -7,6 +7,7 @@
 - `src/app/api/generate-voiceover/route.ts` - API endpoint generowania voiceover
 - `src/app/oferta/[slug]/page.tsx` - Strona oferty (embeds player)
 - `scripts/generate-test-voiceover.mjs` - Skrypt testowy voiceover
+- `scripts/generate-all-voiceovers.mjs` - Batch generowanie voiceover dla wszystkich ofert
 - `public/bank-*.png` - Loga banków (9 szt.)
 - `public/audio/jingle.mp3` - Muzyka tła
 - `public/audio/voiceovers/*.mp3` - Voiceover per oferta
@@ -52,12 +53,18 @@
   - [x] 5.2 Dodać komponent Audio z dynamicznym offsetem per bank
   - [x] 5.3 Ustawić volume (0.08 z voiceoverem, 0.25 bez)
 
-- [ ] 6.0 Generowanie voiceover dla wszystkich ofert
-  - [ ] 6.1 Wygenerować voiceover dla każdej aktywnej oferty via API
-  - [ ] 6.2 Zmierzyć pauzy i dostosować timingi per oferta
-  - [ ] 6.3 Podpiąć voiceoverUrl w danych oferty (Supabase lub props)
+- [x] 6.0 Generowanie voiceover dla wszystkich ofert
+  - [x] 6.1 Stworzyć batch script `scripts/generate-all-voiceovers.mjs`
+  - [x] 6.2 Wygenerować voiceover dla 9 ofert (limit free tier: 10k znaków/mies.)
+  - [x] 6.3 Podpiąć voiceoverUrl w stronie oferty (server-side check existsSync)
+  - [ ] 6.4 Wygenerować voiceover dla pozostałych 8 ofert (po resecie limitu lub upgrade)
 
-- [ ] 7.0 Server-side rendering do MP4 (opcjonalnie)
-  - [ ] 7.1 Setup @remotion/renderer
-  - [ ] 7.2 API endpoint renderowania MP4
-  - [ ] 7.3 Upload do storage (Supabase/S3)
+- [ ] 7.0 Unikalne wideo per oferta (kolorystyka, napisy TikTok, warianty copy)
+  - [ ] 7.1 Dodać bankColor do OfferVideo (accent color per bank)
+  - [ ] 7.2 Wariant z napisami TikTok do eksportu reklamowego
+  - [ ] 7.3 Unikalne skrypty lektora per oferta (nie template)
+
+- [ ] 8.0 Server-side rendering do MP4 (opcjonalnie)
+  - [ ] 8.1 Setup @remotion/renderer
+  - [ ] 8.2 API endpoint renderowania MP4
+  - [ ] 8.3 Upload do storage (Supabase/S3)
