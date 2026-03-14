@@ -1,7 +1,9 @@
 /**
  * Unified AI client — tries providers in order of cost (cheapest first):
  * 1. Gemini free tier (if GEMINI_API_KEY set)
- * 2. OpenRouter (if OPENROUTER_API_KEY set) — auto-picks cheapest model
+ * 2. OpenRouter (if OPENROUTER_API_KEY set) — dynamically fetches available
+ *    models from the OpenRouter API, sorts by price, and tries from cheapest.
+ *    Model list is cached for 1h. Max price cap: $2/M tokens.
  *
  * Falls back to next provider on rate limit (429) or failure.
  */
@@ -13,16 +15,53 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const GEMINI_MODELS = ["gemini-2.0-flash", "gemini-2.0-flash-lite"];
 const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 
-// OpenRouter models — sorted by cost (cheapest first)
-// Prices are per 1M tokens (input+output combined estimate)
-const OPENROUTER_MODELS = [
-  "google/gemini-2.0-flash-exp:free",       // free
-  "meta-llama/llama-3.1-8b-instruct:free",  // free
-  "mistralai/mistral-small-3.1-24b-instruct:free", // free
-  "google/gemini-2.0-flash-001",            // $0.10/M
-  "meta-llama/llama-4-scout",               // $0.15/M
-  "anthropic/claude-3.5-haiku",             // $1/M (fallback quality)
-];
+// OpenRouter — dynamically fetched models sorted by cost
+// Max price per token (input+output) to consider — skip expensive models
+const OPENROUTER_MAX_PROMPT_PRICE = 0.000002; // $2/M tokens
+let cachedModels: string[] | null = null;
+let cacheTimestamp = 0;
+const CACHE_TTL = 1000 * 60 * 60; // 1 hour
+
+async function getOpenRouterModels(): Promise<string[]> {
+  if (cachedModels && Date.now() - cacheTimestamp < CACHE_TTL) {
+    return cachedModels;
+  }
+
+  const res = await fetch("https://openrouter.ai/api/v1/models", {
+    headers: { Authorization: `Bearer ${OPENROUTER_API_KEY}` },
+  });
+
+  if (!res.ok) {
+    // fallback to previously cached or hardcoded defaults
+    return cachedModels ?? ["google/gemini-2.0-flash-exp:free"];
+  }
+
+  interface ModelEntry {
+    id: string;
+    pricing?: { prompt?: string; completion?: string };
+  }
+
+  const data: { data: ModelEntry[] } = await res.json();
+
+  const sorted = data.data
+    .filter((m) => m.pricing?.prompt != null)
+    .sort((a, b) => {
+      const costA = Number(a.pricing!.prompt) + Number(a.pricing!.completion ?? 0);
+      const costB = Number(b.pricing!.prompt) + Number(b.pricing!.completion ?? 0);
+      return costA - costB;
+    })
+    .filter((m) => {
+      const cost = Number(m.pricing!.prompt);
+      return cost <= OPENROUTER_MAX_PROMPT_PRICE;
+    })
+    .map((m) => m.id);
+
+  cachedModels = sorted.length > 0 ? sorted : ["google/gemini-2.0-flash-exp:free"];
+  cacheTimestamp = Date.now();
+
+  console.log(`[OpenRouter] Fetched ${cachedModels.length} models, cheapest: ${cachedModels[0]}`);
+  return cachedModels;
+}
 
 interface OpenRouterResponse {
   choices?: { message?: { content?: string } }[];
@@ -102,7 +141,8 @@ async function tryGemini(prompt: string, maxOutputTokens: number): Promise<strin
 }
 
 async function tryOpenRouter(prompt: string, maxOutputTokens: number): Promise<string | null> {
-  for (const model of OPENROUTER_MODELS) {
+  const models = await getOpenRouterModels();
+  for (const model of models) {
     try {
       const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",

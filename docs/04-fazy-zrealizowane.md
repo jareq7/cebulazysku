@@ -337,3 +337,50 @@ Zostały zrealizowane w poprzednich sesjach. Kluczowe deliverables:
 - `/blog` i `/blog/[slug]` — infrastruktura blogowa z SEO
 - Dark mode via `next-themes` + `ThemeToggle`
 - `TrackingPixels` component (placeholder dla Google Ads i Meta Pixel)
+
+---
+
+## Faza 5 — Parser warunków z feedu + dynamiczny OpenRouter
+
+**Co zrobiono:**
+
+### Parser warunków z Leadstar (bez AI)
+- Nowy moduł `src/lib/parse-leadstar-conditions.ts` — deterministyczny parser tekstu (regex)
+- Parsuje `leadstar_benefits_html` na strukturalne `Condition[]` podczas synca
+- Wykrywa 12 typów warunków: `transfer`, `card_payment`, `blik_payment`, `income`, `standing_order`, `direct_debit`, `mobile_app_login`, `online_payment`, `contactless_payment`, `setup`, `savings`, `other`
+- Wykrywa liczbę wymaganych transakcji, miesięcy, warunki "perMonth"
+- Dziedziczenie kontekstu miesięcznego z bloków nadrzędnych (np. "W każdym z 5 kolejnych miesięcy:")
+- Deduplication — merguje duplikaty tego samego typu
+- Odpalany automatycznie w `sync-offers/route.ts` — tracker działa od razu po syncu
+
+### Rozdzielenie odpowiedzialności AI vs Feed
+- `generate-offer-content.ts` — AI generuje TYLKO `short_description`, `full_description`, `pros`, `cons`, `faq`
+- `conditions` usunięte z interfejsu `GeneratedOfferContent` i z AI prompta
+- `cron/generate-descriptions` — nie nadpisuje `conditions` w bazie
+- Sync respektuje `locked_fields` — ręcznie edytowane warunki nie są nadpisywane
+
+### Nowe typy warunków
+- `ConditionType` rozszerzony o `setup`, `savings`, `other`
+- Ikony: `UserPlus` (setup), `PiggyBank` (savings), `ListChecks` (other)
+- Zaktualizowane: `ConditionTracker.tsx`, `OfferCard.tsx`, `banks.ts`
+
+### Dynamiczny OpenRouter
+- `ai-client.ts` — zamiast hardkodowanej listy modeli, pobiera dynamicznie z `https://openrouter.ai/api/v1/models`
+- Sortuje po cenie (najtańsze najpierw), automatycznie aktualizuje się gdy zmieniają się ceny
+- Cache 1h, limit $2/M tokenów
+- Fallback na ostatnio zcachowaną listę gdy API niedostępne
+
+### Backfill
+- Jednorazowy skrypt backfillujący warunki dla 13 ofert bez conditions
+- 3 oferty bez parsowanych warunków (VeloBank — ogólne opisy, mBank "do wyboru" — brak HTML)
+
+**Zmienione pliki:**
+- `src/lib/parse-leadstar-conditions.ts` (NOWY)
+- `src/lib/ai-client.ts` — dynamiczne modele OpenRouter
+- `src/lib/generate-offer-content.ts` — usunięte conditions z AI
+- `src/app/api/sync-offers/route.ts` — parser warunków przy syncu
+- `src/app/api/cron/generate-descriptions/route.ts` — nie nadpisuje conditions
+- `src/data/banks.ts` — nowe typy + ikony
+- `src/components/ConditionTracker.tsx` — nowe ikony
+- `src/components/OfferCard.tsx` — nowe ikony
+- `scripts/test-generate.ts` — usunięte conditions

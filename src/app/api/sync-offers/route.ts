@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchLeadStarOffers, generateSlug, generateOfferId } from "@/lib/leadstar";
+import { parseLeadstarConditions } from "@/lib/parse-leadstar-conditions";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -59,12 +60,15 @@ export async function runSync() {
 
       const { data: existing } = await supabase
         .from("offers")
-        .select("id, source, reward, locked_fields, quality_flags, leadstar_description_html, leadstar_benefits_html")
+        .select("id, source, reward, locked_fields, quality_flags, conditions, leadstar_description_html, leadstar_benefits_html")
         .eq("leadstar_id", ls.id)
         .single();
 
       const descEmpty = !ls.description || ls.description.trim().length < 30;
       const benefitsEmpty = !ls.benefits || ls.benefits.trim().length < 30;
+
+      // Parsuj warunki z benefits HTML (bez AI — czysty parser tekstu)
+      const parsedConditions = parseLeadstarConditions(ls.benefits);
 
       if (existing) {
         const lockedFields: string[] = existing.locked_fields || [];
@@ -91,6 +95,15 @@ export async function runSync() {
 
         if (descChanged || benefitsChanged) {
           updateData.ai_generated_at = null;
+          // Reparsuj warunki z nowego HTML (chyba że conditions jest locked)
+          if (!lockedFields.includes("conditions") && parsedConditions.length > 0) {
+            updateData.conditions = parsedConditions;
+          }
+        }
+
+        // Uzupełnij warunki jeśli puste (nigdy nie były parsowane)
+        if (!lockedFields.includes("conditions") && !existing.conditions?.length && parsedConditions.length > 0) {
+          updateData.conditions = parsedConditions;
         }
 
         if (existing.source === "leadstar") {
@@ -115,6 +128,7 @@ export async function runSync() {
         const insertData = {
           ...offerData,
           reward: 0,
+          conditions: parsedConditions,
           locked_fields: [],
           quality_flags: {
             reward_zero: true,

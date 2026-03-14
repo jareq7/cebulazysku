@@ -33,6 +33,9 @@ import {
   Globe,
   Wifi,
   PartyPopper,
+  UserPlus,
+  PiggyBank,
+  ListChecks,
 } from "lucide-react";
 
 const conditionIcons: Record<ConditionType, React.ReactNode> = {
@@ -45,6 +48,9 @@ const conditionIcons: Record<ConditionType, React.ReactNode> = {
   mobile_app_login: <LogIn className="h-4 w-4" />,
   online_payment: <Globe className="h-4 w-4" />,
   contactless_payment: <Wifi className="h-4 w-4" />,
+  setup: <UserPlus className="h-4 w-4" />,
+  savings: <PiggyBank className="h-4 w-4" />,
+  other: <ListChecks className="h-4 w-4" />,
 };
 
 function getCurrentMonth(): string {

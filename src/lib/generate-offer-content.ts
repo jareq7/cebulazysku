@@ -6,15 +6,6 @@ export interface GeneratedOfferContent {
   pros: string[];
   cons: string[];
   faq: { question: string; answer: string }[];
-  conditions: {
-    id: string;
-    label: string;
-    description: string;
-    type: "transaction" | "deposit" | "login" | "setup" | "other";
-    requiredCount: number;
-    perMonth: boolean;
-    monthsRequired: number;
-  }[];
 }
 
 function decodeHtmlEntities(html: string): string {
@@ -70,7 +61,7 @@ Premia: ${reward} zł
 Opis z feedu: ${descPlain}
 Warunki z feedu: ${benPlain}
 
-ZADANIE: Wygeneruj treść do wyświetlenia na stronie oferty. Odpowiedz WYŁĄCZNIE poprawnym JSON (bez żadnego tekstu przed ani po), zgodnym z tym schematem:
+ZADANIE: Wygeneruj treść do wyświetlenia na stronie oferty. Warunki (conditions) są już sparsowane z feedu — NIE generuj ich. Odpowiedz WYŁĄCZNIE poprawnym JSON (bez żadnego tekstu przed ani po), zgodnym z tym schematem:
 
 {
   "short_description": "2-3 zdania zachęcające, max 220 znaków, wspomina premię ${reward} zł",
@@ -81,17 +72,6 @@ ZADANIE: Wygeneruj treść do wyświetlenia na stronie oferty. Odpowiedz WYŁĄC
     {"question": "Pytanie 1?", "answer": "Odpowiedź 1."},
     {"question": "Pytanie 2?", "answer": "Odpowiedź 2."},
     {"question": "Pytanie 3?", "answer": "Odpowiedź 3."}
-  ],
-  "conditions": [
-    {
-      "id": "cond_1",
-      "label": "Krótka nazwa warunku",
-      "description": "Szczegółowy opis co trzeba zrobić",
-      "type": "transaction",
-      "requiredCount": 5,
-      "perMonth": true,
-      "monthsRequired": 2
-    }
   ]
 }
 
@@ -101,8 +81,6 @@ ZASADY:
 - pros: minimum 2, maksimum 5 prawdziwych zalet (nie wymyślaj)
 - cons: minimum 1, maksimum 3 uczciwe wady (nie pomijaj warunków jeśli są wymagające)
 - faq: 3-5 pytań które użytkownik mógłby zadać
-- conditions: wyciągnij WSZYSTKIE warunki z sekcji "Warunki z feedu"; type to jedno z: "transaction" (transakcje kartą/BLIK), "deposit" (wpłata/przelew), "login" (logowanie do aplikacji), "setup" (założenie/aktywacja), "other"
-- Jeśli brak danych do warunków, zwróć "conditions": []
 - Odpowiedz TYLKO JSON, bez żadnych komentarzy`;
 
   try {
@@ -116,20 +94,13 @@ ZASADY:
       typeof parsed.full_description !== "string" ||
       !Array.isArray(parsed.pros) ||
       !Array.isArray(parsed.cons) ||
-      !Array.isArray(parsed.faq) ||
-      !Array.isArray(parsed.conditions)
+      !Array.isArray(parsed.faq)
     ) {
       console.error("generateOfferContent: invalid shape", parsed);
       return null;
     }
 
-    const sanitized = sanitize(parsed);
-
-    // Double-check wyłączony — oszczędność tokenów Gemini i czasu (Hobby 60s limit)
-    // const verified = await verifyOfferContent(sanitized, bankName, offerName, reward, descPlain, benPlain);
-    // return verified ?? sanitized;
-
-    return sanitized;
+    return sanitize(parsed);
   } catch (err) {
     console.error("generateOfferContent error:", err);
     return null;
@@ -145,17 +116,6 @@ function sanitize(parsed: GeneratedOfferContent): GeneratedOfferContent {
     faq: parsed.faq.slice(0, 6).map((f) => ({
       question: String(f.question || ""),
       answer: String(f.answer || ""),
-    })),
-    conditions: parsed.conditions.slice(0, 10).map((c, i) => ({
-      id: String(c.id || `cond_${i + 1}`),
-      label: String(c.label || ""),
-      description: String(c.description || ""),
-      type: (["transaction", "deposit", "login", "setup", "other"].includes(c.type)
-        ? c.type
-        : "other") as GeneratedOfferContent["conditions"][0]["type"],
-      requiredCount: Number(c.requiredCount) || 1,
-      perMonth: Boolean(c.perMonth),
-      monthsRequired: Number(c.monthsRequired) || 1,
     })),
   };
 }
@@ -200,8 +160,7 @@ Odpowiedz WYŁĄCZNIE poprawnym JSON (bez tekstu przed ani po), zachowując dok�
       typeof parsed.full_description !== "string" ||
       !Array.isArray(parsed.pros) ||
       !Array.isArray(parsed.cons) ||
-      !Array.isArray(parsed.faq) ||
-      !Array.isArray(parsed.conditions)
+      !Array.isArray(parsed.faq)
     ) {
       console.warn("verifyOfferContent: invalid shape, using draft");
       return null;

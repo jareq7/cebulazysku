@@ -62,11 +62,6 @@ async function main() {
   content.cons.forEach((c, i) => console.log(`  ${i + 1}. ${c}`));
   console.log("\n=== FAQ ===");
   content.faq.forEach((f, i) => console.log(`  Q${i + 1}: ${f.question}\n  A:  ${f.answer}\n`));
-  console.log("=== CONDITIONS ===");
-  content.conditions.forEach((c, i) =>
-    console.log(`  ${i + 1}. [${c.type}] ${c.label}: ${c.description}`)
-  );
-
   console.log("\nZapisuję do bazy...");
   const { error: saveError } = await supabase
     .from("offers")
@@ -76,7 +71,6 @@ async function main() {
       pros: content.pros,
       cons: content.cons,
       faq: content.faq,
-      conditions: content.conditions,
       ai_generated_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     })

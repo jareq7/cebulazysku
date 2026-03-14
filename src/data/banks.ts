@@ -7,7 +7,10 @@ export type ConditionType =
   | "direct_debit"
   | "mobile_app_login"
   | "online_payment"
-  | "contactless_payment";
+  | "contactless_payment"
+  | "setup"
+  | "savings"
+  | "other";
 
 export interface Condition {
   id: string;
@@ -55,6 +58,9 @@ export const conditionTypeLabels: Record<ConditionType, string> = {
   mobile_app_login: "Logowanie do aplikacji",
   online_payment: "Płatność online",
   contactless_payment: "Płatność zbliżeniowa",
+  setup: "Założenie / aktywacja",
+  savings: "Oszczędności",
+  other: "Inne",
 };
 
 export const conditionTypeIcons: Record<ConditionType, string> = {
@@ -67,6 +73,9 @@ export const conditionTypeIcons: Record<ConditionType, string> = {
   mobile_app_login: "LogIn",
   online_payment: "Globe",
   contactless_payment: "Wifi",
+  setup: "UserPlus",
+  savings: "PiggyBank",
+  other: "ListChecks",
 };
 
 export const bankOffers: BankOffer[] = [

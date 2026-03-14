@@ -80,7 +80,6 @@ export async function GET(request: NextRequest) {
           pros: content.pros,
           cons: content.cons,
           faq: content.faq,
-          conditions: content.conditions,
           ai_generated_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })

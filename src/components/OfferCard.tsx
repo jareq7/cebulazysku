@@ -16,6 +16,9 @@ import {
   LogIn,
   Globe,
   Wifi,
+  UserPlus,
+  PiggyBank,
+  ListChecks,
 } from "lucide-react";
 import {
   BankOffer,
@@ -35,6 +38,9 @@ const iconMap: Record<ConditionType, React.ReactNode> = {
   mobile_app_login: <LogIn className="h-3.5 w-3.5" />,
   online_payment: <Globe className="h-3.5 w-3.5" />,
   contactless_payment: <Wifi className="h-3.5 w-3.5" />,
+  setup: <UserPlus className="h-3.5 w-3.5" />,
+  savings: <PiggyBank className="h-3.5 w-3.5" />,
+  other: <ListChecks className="h-3.5 w-3.5" />,
 };
 
 export function OfferCard({ offer }: { offer: BankOffer }) {
