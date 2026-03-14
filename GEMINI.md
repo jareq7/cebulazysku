@@ -75,6 +75,22 @@ Pracujesz TYLKO nad rzeczami z poniższej listy. Wyniki zapisuj w katalogu `/res
 5. Powiedz userowi co zrobiłeś i gdzie jest output
 6. Czekaj na kolejne zadanie
 
+## Atrybucja kodu (OBOWIĄZKOWE)
+
+Każdy plik który tworzysz lub znacząco edytujesz musi mieć komentarz z autorem na górze:
+
+```ts
+// @author Gemini CLI (gemini-2.5-pro) | 2026-03-14
+```
+
+Jeśli edytujesz plik który ma już `@author` od Claude Code, dodaj swoją linię pod spodem:
+```ts
+// @author Claude Code (claude-opus-4-6) | 2026-03-14 — initial version
+// @author Gemini CLI (gemini-2.5-pro) | 2026-03-14 — opis co zmieniłeś
+```
+
+Format: `// @author [Narzędzie] ([model]) | [data YYYY-MM-DD] — [opcjonalny opis]`
+
 ## Eskalacja
 
 Jeśli Twoje zadanie wymaga zmiany w kodzie produkcyjnym — **nie rób tego sam**. Napisz rekomendację w swoim raporcie, user przekaże ją Claude Code do implementacji.

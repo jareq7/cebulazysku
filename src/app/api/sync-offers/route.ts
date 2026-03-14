@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchLeadStarOffers, generateSlug, generateOfferId } from "@/lib/leadstar";
 import { parseLeadstarConditions } from "@/lib/parse-leadstar-conditions";
+import { verifyConditionsWithAI } from "@/lib/verify-conditions-ai";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+export const maxDuration = 120;
 
 function isAuthorized(request: NextRequest): boolean {
   const authHeader = request.headers.get("authorization");
@@ -67,8 +68,29 @@ export async function runSync() {
       const descEmpty = !ls.description || ls.description.trim().length < 30;
       const benefitsEmpty = !ls.benefits || ls.benefits.trim().length < 30;
 
-      // Parsuj warunki z benefits HTML (bez AI — czysty parser tekstu)
-      const parsedConditions = parseLeadstarConditions(ls.benefits);
+      // Parsuj warunki: regex parser → AI verification
+      const regexConditions = parseLeadstarConditions(ls.benefits);
+      let parsedConditions = regexConditions;
+
+      if (regexConditions.length > 0 && (process.env.GEMINI_API_KEY || process.env.OPENROUTER_API_KEY)) {
+        try {
+          const stripHtml = (html: string) => html
+            .replace(/<[^>]+>/g, " ").replace(/&[a-zA-Z]+;/g, " ").replace(/\s+/g, " ").trim();
+          const rawText = stripHtml(ls.benefits || "");
+          const { conditions: verified, corrections } = await verifyConditionsWithAI(
+            regexConditions, rawText, ls.institution,
+          );
+          if (corrections.length > 0) {
+            console.log(`[sync] AI corrected conditions for ${ls.institution}: ${corrections.join("; ")}`);
+          }
+          parsedConditions = verified;
+          // Rate limit between AI calls
+          await new Promise((r) => setTimeout(r, 2000));
+        } catch {
+          // AI verification failed — use regex output
+          console.warn(`[sync] AI verification failed for ${ls.institution}, using regex output`);
+        }
+      }
 
       if (existing) {
         const lockedFields: string[] = existing.locked_fields || [];

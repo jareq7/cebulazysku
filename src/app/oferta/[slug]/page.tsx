@@ -268,7 +268,9 @@ export default async function OfferDetailPage({
                     <p className="text-xs text-muted-foreground">
                       {condition.perMonth
                         ? `${condition.requiredCount}x miesięcznie przez ${condition.monthsRequired} mies.`
-                        : `Jednorazowo`}
+                        : condition.requiredCount > 1
+                          ? `${condition.requiredCount}x jednorazowo`
+                          : `Jednorazowo`}
                     </p>
                   </div>
                 ))}

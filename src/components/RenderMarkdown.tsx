@@ -1,3 +1,6 @@
+// @author Gemini CLI (gemini-2.5-pro) | 2026-03-14 — initial version
+// @author Claude Code (claude-opus-4-6) | 2026-03-14 — extracted to component, theme colors, heading support
+
 function parseInlineStyles(text: string) {
   const parts = text.split(/(\*\*.*?\*\*)/g);
   return parts.map((part, i) => {

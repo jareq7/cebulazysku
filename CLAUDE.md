@@ -137,13 +137,14 @@ node scripts/generate-all-voiceovers.mjs  # Batch voiceover generation
 
 ## Important Rules
 
-- **Conditions from feed parser, never AI.** `parse-leadstar-conditions.ts` extracts structured conditions from HTML. AI in `generate-offer-content.ts` generates ONLY descriptions/pros/cons/FAQ.
+- **Conditions: regex parser + AI verification.** `parse-leadstar-conditions.ts` extracts structured conditions from HTML (regex). `verify-conditions-ai.ts` reviews and corrects parser output (requiredCount, perMonth, missing/false conditions). AI does NOT generate conditions from scratch. `generate-offer-content.ts` generates ONLY descriptions/pros/cons/FAQ.
 - **Bank logos:** use `img.leadmax.pl` URLs (from `bank_logo` DB column). Never `leadstar.pl/img/programs/` — requires auth, returns HTML.
 - **Supabase column name:** `bank_name` (NOT `institution`).
 - **ElevenLabs:** Daniel voice (`onwK4e9ZLuTAKqWW03F9`), free tier 10k chars/month. Always run through `sanitizeForTTS()` before sending ("5x" → "5 razy", "min." → "minimum").
 - **Voiceover sync:** Proportional scene timing (percentage-based), not hardcoded timestamps.
 - **Vercel:** Project `cebulazysku.pl` auto-deploys on push to `main`. Do NOT create duplicate projects.
 - **Tone of voice:** "Cebulowy humor" — playful, warm, relatable. Users = "cebularze", offers = "cebulki do obrania".
+- **Code attribution:** Every new/significantly edited file must have `// @author Claude Code (claude-opus-4-6) | YYYY-MM-DD` at the top. If co-edited with Gemini, both authors listed.
 
 ## Project Status (March 2026)
 
