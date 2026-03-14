@@ -1,11 +1,9 @@
 /**
- * Unified AI client — tries providers in order of cost (cheapest first):
+ * Unified AI client — tries providers in order:
  * 1. Gemini free tier (if GEMINI_API_KEY set)
- * 2. OpenRouter (if OPENROUTER_API_KEY set) — dynamically fetches available
- *    models from the OpenRouter API, sorts by price, and tries from cheapest.
- *    Model list is cached for 1h. Max price cap: $2/M tokens.
+ * 2. OpenRouter (if OPENROUTER_API_KEY set) — curated models sorted by cost
  *
- * Falls back to next provider on rate limit (429) or failure.
+ * Falls back to next provider/model on rate limit (429) or failure.
  */
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -15,53 +13,14 @@ const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
 const GEMINI_MODELS = ["gemini-2.0-flash", "gemini-2.0-flash-lite"];
 const GEMINI_BASE = "https://generativelanguage.googleapis.com/v1beta/models";
 
-// OpenRouter — dynamically fetched models sorted by cost
-// Max price per token (input+output) to consider — skip expensive models
-const OPENROUTER_MAX_PROMPT_PRICE = 0.000002; // $2/M tokens
-let cachedModels: string[] | null = null;
-let cacheTimestamp = 0;
-const CACHE_TTL = 1000 * 60 * 60; // 1 hour
-
-async function getOpenRouterModels(): Promise<string[]> {
-  if (cachedModels && Date.now() - cacheTimestamp < CACHE_TTL) {
-    return cachedModels;
-  }
-
-  const res = await fetch("https://openrouter.ai/api/v1/models", {
-    headers: { Authorization: `Bearer ${OPENROUTER_API_KEY}` },
-  });
-
-  if (!res.ok) {
-    // fallback to previously cached or hardcoded defaults
-    return cachedModels ?? ["google/gemini-2.0-flash-exp:free"];
-  }
-
-  interface ModelEntry {
-    id: string;
-    pricing?: { prompt?: string; completion?: string };
-  }
-
-  const data: { data: ModelEntry[] } = await res.json();
-
-  const sorted = data.data
-    .filter((m) => m.pricing?.prompt != null)
-    .sort((a, b) => {
-      const costA = Number(a.pricing!.prompt) + Number(a.pricing!.completion ?? 0);
-      const costB = Number(b.pricing!.prompt) + Number(b.pricing!.completion ?? 0);
-      return costA - costB;
-    })
-    .filter((m) => {
-      const cost = Number(m.pricing!.prompt);
-      return cost <= OPENROUTER_MAX_PROMPT_PRICE;
-    })
-    .map((m) => m.id);
-
-  cachedModels = sorted.length > 0 ? sorted : ["google/gemini-2.0-flash-exp:free"];
-  cacheTimestamp = Date.now();
-
-  console.log(`[OpenRouter] Fetched ${cachedModels.length} models, cheapest: ${cachedModels[0]}`);
-  return cachedModels;
-}
+// OpenRouter — curated models tested for Polish JSON generation, cheapest first
+const OPENROUTER_MODELS = [
+  "meta-llama/llama-3.1-8b-instruct",        // $0.02+$0.05/M — tested, works
+  "mistralai/mistral-small-3.1-24b-instruct", // $0.10+$0.30/M — good quality
+  "google/gemini-2.0-flash-001",              // $0.10+$0.40/M — reliable
+  "meta-llama/llama-4-scout",                 // $0.15+$0.40/M — newest llama
+  "anthropic/claude-3.5-haiku",               // $0.80+$4.00/M — quality fallback
+];
 
 interface OpenRouterResponse {
   choices?: { message?: { content?: string } }[];
@@ -80,16 +39,18 @@ export async function askAI(prompt: string, maxOutputTokens = 1024): Promise<str
     try {
       const result = await tryGemini(prompt, maxOutputTokens);
       if (result) return result;
+      errors.push("Gemini: all models exhausted (rate limit or error)");
     } catch (err) {
       errors.push(`Gemini: ${err instanceof Error ? err.message : String(err)}`);
     }
   }
 
-  // 2. Try OpenRouter (cheapest models first)
+  // 2. Try OpenRouter (curated models, cheapest first)
   if (OPENROUTER_API_KEY) {
     try {
       const result = await tryOpenRouter(prompt, maxOutputTokens);
       if (result) return result;
+      errors.push("OpenRouter: all models exhausted");
     } catch (err) {
       errors.push(`OpenRouter: ${err instanceof Error ? err.message : String(err)}`);
     }
@@ -123,11 +84,11 @@ async function tryGemini(prompt: string, maxOutputTokens: number): Promise<strin
         break; // try next model
       }
 
-      if (res.status === 403) break; // try next model
+      if (res.status === 403) break;
 
       if (!res.ok) {
         const errBody = await res.text();
-        console.warn(`Gemini ${model} error ${res.status}: ${errBody.slice(0, 200)}`);
+        console.warn(`[AI] Gemini ${model} error ${res.status}: ${errBody.slice(0, 200)}`);
         break;
       }
 
@@ -137,12 +98,11 @@ async function tryGemini(prompt: string, maxOutputTokens: number): Promise<strin
     }
   }
 
-  return null; // all Gemini models failed, try next provider
+  return null;
 }
 
 async function tryOpenRouter(prompt: string, maxOutputTokens: number): Promise<string | null> {
-  const models = await getOpenRouterModels();
-  for (const model of models) {
+  for (const model of OPENROUTER_MODELS) {
     try {
       const res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
         method: "POST",
@@ -161,26 +121,30 @@ async function tryOpenRouter(prompt: string, maxOutputTokens: number): Promise<s
       });
 
       if (res.status === 429) {
-        await sleep(2000);
-        continue; // try next model
+        console.warn(`[AI] OpenRouter ${model}: rate limited, trying next`);
+        await sleep(1000);
+        continue;
       }
 
       if (!res.ok) {
-        console.warn(`OpenRouter ${model} error ${res.status}`);
+        console.warn(`[AI] OpenRouter ${model}: HTTP ${res.status}`);
         continue;
       }
 
       const data: OpenRouterResponse = await res.json();
 
       if (data.error) {
-        console.warn(`OpenRouter ${model}: ${data.error.message}`);
+        console.warn(`[AI] OpenRouter ${model}: ${data.error.message}`);
         continue;
       }
 
       const text = data.choices?.[0]?.message?.content?.trim();
-      if (text) return text;
+      if (text) {
+        console.log(`[AI] OpenRouter ${model}: success`);
+        return text;
+      }
     } catch (err) {
-      console.warn(`OpenRouter ${model} exception:`, err);
+      console.warn(`[AI] OpenRouter ${model} exception:`, err);
       continue;
     }
   }
@@ -192,5 +156,5 @@ function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
-// Backward compatibility — drop-in replacement for askGemini
+// Backward compatibility
 export const askGemini = askAI;
