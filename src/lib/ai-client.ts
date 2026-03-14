@@ -66,36 +66,30 @@ async function tryGemini(prompt: string, maxOutputTokens: number): Promise<strin
   });
 
   for (const model of GEMINI_MODELS) {
-    for (let attempt = 0; attempt < 2; attempt++) {
-      const res = await fetch(`${GEMINI_BASE}/${model}:generateContent`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-goog-api-key": GEMINI_API_KEY!,
-        },
-        body,
-      });
+    const res = await fetch(`${GEMINI_BASE}/${model}:generateContent`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-goog-api-key": GEMINI_API_KEY!,
+      },
+      body,
+    });
 
-      if (res.status === 429) {
-        if (attempt === 0) {
-          await sleep(3000);
-          continue;
-        }
-        break; // try next model
-      }
-
-      if (res.status === 403) break;
-
-      if (!res.ok) {
-        const errBody = await res.text();
-        console.warn(`[AI] Gemini ${model} error ${res.status}: ${errBody.slice(0, 200)}`);
-        break;
-      }
-
-      const data: GeminiResponse = await res.json();
-      const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-      if (text) return text;
+    if (res.status === 429 || res.status === 403) {
+      // Rate limited or forbidden — skip all Gemini, fall through to OpenRouter
+      console.warn(`[AI] Gemini ${model}: ${res.status}, falling back to OpenRouter`);
+      return null;
     }
+
+    if (!res.ok) {
+      const errBody = await res.text();
+      console.warn(`[AI] Gemini ${model} error ${res.status}: ${errBody.slice(0, 200)}`);
+      continue; // try next Gemini model
+    }
+
+    const data: GeminiResponse = await res.json();
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
+    if (text) return text;
   }
 
   return null;
