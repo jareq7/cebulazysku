@@ -26,18 +26,29 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "GEMINI_API_KEY nie jest ustawiony." }, { status: 400 });
   }
 
+  const { searchParams } = new URL(request.url);
+  const force = searchParams.get("force") === "true";
+  const limit = force ? 10 : MAX_PER_RUN;
+
   const start = Date.now();
   const supabase = createAdminClient();
 
-  // Pobierz aktywne oferty z feedu LeadStar które nie mają jeszcze wygenerowanych opisów
-  const { data: offers, error } = await supabase
+  // Pobierz aktywne oferty z feedu LeadStar
+  let query = supabase
     .from("offers")
-    .select("id, bank_name, offer_name, reward, leadstar_description_html, leadstar_benefits_html")
+    .select("id, bank_name, offer_name, reward, leadstar_description_html, leadstar_benefits_html, ai_generated_at")
     .eq("is_active", true)
-    .is("ai_generated_at", null)
-    .not("leadstar_description_html", "is", null)
-    .order("first_seen_at", { ascending: true })
-    .limit(MAX_PER_RUN);
+    .not("leadstar_description_html", "is", null);
+
+  if (force) {
+    // Jeśli wymuszamy, bierzemy te najdawniej generowane lub wcale
+    query = query.order("ai_generated_at", { ascending: true, nullsFirst: true });
+  } else {
+    // Standardowo tylko te które nie mają jeszcze opisu
+    query = query.is("ai_generated_at", null).order("first_seen_at", { ascending: true });
+  }
+
+  const { data: offers, error } = await query.limit(limit);
 
   if (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -46,7 +57,7 @@ export async function GET(request: NextRequest) {
   if (!offers || offers.length === 0) {
     return NextResponse.json({
       success: true,
-      message: "Wszystkie oferty mają już wygenerowane opisy.",
+      message: "Wszystkie oferty mają już aktualne opisy.",
       generated: 0,
       duration_ms: Date.now() - start,
     });

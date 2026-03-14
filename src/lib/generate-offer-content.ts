@@ -52,36 +52,56 @@ export async function generateOfferContent(
   const descPlain = stripHtml(descriptionHtml).slice(0, 3000);
   const benPlain = stripHtml(benefitsHtml).slice(0, 2000);
 
-  const prompt = `Jesteś copywriterem serwisu CebulaZysku.pl — agregatu promocji bankowych. Piszesz w tonie przystępnym, lekko humorystycznym, nawiązującym do cebuli i "obierania warstw zysku". Unikasz korporacyjnego żargonu. Tekst ma być zrozumiały dla każdego, nie tylko dla finansistów.
+  const prompt = `Jesteś senior copywriterem serwisu CebulaZysku.pl. Twoim zadaniem jest stworzenie soczystego, konkretnego i niezwykle czytelnego opisu promocji bankowej.
+
+TONE OF VOICE:
+- Przystępny, humorystyczny, "cebulowy" (nawiązania do obierania warstw zysku, łupienia banków).
+- Poziom humoru: 7/10 (śmiesznie, ale konkretnie i profesjonalnie przy liczbach).
+- Zero korporacyjnego bełkotu i lania wody.
+
+STRUKTURA OPISU (full_description):
+Musisz użyć dokładnie tej struktury i formatowania Markdown:
+
+1. **Szybki strzał (TL;DR)**: Jedno pogrubione zdanie z kwotą premii.
+   Przykład: **Zgarnij równe ${reward} zł** za otwarcie konta i kilka prostych ruchów kartą.
+
+2. **Dla kogo ta cebulka?**: Lista punktowa (kto może skorzystać, a kto jest wykluczony - np. powracający klienci).
+   Użyj formatu:
+   - Nowi klienci (brak konta od [data])
+   - Osoby pełnoletnie
+   - Fani darmowej kasy
+
+3. **Kluczowe kroki**: Skondensowana lista etapów prowadzących do wypłaty.
+   Użyj formatu:
+   - **Krok 1**: Załóż konto z linku poniżej.
+   - **Krok 2**: Wpłać min. [kwota] zł.
+   - **Krok 3**: Zapłać min. [X] razy kartą.
+
+4. **Cebulowy werdykt**: 2-3 zdania podsumowania, czy warto i jak bardzo to jest opłacalne.
 
 OFERTA DO OPISANIA:
 Bank: ${bankName}
 Nazwa oferty: ${offerName}
 Premia: ${reward} zł
-Opis z feedu: ${descPlain}
-Warunki z feedu: ${benPlain}
+Surowe dane z feedu:
+Opis: ${descPlain}
+Warunki: ${benPlain}
 
-ZADANIE: Wygeneruj treść do wyświetlenia na stronie oferty. Warunki (conditions) są już sparsowane z feedu — NIE generuj ich. Odpowiedz WYŁĄCZNIE poprawnym JSON (bez żadnego tekstu przed ani po), zgodnym z tym schematem:
+ZADANIE: Odpowiedz WYŁĄCZNIE poprawnym JSON (bez markdownu na zewnątrz), zgodnym z tym schematem:
 
 {
-  "short_description": "2-3 zdania zachęcające, max 220 znaków, wspomina premię ${reward} zł",
-  "full_description": "3-4 akapity (każdy oddzielony \\n\\n), czytelny opis oferty: co to jest, jak działa, dla kogo, cebulowy akcent na koniec",
-  "pros": ["zaleta 1", "zaleta 2", "zaleta 3"],
-  "cons": ["wada 1", "wada 2"],
-  "faq": [
-    {"question": "Pytanie 1?", "answer": "Odpowiedź 1."},
-    {"question": "Pytanie 2?", "answer": "Odpowiedź 2."},
-    {"question": "Pytanie 3?", "answer": "Odpowiedź 3."}
-  ]
+  "short_description": "2 zdania zachęcające, max 200 znaków, wspomina premię ${reward} zł",
+  "full_description": "Opis w strukturze opisanej wyżej, używający \\n\\n do oddzielania sekcji i Markdown (**bold**, - listy).",
+  "pros": ["max 5 konkretnych zalet"],
+  "cons": ["max 3 uczciwe wady"],
+  "faq": [{"question": "...", "answer": "..."}]
 }
 
 ZASADY:
-- short_description: zwięzłe, zachęcające, z kwotą premii
-- full_description: przystępny język, cebulowy humor bez przesady, konkretne info
-- pros: minimum 2, maksimum 5 prawdziwych zalet (nie wymyślaj)
-- cons: minimum 1, maksimum 3 uczciwe wady (nie pomijaj warunków jeśli są wymagające)
-- faq: 3-5 pytań które użytkownik mógłby zadać
-- Odpowiedz TYLKO JSON, bez żadnych komentarzy`;
+- Kwoty i najważniejsze terminy ZAWSZE pogrubiaj (**kwota**).
+- W sekcji "Kluczowe kroki" podawaj konkretne kwoty i liczby z feedu.
+- NIE generuj warunków (conditions) - one są już na stronie, Ty piszesz opis.
+- Jeśli w feedzie nie ma daty karencji dla powracających klientów, napisz "Sprawdź szczegóły w regulaminie".`;
 
   try {
     const raw = await askGemini(prompt, 3000);

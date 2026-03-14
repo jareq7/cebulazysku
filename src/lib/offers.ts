@@ -24,11 +24,16 @@ function decodeHtmlEntities(html: string): string {
     .replace(/&#x([0-9a-fA-F]+);/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
 }
 
-function decodeAndStripHtml(html: string): string {
+function decodeAndFormatDescription(html: string): string {
   return decodeHtmlEntities(html)
-    .replace(/<br\s*\/?>/gi, "\n")
-    .replace(/<[^>]+>/g, " ")
-    .replace(/\s+/g, " ")
+    .replace(/<br\s*\/?>/gi, "\n") // <br> na nową linię
+    .replace(/<p[^>]*>/gi, "")     // usuń <p>
+    .replace(/<\/p>/gi, "\n\n")    // </p> na podwójną nową linię
+    .replace(/<[^>]+>/g, "")       // usuń pozostałe tagi HTML
+    .replace(/[ \t]+/g, " ")       // zredukuj spacje i tabulatory do jednej spacji
+    .replace(/\n +/g, "\n")        // usuń spacje na początku nowej linii
+    .replace(/ +\n/g, "\n")        // usuń spacje na końcu linii
+    .replace(/\n\n+/g, "\n\n")     // zredukuj wielokrotne nowe linie do max dwóch
     .trim();
 }
 
@@ -45,8 +50,8 @@ function mapDbOffer(row: any): BankOffer {
     offerName: row.offer_name,
     shortDescription: row.short_description || "",
     fullDescription: row.full_description
-      ? decodeAndStripHtml(row.full_description)
-      : (row.leadstar_description_html ? decodeAndStripHtml(row.leadstar_description_html) : ""),
+      ? decodeAndFormatDescription(row.full_description)
+      : (row.leadstar_description_html ? decodeAndFormatDescription(row.leadstar_description_html) : ""),
     reward: row.reward || 0,
     difficulty: row.difficulty || "medium",
     conditions: Array.isArray(row.conditions) ? row.conditions as Condition[] : [],

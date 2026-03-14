@@ -16,6 +16,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { OfferTrackingActions } from "@/components/OfferTrackingActions";
 import { OfferCard } from "@/components/OfferCard";
 import { OfferVideoPlayer } from "@/components/OfferVideoPlayer";
+import { RenderMarkdown } from "@/components/RenderMarkdown";
 import {
   Clock,
   CheckCircle,
@@ -190,9 +191,7 @@ export default async function OfferDetailPage({
               <CardTitle>O promocji</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-muted-foreground leading-relaxed">
-                {offer.fullDescription}
-              </p>
+              <RenderMarkdown text={offer.fullDescription} />
               {offer.freeIf && (
                 <p className="mt-4 text-sm">
                   <strong>Konto bezpłatne jeśli:</strong>{" "}

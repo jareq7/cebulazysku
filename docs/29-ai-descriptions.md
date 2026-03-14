@@ -148,3 +148,18 @@ W zakładce **Feed / Jakość** (`/admin/feed`):
 | `src/app/api/sync-offers/route.ts` | Reset `ai_generated_at` przy zmianie treści feedu |
 | `src/app/admin/feed/page.tsx` | Kolumna AI, filtr „Bez AI", przycisk generacji |
 | `scripts/test-generate.ts` | Lokalny skrypt testowy (tsx) |
+
+---
+
+## Faza 4: Optymalizacja Copywritingu i Formatowania (Marzec 2026)
+
+**Cel:** Poprawa czytelności opisów poprzez wprowadzenie struktury modułowej i formatowania Markdown (pogrubienia, listy).
+
+**Zmiany:**
+1.  **Prompt:** Wymuszenie struktury: Szybki strzał (TL;DR), Dla kogo, Kroki, Werdykt.
+2.  **Formatowanie:** Obsługa Markdown (`**bold**`, `- list`) w `full_description`.
+3.  **Lib `offers.ts`:** Zmiana `decodeAndStripHtml` na `decodeAndFormatDescription`, aby zachować znaki nowej linii i formatowanie Markdown, ale czyścić śmieciowy HTML z LeadStar.
+4.  **Frontend:** Komponent `RenderMarkdown` w `src/app/oferta/[slug]/page.tsx` renderujący pogrubienia i listy.
+5.  **API:** Endpoint `/api/cron/generate-descriptions` obsługuje parametr `force=true` do wymuszenia re-generacji opisów dla wszystkich ofert.
+
+**Status:** Zrealizowane na branchu `feature/copywriting-optimization`.
