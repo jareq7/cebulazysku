@@ -2,6 +2,7 @@
 
 import type { Condition, ConditionType } from "@/data/banks";
 import { askAI } from "@/lib/ai-client";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 /**
  * AI verification layer for parsed conditions.
@@ -38,6 +39,7 @@ export async function verifyConditionsWithAI(
   parsedConditions: Condition[],
   rawBenefitsText: string,
   bankName: string,
+  offerId?: string,
 ): Promise<VerificationResult> {
   if (parsedConditions.length === 0) {
     return { conditions: [], corrections: [], verified: true };
@@ -131,14 +133,44 @@ Jeśli nie ma żadnych poprawek, corrections powinno być pustą tablicą [].`;
       console.log(`[AI-verify] ${bankName}: ${corrections.length} correction(s): ${corrections.join("; ")}`);
     }
 
-    return {
+    const result: VerificationResult = {
       conditions: verified.length > 0 ? verified : parsedConditions,
       corrections,
       verified: true,
     };
+
+    // Log to DB (graceful — don't block sync on log failure)
+    await saveVerificationLog(offerId, bankName, parsedConditions, result);
+
+    return result;
   } catch (err) {
     console.error(`[AI-verify] Failed for ${bankName}:`, err instanceof Error ? err.message : String(err));
-    // On AI failure, keep parser output — it's better than nothing
-    return { conditions: parsedConditions, corrections: [], verified: false };
+
+    const failResult: VerificationResult = { conditions: parsedConditions, corrections: [], verified: false };
+    await saveVerificationLog(offerId, bankName, parsedConditions, failResult);
+
+    return failResult;
+  }
+}
+
+async function saveVerificationLog(
+  offerId: string | undefined,
+  bankName: string,
+  regexConditions: Condition[],
+  result: VerificationResult,
+): Promise<void> {
+  if (!offerId) return;
+  try {
+    const supabase = createAdminClient();
+    await supabase.from("ai_verification_logs").insert({
+      offer_id: offerId,
+      bank_name: bankName,
+      regex_conditions: regexConditions,
+      ai_conditions: result.conditions,
+      corrections: result.corrections,
+      verified: result.verified,
+    });
+  } catch (err) {
+    console.warn("[AI-verify] Failed to save log:", err instanceof Error ? err.message : String(err));
   }
 }

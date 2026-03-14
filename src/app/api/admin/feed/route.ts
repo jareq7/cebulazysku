@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyAdmin } from "@/lib/admin-auth";
+import { parseLeadstarConditions } from "@/lib/parse-leadstar-conditions";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -15,7 +16,7 @@ export async function GET(request: NextRequest) {
     const { data, error } = await supabase
       .from("offers")
       .select(
-        "id, slug, bank_name, offer_name, reward, short_description, difficulty, is_active, source, affiliate_url, leadstar_id, leadstar_product_id, is_business, for_young, leadstar_description_html, leadstar_benefits_html, locked_fields, quality_flags, first_seen_at, updated_at, ai_generated_at"
+        "id, slug, bank_name, offer_name, reward, short_description, difficulty, is_active, source, affiliate_url, leadstar_id, leadstar_product_id, is_business, for_young, leadstar_description_html, leadstar_benefits_html, locked_fields, quality_flags, conditions, first_seen_at, updated_at, ai_generated_at"
       )
       .order("bank_name", { ascending: true });
 
@@ -34,7 +35,7 @@ export async function PATCH(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { id, locked_fields, ...fieldUpdates } = body;
+    const { id, locked_fields, conditions, unlock_conditions, ...fieldUpdates } = body;
 
     if (!id) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
@@ -62,6 +63,35 @@ export async function PATCH(request: NextRequest) {
     // locked_fields — lista pól chronionych przed sync
     if (Array.isArray(locked_fields)) {
       safeUpdates.locked_fields = locked_fields;
+    }
+
+    // Conditions — ręczna edycja warunków
+    if (Array.isArray(conditions)) {
+      safeUpdates.conditions = conditions;
+      // Auto-lock conditions to prevent sync overwrite
+      const { data: current } = await supabase
+        .from("offers")
+        .select("locked_fields")
+        .eq("id", id)
+        .single();
+      const currentLocked: string[] = current?.locked_fields || [];
+      if (!currentLocked.includes("conditions")) {
+        safeUpdates.locked_fields = [...currentLocked, "conditions"];
+      }
+    }
+
+    // Unlock conditions — remove lock and reparse from feed
+    if (unlock_conditions) {
+      const { data: current } = await supabase
+        .from("offers")
+        .select("locked_fields, leadstar_benefits_html")
+        .eq("id", id)
+        .single();
+      const currentLocked: string[] = current?.locked_fields || [];
+      safeUpdates.locked_fields = currentLocked.filter((f: string) => f !== "conditions");
+      if (current?.leadstar_benefits_html) {
+        safeUpdates.conditions = parseLeadstarConditions(current.leadstar_benefits_html);
+      }
     }
 
     if (Object.keys(safeUpdates).length === 0) {

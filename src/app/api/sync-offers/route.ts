@@ -78,7 +78,7 @@ export async function runSync() {
             .replace(/<[^>]+>/g, " ").replace(/&[a-zA-Z]+;/g, " ").replace(/\s+/g, " ").trim();
           const rawText = stripHtml(ls.benefits || "");
           const { conditions: verified, corrections } = await verifyConditionsWithAI(
-            regexConditions, rawText, ls.institution,
+            regexConditions, rawText, ls.institution, offerId,
           );
           if (corrections.length > 0) {
             console.log(`[sync] AI corrected conditions for ${ls.institution}: ${corrections.join("; ")}`);
