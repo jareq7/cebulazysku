@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
 
   let generated = 0;
   let failed = 0;
-  const details: { bank: string; status: "ok" | "failed" }[] = [];
+  const details: { bank: string; status: "ok" | "failed"; error?: string }[] = [];
 
   for (const offer of offers) {
     try {
@@ -68,7 +68,7 @@ export async function GET(request: NextRequest) {
 
       if (!content) {
         failed++;
-        details.push({ bank: offer.bank_name, status: "failed" });
+        details.push({ bank: offer.bank_name, status: "failed", error: "AI returned null" });
         continue;
       }
 
@@ -95,9 +95,10 @@ export async function GET(request: NextRequest) {
       generated++;
       details.push({ bank: offer.bank_name, status: "ok" });
     } catch (err) {
-      console.error(`generateOfferContent exception for ${offer.id}:`, err);
+      const errMsg = err instanceof Error ? err.message : String(err);
+      console.error(`generateOfferContent exception for ${offer.id}:`, errMsg);
       failed++;
-      details.push({ bank: offer.bank_name, status: "failed" });
+      details.push({ bank: offer.bank_name, status: "failed", error: errMsg });
     }
 
     // Przerwa między wywołaniami Gemini (rate limit: 15 req/min na darmowym planie)
@@ -111,6 +112,10 @@ export async function GET(request: NextRequest) {
     generated,
     failed,
     duration_ms: Date.now() - start,
+    providers: {
+      gemini: !!process.env.GEMINI_API_KEY,
+      openrouter: !!process.env.OPENROUTER_API_KEY,
+    },
     details,
   });
 }
