@@ -8,9 +8,9 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, BookOpen, Clock } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Blog – Poradniki i artykuły o promocjach bankowych",
+  title: "Blog i Poradniki – Jak zarabiać na bankach? | CebulaZysku",
   description:
-    "Praktyczne poradniki, porównania i aktualności ze świata promocji bankowych. Dowiedz się, jak bezpiecznie korzystać z premii.",
+    "Praktyczne poradniki, wyjaśnienie regulaminów i aktualności ze świata promocji bankowych. Dowiedz się, jak bezpiecznie łupić banki i zbierać premie! 🧅",
 };
 
 export const revalidate = 300; // ISR: revalidate every 5 min

@@ -80,19 +80,29 @@ export async function listVoices(): Promise<{ voice_id: string; name: string; la
  * Returns text optimized for TTS (~25 seconds of speech for 30s video).
  * Numbers written as words for natural Polish pronunciation.
  */
-function sanitizeForTTS(text: string): string {
-  return text
-    .replace(/(\d+)x\b/g, '$1 razy')
-    .replace(/\bmin\.\s*/g, 'minimum ')
-    .replace(/\bmaks\.\s*/g, 'maksimum ')
-    .replace(/\bmies\.\s*/g, 'miesięcznie ')
-    .replace(/\bzł\/mies\./g, 'złotych miesięcznie')
-    .replace(/\bzł\b/g, 'złotych')
-    .replace(/\bnr\.\s*/g, 'numer ')
-    .replace(/\btys\.\s*/g, 'tysięcy ')
-    .replace(/\br\.\s*/g, 'roku ')
-    .replace(/\s+/g, ' ')
-    .trim();
+export function sanitizeForTTS(text: string): string {
+  let t = text;
+  
+  // 1. Złożone skróty najpierw
+  t = t.replace(/\bz[łl]\/mies\./gi, 'złotych miesięcznie');
+  
+  // 2. Skróty z kropką
+  t = t.replace(/\bmin\.\s*/gi, 'minimum ');
+  t = t.replace(/\bmaks\.\s*/gi, 'maksimum ');
+  t = t.replace(/\bmies\.\s*/gi, 'miesięcznie ');
+  t = t.replace(/\bnr\.\s*/gi, 'numer ');
+  t = t.replace(/\btys\.\s*/gi, 'tysięcy ');
+  t = t.replace(/\br\.\s*/gi, 'roku ');
+  
+  // 3. Specyficzne dla liczb (np. 5x)
+  t = t.replace(/(\d+)x\b/g, '$1 razy');
+  
+  // 4. Samodzielne "zł" (uważnie, aby nie zepsuć słów)
+  // Używamy ucieczki dla polskich znaków i sprawdzamy granice słów ręcznie jeśli \b zawodzi
+  t = t.replace(/(^|\s)z[łl](\s|$|,|\.)/gi, '$1złotych$2');
+  
+  // 5. Cleanup
+  return t.replace(/\s+/g, ' ').trim();
 }
 
 export function generateVoiceoverScript(

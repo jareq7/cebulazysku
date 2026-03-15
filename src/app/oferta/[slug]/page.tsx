@@ -41,8 +41,8 @@ export async function generateMetadata({
   const offer = await fetchOfferBySlug(slug);
   if (!offer) return {};
 
-  const title = `${offer.bankName} – ${offer.offerName} | Warunki i szczegóły`;
-  const description = `${offer.shortDescription} Sprawdź warunki promocji ${offer.bankName} i odbierz premię ${offer.reward} zł. Szczegółowy opis, zalety, wady i FAQ.`;
+  const title = `Promocja ${offer.bankName}: ${offer.reward} zł za ${offer.offerName} | CebulaZysku`;
+  const description = `${offer.shortDescription} Zobacz jak ołupić bank ${offer.bankName} i zgarnąć ${offer.reward} zł premii. Sprawdzone warunki, instrukcja krok po kroku i tracker postępów! 🧅`;
 
   return {
     title,

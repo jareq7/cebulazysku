@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { OfferFilters } from "@/components/OfferFilters";
@@ -14,18 +15,25 @@ import {
 import { DisclaimerBanner } from "@/components/DisclaimerBanner";
 import { JsonLd } from "@/components/JsonLd";
 
+export async function generateMetadata(): Promise<Metadata> {
+  const totalEarnings = await getTotalPotentialEarnings();
+  return {
+    title: "Promocje Bankowe i Ranking Kont 2026 – Zgarnij Premie | CebulaZysku",
+    description: `Aktualne promocje bankowe i ranking kont osobistych. Porównaj oferty, sprawdź haczyki i zyskaj nawet ${totalEarnings} zł na start. Łupimy banki legalnie! 🧅`,
+  };
+}
+
 export default async function Home() {
+  const totalEarnings = await getTotalPotentialEarnings();
+  const bankOffers = await fetchOffersFromDB();
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
     name: "CebulaZysku",
     url: "https://cebulazysku.pl",
-    description:
-      "Obierz premie bankowe warstwa po warstwie. Łupimy banki legalnie!",
+    description: `Zyskaj nawet ${totalEarnings} zł dzięki promocjom bankowym. Ranking CebulaZysku pomoże Ci ołupić banki legalnie!`,
     inLanguage: "pl-PL",
   };
-  const bankOffers = await fetchOffersFromDB();
-  const totalEarnings = await getTotalPotentialEarnings();
 
   return (
     <>
