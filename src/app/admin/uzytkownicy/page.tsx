@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Loader2,
   AlertTriangle,
@@ -18,6 +19,8 @@ import {
   UserX,
   Activity,
   Percent,
+  ChevronDown,
+  ChevronUp,
 } from "lucide-react";
 
 interface UserSummary {
@@ -43,6 +46,17 @@ interface UserRow {
   days_inactive: number;
 }
 
+interface TrackedOffer {
+  id: string;
+  bank_name: string;
+  offer_name: string;
+  reward: number;
+  conditions: { id: string; label: string; requiredCount: number; perMonth: boolean; monthsRequired: number }[] | null;
+  is_active: boolean;
+  started_at: string;
+  progress: { condition_id: string; month: string; count: number }[];
+}
+
 type FilterType = "all" | "active" | "inactive14" | "inactive30" | "tracking";
 type SortType = "date" | "tracking" | "completed" | "inactive";
 
@@ -62,6 +76,9 @@ export default function AdminUsersPage() {
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<SortType>("date");
   const [filter, setFilter] = useState<FilterType>("all");
+  const [expandedUser, setExpandedUser] = useState<string | null>(null);
+  const [trackerData, setTrackerData] = useState<Record<string, TrackedOffer[]>>({});
+  const [trackerLoading, setTrackerLoading] = useState<string | null>(null);
 
   useEffect(() => {
     adminFetch("/api/admin/users")
@@ -73,6 +90,26 @@ export default function AdminUsersPage() {
       .catch(() => setError("Nie udało się załadować statystyk użytkowników."))
       .finally(() => setLoading(false));
   }, []);
+
+  const toggleExpand = async (userId: string) => {
+    if (expandedUser === userId) {
+      setExpandedUser(null);
+      return;
+    }
+    setExpandedUser(userId);
+    if (!trackerData[userId]) {
+      setTrackerLoading(userId);
+      try {
+        const res = await adminFetch(`/api/admin/users/tracker?userId=${userId}`);
+        const data = await res.json();
+        setTrackerData((prev) => ({ ...prev, [userId]: data.offers || [] }));
+      } catch {
+        setTrackerData((prev) => ({ ...prev, [userId]: [] }));
+      } finally {
+        setTrackerLoading(null);
+      }
+    }
+  };
 
   const filtered = users
     .filter((u) => {
@@ -378,7 +415,86 @@ export default function AdminUsersPage() {
                       <p className="text-[10px] text-muted-foreground">dni</p>
                     </div>
                   </div>
+                  {/* Expand button */}
+                  {user.tracked_offers_count > 0 && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-8 w-8 shrink-0"
+                      onClick={() => toggleExpand(user.user_id)}
+                    >
+                      {expandedUser === user.user_id ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </Button>
+                  )}
                 </div>
+
+                {/* Tracker preview */}
+                {expandedUser === user.user_id && (
+                  <div className="mt-3 border-t pt-3">
+                    {trackerLoading === user.user_id ? (
+                      <div className="flex items-center justify-center py-4">
+                        <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+                      </div>
+                    ) : (trackerData[user.user_id] || []).length === 0 ? (
+                      <p className="text-xs text-muted-foreground text-center py-2">Brak danych trackera.</p>
+                    ) : (
+                      <div className="space-y-2">
+                        {(trackerData[user.user_id] || []).map((offer) => (
+                          <div key={offer.id} className="rounded-md border p-3 text-xs">
+                            <div className="flex items-center justify-between mb-1.5">
+                              <span className="font-medium">{offer.bank_name} — {offer.offer_name}</span>
+                              <div className="flex items-center gap-2">
+                                <Badge className="text-[10px] bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400">
+                                  {offer.reward} zł
+                                </Badge>
+                                {!offer.is_active && (
+                                  <Badge variant="destructive" className="text-[10px]">Ukryta</Badge>
+                                )}
+                              </div>
+                            </div>
+                            <p className="text-muted-foreground text-[10px] mb-2">
+                              Śledzenie od: {new Date(offer.started_at).toLocaleDateString("pl-PL")}
+                            </p>
+                            {offer.conditions && offer.conditions.length > 0 ? (
+                              <div className="space-y-1">
+                                {offer.conditions.map((cond) => {
+                                  const condProgress = offer.progress.filter((p) => p.condition_id === cond.id);
+                                  const totalDone = condProgress.reduce((sum, p) => sum + p.count, 0);
+                                  const totalNeeded = cond.perMonth
+                                    ? cond.requiredCount * (cond.monthsRequired || 1)
+                                    : cond.requiredCount;
+                                  const pct = totalNeeded > 0 ? Math.min(100, Math.round((totalDone / totalNeeded) * 100)) : 0;
+                                  return (
+                                    <div key={cond.id} className="flex items-center gap-2">
+                                      <div className="flex-1 min-w-0">
+                                        <span className="text-muted-foreground truncate block">{cond.label}</span>
+                                      </div>
+                                      <div className="w-20 h-1.5 rounded-full bg-muted overflow-hidden shrink-0">
+                                        <div
+                                          className={`h-full rounded-full ${pct >= 100 ? "bg-emerald-500" : "bg-primary"}`}
+                                          style={{ width: `${pct}%` }}
+                                        />
+                                      </div>
+                                      <span className={`text-[10px] w-12 text-right shrink-0 ${pct >= 100 ? "text-emerald-600 font-medium" : "text-muted-foreground"}`}>
+                                        {totalDone}/{totalNeeded}
+                                      </span>
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            ) : (
+                              <p className="text-muted-foreground">Brak warunków</p>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
           );

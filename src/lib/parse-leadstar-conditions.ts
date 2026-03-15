@@ -69,13 +69,13 @@ function detectType(text: string): ConditionType {
   if (/poleceni.*zap[łl]aty/.test(t)) return "direct_debit";
 
   // Logowanie
-  if (/zalogowa|logowani.*aplik/.test(t)) return "mobile_app_login";
+  if (/zalogowa|zaloguj|logowani.*aplik/.test(t)) return "mobile_app_login";
 
   // Oszczędności / saldo / lokata
   if (/lokata|oszcz[ęe]dno[śs]ciow|saldo.*min|moje cele|skarbonk/.test(t)) return "savings";
 
   // Otwarcie konta / założenie
-  if (/otworzy[ćc].*kont|za[łl]o[żz]eni.*kont|otwarci.*kont/.test(t)) return "setup";
+  if (/otworzy[ćc].*kont|za[łl]o[żz]eni.*kont|otwarci.*kont|otw[óo]rz.*kont/.test(t)) return "setup";
   if (/za[łl]o[żz]y[ćc].*firm|zarejestrow.*firm/.test(t)) return "setup";
   if (/z[łl]o[żz]y[ćc].*wniosek/.test(t)) return "setup";
 
@@ -137,10 +137,18 @@ function makeLabel(type: ConditionType, description: string, count: number): str
 
   switch (type) {
     case "income": {
-      // Szukaj kwoty wpływu, nie premii/bonusu
-      const incMatch = description.match(/wp[łl]yw.*?(?:min\.?\s*)?(\d[\d\s]*)\s*z[łl]/i)
-        || description.match(/min\.?\s*(\d[\d\s]*)\s*z[łl]/i);
-      const amt = incMatch ? incMatch[1].replace(/\s/g, "") : "";
+      // Szukaj kwoty wpływu, obsługując spacje i grosze (tylko po przecinku/kropce)
+      const incMatch = description.match(/wp[łl]yw.*?(?:min\.?\s*)?(\d[\d\s,.]*)\s*z[łl]/i)
+        || description.match(/min\.?\s*(\d[\d\s,.]*)\s*z[łl]/i);
+      
+      let amt = "";
+      if (incMatch) {
+        // Usuwamy tylko grosze po przecinku/kropce, np. 500,00 -> 500
+        amt = incMatch[1].replace(/\s/g, "").replace(/[,.](00|--)$/, "");
+        // Jeśli zostały jakieś przecinki/kropki wewnątrz (np. 1.500), czyścimy je
+        amt = amt.replace(/[,.]/g, "");
+      }
+      
       return amt ? `Wpływ min. ${amt} zł` : "Wpływ na konto";
     }
     case "card_payment":
@@ -158,10 +166,10 @@ function makeLabel(type: ConditionType, description: string, count: number): str
     case "mobile_app_login":
       return "Logowanie do aplikacji";
     case "setup":
-      return short.length > 40 ? "Założenie konta" : short;
+      return short.toLowerCase().includes("otwórz") || short.toLowerCase().includes("założ") ? "Założenie konta" : short;
     case "savings": {
-      const savMatch = description.match(/(\d[\d\s]*)\s*z[łl]/);
-      const savAmt = savMatch ? savMatch[1].replace(/\s/g, "") : "";
+      const savMatch = description.match(/(\d[\d\s,.]*)\s*z[łl]/);
+      const savAmt = savMatch ? savMatch[1].replace(/\s/g, "").replace(/[,.](00|--)$/, "").replace(/[,.]/g, "") : "";
       return savAmt ? `Saldo min. ${savAmt} zł` : "Oszczędności";
     }
     case "online_payment":
@@ -173,37 +181,24 @@ function makeLabel(type: ConditionType, description: string, count: number): str
 
 /**
  * Splits benefits text into individual actionable items.
- * Each numbered step, sub-step, or bullet becomes its own block.
- * Related sub-bullets get appended to their parent for context.
  */
 function splitIntoBlocks(text: string): string[] {
   const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
   const blocks: string[] = [];
   let current = "";
-  let subBuffer = "";
 
   for (const line of lines) {
     // Top-level: "1)", "1.", "KROK 1"
-    const isTopLevel = /^(?:\d+[.)]\s|KROK\s+\d)/i.test(line);
+    const isTopLevel = /^(?:\d+[.),]\s|KROK\s+\d)/i.test(line);
     // Named sub-level: "a.", "a)", "b.", "b)"
-    const isNamedSub = /^[a-z][.)]\s/.test(line);
+    const isNamedSub = /^[a-z][.)]\s/i.test(line);
     // Bullet: "-", "–", "•"
-    const isBullet = /^[-–•]\s/.test(line);
+    const isBullet = /^[-–•*]\s/.test(line);
 
-    if (isTopLevel || isNamedSub) {
-      // Flush previous
-      if (subBuffer) {
-        blocks.push(current + " " + subBuffer);
-        subBuffer = "";
-      } else if (current) {
-        blocks.push(current);
-      }
+    if (isTopLevel || isNamedSub || isBullet) {
+      if (current) blocks.push(current);
       current = line;
-    } else if (isBullet) {
-      // Bullets are sub-detail of current item — accumulate
-      subBuffer += (subBuffer ? " " : "") + line;
     } else {
-      // Continuation text
       if (current) {
         current += " " + line;
       } else {
@@ -211,15 +206,11 @@ function splitIntoBlocks(text: string): string[] {
       }
     }
   }
-  // Flush last
-  if (subBuffer) {
-    blocks.push(current + " " + subBuffer);
-  } else if (current) {
-    blocks.push(current);
-  }
+  if (current) blocks.push(current);
 
   return blocks;
 }
+
 
 /**
  * Determines if a text block contains a trackable action (vs intro/summary text).
@@ -227,17 +218,20 @@ function splitIntoBlocks(text: string): string[] {
 function isTrackableAction(text: string): boolean {
   const t = text.toLowerCase();
 
-  // Skip pure intro/summary lines
-  if (/^(?:jak (?:otrzyma[ćc]|zyska[ćc]|odebra[ćc])|klient mo[żz]e|za otwarcie)/.test(t)) return false;
-  if (/^(?:premia (?:wyp[łl]acan|zostan))/.test(t)) return false;
+  // Skip pure intro/summary lines (but allow "otwórz konto")
+  if (/^jak (?:otrzyma[ćc]|zyska[ćc]|odebra[ćc])/.test(t)) return false;
+  if (/^klient mo[żz]e/.test(t)) return false;
+  if (/^premia (?:wyp[łl]acan|zostan)/.test(t)) return false;
   if (/^warunkiem otrzymania/.test(t)) return false;
 
   // Skip "utrzymać zgody" — not a trackable action
   if (/^utrzyma[ćc].*zgod/.test(t)) return false;
 
   // Must contain an action verb or specific condition keyword
-  return /wykona[ćc]|zapewni[ćc]|z[łl]o[żz]y[ćc]|otworzy[ćc]|za[łl]o[żz]y[ćc]|zalogowa[ćc]|zarejestrowa[ćc]|op[łl]aci[ćc]|ustawi[ćc]|zawrze[ćc]|przyst[ąa]pi[ćc]|transakcj|p[łl]atno[śs]|przelew|wp[łl]yw|wp[łl]at|logowani|saldo|lokata|portfel.*cyfrow|zrobieni/.test(t);
+  // Polish verbs: wykonaj, zapewnij, zapłać, zaloguj, otwórz, włóż, kup, pobierz, aktywuj
+  return /wykona[ćc]|zapewni[ćc]|z[łl]o[żz]y[ćc]|otworzy[ćc]|za[łl]o[żz]y[ćc]|zalogowa[ćc]|zarejestrowa[ćc]|op[łl]aci[ćc]|ustawi[ćc]|zawrze[ćc]|przyst[ąa]pi[ćc]|transakcj|p[łl]atno[śs]|przelew|wp[łl]yw|wp[łl]at|logowani|saldo|lokata|portfel.*cyfrow|zrobieni|otw[óo]rz|zap[łl]a[ćc]|zaloguj|pobierz|aktywuj|kup/.test(t);
 }
+
 
 /**
  * Deduplicates conditions by merging similar ones.
@@ -315,7 +309,7 @@ function annotateBlocks(blocks: string[]): AnnotatedBlock[] {
 }
 
 export function parseLeadstarConditions(benefitsHtml: string): Condition[] {
-  if (!benefitsHtml || benefitsHtml.trim().length < 30) return [];
+  if (!benefitsHtml || benefitsHtml.trim().length < 10) return [];
 
   const text = stripHtml(benefitsHtml);
   const blocks = splitIntoBlocks(text);

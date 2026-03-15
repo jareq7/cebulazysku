@@ -20,6 +20,9 @@ import {
   Eye,
   EyeOff,
   DollarSign,
+  CheckSquare,
+  Square,
+  RefreshCw,
 } from "lucide-react";
 
 interface Offer {
@@ -58,6 +61,8 @@ export default function AdminOffersPage() {
   });
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState<"all" | "active" | "hidden" | "zero">("all");
+  const [selected, setSelected] = useState<Set<string>>(new Set());
+  const [bulkAction, setBulkAction] = useState(false);
 
   useEffect(() => {
     adminFetch("/api/admin/offers")
@@ -159,6 +164,77 @@ export default function AdminOffersPage() {
     }
   };
 
+  const toggleSelect = (id: string) => {
+    setSelected((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const selectAll = () => {
+    const ids = filtered.map((o) => o.id);
+    if (ids.every((id) => selected.has(id))) {
+      setSelected(new Set());
+    } else {
+      setSelected(new Set(ids));
+    }
+  };
+
+  const bulkSetActive = async (isActive: boolean) => {
+    if (selected.size === 0) return;
+    setBulkAction(true);
+    try {
+      await Promise.all(
+        [...selected].map((id) =>
+          adminFetch("/api/admin/offers", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, is_active: isActive }),
+          })
+        )
+      );
+      setOffers((prev) =>
+        prev.map((o) =>
+          selected.has(o.id)
+            ? { ...o, is_active: isActive, updated_at: new Date().toISOString() }
+            : o
+        )
+      );
+      setSelected(new Set());
+    } catch {
+      setError("Nie udało się zmienić widoczności wybranych ofert.");
+    } finally {
+      setBulkAction(false);
+    }
+  };
+
+  const bulkRegenerateAI = async () => {
+    if (selected.size === 0) return;
+    if (!confirm(`Zresetować opisy AI dla ${selected.size} ofert? Zostaną ponownie wygenerowane przy następnym cronie.`)) return;
+    setBulkAction(true);
+    try {
+      await Promise.all(
+        [...selected].map((id) =>
+          adminFetch("/api/admin/offers", {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ id, ai_generated_at: null }),
+          })
+        )
+      );
+      setSelected(new Set());
+      alert(`Zresetowano opisy AI dla ${selected.size} ofert. Zostaną wygenerowane przy następnym cronie.`);
+    } catch {
+      setError("Nie udało się zresetować opisów AI.");
+    } finally {
+      setBulkAction(false);
+    }
+  };
+
+  const allFilteredSelected = filtered.length > 0 && filtered.every((o) => selected.has(o.id));
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-20">
@@ -227,6 +303,56 @@ export default function AdminOffersPage() {
         />
       </div>
 
+      {/* Bulk action toolbar */}
+      {selected.size > 0 && (
+        <div className="flex items-center gap-2 rounded-lg border border-primary/30 bg-primary/5 p-3">
+          <span className="text-sm font-medium">
+            Zaznaczono: {selected.size}
+          </span>
+          <div className="flex-1" />
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1 text-xs"
+            onClick={() => bulkSetActive(true)}
+            disabled={bulkAction}
+          >
+            <Eye className="h-3 w-3" /> Pokaż
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1 text-xs"
+            onClick={() => bulkSetActive(false)}
+            disabled={bulkAction}
+          >
+            <EyeOff className="h-3 w-3" /> Ukryj
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1 text-xs"
+            onClick={bulkRegenerateAI}
+            disabled={bulkAction}
+          >
+            {bulkAction ? (
+              <Loader2 className="h-3 w-3 animate-spin" />
+            ) : (
+              <RefreshCw className="h-3 w-3" />
+            )}
+            Regeneruj AI
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-xs"
+            onClick={() => setSelected(new Set())}
+          >
+            Odznacz
+          </Button>
+        </div>
+      )}
+
       {error && (
         <div className="rounded-lg bg-red-50 dark:bg-red-950/30 p-3 text-sm text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/40">
           {error}
@@ -234,11 +360,34 @@ export default function AdminOffersPage() {
       )}
 
       <div className="space-y-3">
+        {filtered.length > 0 && (
+          <button
+            onClick={selectAll}
+            className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition-colors px-1"
+          >
+            {allFilteredSelected ? (
+              <CheckSquare className="h-4 w-4 text-primary" />
+            ) : (
+              <Square className="h-4 w-4" />
+            )}
+            {allFilteredSelected ? "Odznacz wszystkie" : "Zaznacz wszystkie"} ({filtered.length})
+          </button>
+        )}
         {filtered.map((offer) => (
-          <Card key={offer.id} className={`transition-shadow ${!offer.is_active ? "opacity-60" : ""}`}>
+          <Card key={offer.id} className={`transition-shadow ${!offer.is_active ? "opacity-60" : ""} ${selected.has(offer.id) ? "ring-2 ring-primary/30" : ""}`}>
             <CardContent className="py-4">
               {/* Header row */}
               <div className="flex items-center gap-3 mb-2">
+                <button
+                  onClick={() => toggleSelect(offer.id)}
+                  className="shrink-0"
+                >
+                  {selected.has(offer.id) ? (
+                    <CheckSquare className="h-4 w-4 text-primary" />
+                  ) : (
+                    <Square className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </button>
                 {offer.is_active ? (
                   <CheckCircle className="h-4 w-4 text-emerald-500 shrink-0" />
                 ) : (

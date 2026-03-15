@@ -55,6 +55,7 @@ export async function PATCH(request: NextRequest) {
       "deadline",
       "banner_url",
       "for_young",
+      "ai_generated_at",
     ];
 
     const safeUpdates: Record<string, unknown> = {};

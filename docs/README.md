@@ -3,7 +3,7 @@
 > **Domena:** cebulazysku.pl  
 > **Repozytorium:** https://github.com/jareq7/cebulazysku  
 > **Deploy:** Vercel (automatyczny z brancha `main`)  
-> **Ostatnia aktualizacja:** 14 marca 2026 r.
+> **Ostatnia aktualizacja:** 15 marca 2026 r.
 
 ---
 
@@ -50,6 +50,21 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 35 | [AI Double-Check](./35-ai-double-check.md) | Weryfikacja wygenerowanych opisów przez drugie wywołanie Gemini |
 | 36 | [Typy ofert i filtry](./36-offer-types-filters.md) | Osobiste / firmowe / dla młodych — filtry i preferencje |
 | 37 | [API Endpoints](./37-api-endpoints.md) | Pełna lista wszystkich 22 API routes z opisami |
+| 38 | [Admin Panel v2](./38-admin-panel-v2.md) | Edytor warunków, logi AI, konwersje, bulk actions, tracker preview, markdown preview |
+| 39 | [AI Verification Layer](./39-ai-verification.md) | Weryfikacja AI warunków parsowanych regexem |
+
+---
+
+## 🔬 Raporty Researchu i Strategii
+
+Wyniki analiz przeprowadzonych przez Gemini CLI w obszarze optymalizacji i rozwoju.
+
+| Dokument | Opis |
+|----------|------|
+| [Research: Remotion Rendering](../research/remotion-rendering.md) | Analiza opcji generowania MP4 (AWS Lambda vs GitHub Actions) |
+| [SEO: Strategia Contentowa](../research/content/blog-topics.md) | Plan 10 tematów blogowych pod EEAT i ruch organiczny |
+| [SEO: Treści Rankingu](../research/content/ranking-copy.md) | Propozycja unikalnych treści "cebulowych" dla strony /ranking |
+| [SEO: Meta Tagi](../research/content/meta-tags.md) | Optymalizacja tytułów i opisów meta dla kluczowych podstron |
 
 ### Pliki instrukcji dla AI
 
@@ -67,6 +82,7 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | CebulaZysku v2 | [prd-cebulazysku-v2.md](../tasks/prd-cebulazysku-v2.md) | [tasks-cebulazysku-v2.md](../tasks/tasks-cebulazysku-v2.md) | ✅ Done |
 | Auto-sync XML | [prd-auto-sync-xml.md](../tasks/prd-auto-sync-xml.md) | [tasks-auto-sync-xml.md](../tasks/tasks-auto-sync-xml.md) | ✅ Done |
 | Video Ads | [prd-video-ads.md](../tasks/prd-video-ads.md) | [tasks-video-ads.md](../tasks/tasks-video-ads.md) | ⚠️ 80% |
+| Admin Panel v2 | [prd-admin-panel-v2.md](../tasks/prd-admin-panel-v2.md) | [tasks-admin-panel-v2.md](../tasks/tasks-admin-panel-v2.md) | ⚠️ 90% |
 
 ---
 

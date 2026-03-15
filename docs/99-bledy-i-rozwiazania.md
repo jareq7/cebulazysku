@@ -131,14 +131,129 @@ Plus: `\bblik\b` → `\bblik` (żeby matchowało odmianę "BLIKIEM").
 
 ---
 
-## Ogólne wnioski
+---
+
+## 11. Błędy w parsowaniu kwot z spacjami i zerami
+
+**Problem:** Parser kwot w warunkach gubił cyfry przy spacjach (np. "1 500" stawało się "500") lub błędnie usuwał zera uznając je za grosze (np. "500" stawało się "5").
+
+**Rozwiązanie:** 
+- Poprawa regexa na `(\d[\d\s,.]*)`, aby przechwytywał całą grupę cyfr ze znakami rozdzielającymi.
+- Inteligentne usuwanie groszy: tylko jeśli występują po separatorze `,` lub `.` (np. `500,00` -> `500`, ale `500` zostaje jako `500`).
+
+**Jak unikać:** Przy wyciąganiu liczb z tekstu pisanego przez ludzi (lub banki), zawsze zakładaj obecność spacji "tysięcznych" i różnych separatorów groszy. Testuj na kwotach kończących się na zero.
+
+---
+
+## 12. Problemy z ESM i TypeScript w Node.js (v25)
+
+**Problem:** Próba uruchomienia testów `node --experimental-strip-types test-parser.ts` kończyła się błędem `ERR_MODULE_NOT_FOUND`, mimo że plik istniał.
+
+**Przyczyna:** W trybie ESM (ES Modules) Node.js wymaga **pełnych rozszerzeń plików** w instrukcjach `import`. Nawet jeśli importujemy plik `.ts`, w kodzie musi znaleźć się rozszerzenie, aby loader wiedział, co załadować.
+
+**Rozwiązanie:** Zmiana importu z `import { ... } from './path'` na `import { ... } from './path.ts'`.
+
+**Jak unikać:** Pracując z natywnym wsparciem dla TypeScript w nowym Node.js (bez transpilacji przez build step), zawsze podawaj pełne ścieżki z rozszerzeniami.
+
+---
+
+## 13. Problemy z narzędziem write_file i spacjami w ścieżkach
+
+**Problem:** Narzędzie `write_file` zgłaszało sukces, ale pliki nie pojawiały się na dysku lub basha gubiła składnia przy próbie zapisu przez `cat <<EOF`.
+
+**Przyczyna:** Spacja w nazwie katalogu głównego (`afiliacje bankowe/`) oraz specyfika buforowania narzędzi AI CLI mogą powodować błędy przy głębokich ścieżkach lub znakach ucieczki wewnątrz plików.
+
+**Rozwiązanie:** Użycie **Pythona** jako "niezawodnego writera": `python3 -c "with open('path', 'w') as f: f.write(content)"`. Python lepiej radzi sobie ze znakami specjalnymi i ścieżkami w shellu niż proste przekierowania basha.
+
+**Jak unikać:** Jeśli standardowe metody zapisu pliku zawodzą w środowisku AI, użyj skryptu w języku wyższego poziomu (Python/Node) do fizycznego zapisu treści na dysk.
+
+---
+
+## 14. Wyświetlanie "Jednorazowo" zamiast "5x jednorazowo"
+
+**Problem:** Warunek z `requiredCount: 5` i `perMonth: false` pokazywał użytkownikowi "Jednorazowo" — sugerując 1 raz, mimo że wymagane było 5 powtórzeń.
+
+**Rozwiązanie:** Zmiana logiki wyświetlania w `oferta/[slug]/page.tsx`: gdy `requiredCount > 1` i `perMonth: false`, wyświetlaj `"5x jednorazowo"` zamiast `"Jednorazowo"`.
+
+**Jak unikać:** Zawsze testuj warianty danych na froncie. "Jednorazowo" brzmi jak "raz" — testy z `requiredCount > 1` powinny być w standardowym zestawie.
+
+---
+
+## 15. Luźne pliki .ts w rootcie projektu psują build
+
+**Problem:** Plik `test-parser.ts` leżący w rootcie projektu powodował build error Next.js (`allowImportingTsExtensions`). `tsconfig.json` includował `**/*.ts` a excludował tylko `node_modules`.
+
+**Rozwiązanie:** Usunięcie pliku z roota, przeniesienie do `scripts/`, dodanie `"scripts"` do `exclude` w `tsconfig.json`.
+
+**Jak unikać:** Nie trzymaj luźnych plików .ts poza `src/`. Skrypty testowe/pomocnicze → `scripts/` (excluded z buildu). Sprawdzaj `tsconfig.json` exclude przy dziwnych build errors.
+
+---
+
+## 16. Frontend kodowany pod nieistniejące API
+
+**Problem:** Bulk action "Regeneruj AI" w `/admin/oferty` wywoływał `/api/admin/enrich` z parametrem `offerIds` — ale ten endpoint nie przyjmuje takiego parametru (obsługuje tylko automatyczne wyszukiwanie ofert z `reward=0`).
+
+**Rozwiązanie:** Zmiana strategii — zamiast wywoływać enrich, resetujemy `ai_generated_at` na null przez PATCH `/api/admin/offers`. Cron sam wygeneruje opisy przy następnym uruchomieniu. Trzeba było też dodać `ai_generated_at` do `allowedFields` w offers API.
+
+**Jak unikać:** **Zawsze przeczytaj `route.ts` endpointu przed napisaniem frontendu który go wywołuje.** Sprawdź jakie parametry przyjmuje, co zwraca, jakie pola pozwala edytować.
+
+---
+
+## 17. Brak dokumentacji po implementacji feature'a
+
+**Problem:** Po zaimplementowaniu 6 nowych funkcji admin panelu (edytor warunków, AI logs, konwersje, bulk actions, tracker preview, markdown preview) nie zaktualizowano `docs/README.md` ani nie stworzono plików dokumentacji.
+
+**Rozwiązanie:** Dodanie `docs/38-admin-panel-v2.md` i `docs/39-ai-verification.md`, aktualizacja spisu treści i tabeli PRD tracking.
+
+**Jak unikać:** Dokumentacja jest częścią feature'a, nie opcjonalnym dodatkiem. Checklist przed zamknięciem: 1) kod, 2) build test, 3) docs, 4) commit.
+
+---
+
+## 18. Supabase migracje — stare migracje failują na istniejących obiektach
+
+**Problem:** `supabase db push` próbował wykonać wszystkie migracje od 001. Stare migracje (001-018) failowały bo obiekty (tabele, RLS policies) już istniały w bazie.
+
+**Rozwiązanie:** Tymczasowe przeniesienie starych migracji do /tmp, push tylko nowych (019, 020), przywrócenie starych plików.
+
+**Jak unikać:** Supabase CLI nie ma wbudowanego "push only new". Alternatywy: `supabase db push --dry-run` przed pushem, lub ręczne SQL w Supabase Dashboard dla pojedynczych migracji.
+
+---
+
+## 19. Kodowanie bez PRD i task listy
+
+**Problem:** W pierwszych iteracjach projektu feature'y były kodowane ad hoc — od razu po briefie, bez dokumentacji wymagań. Skutki:
+- Brak struktury → trudno śledzić co jest zrobione, a co nie
+- Zakres feature'a rozrastał się w trakcie implementacji
+- Dokumentacja dopisywana po fakcie (lub wcale)
+- Ciężko wrócić do feature'a po przerwie
+
+**Rozwiązanie:** Obowiązkowy flow PRD → Tasks → Code:
+1. Brief od usera
+2. 3-5 pytań wyjaśniających z opcjami A/B/C/D
+3. PRD w `/tasks/prd-[feature].md`
+4. Parent tasks → potwierdzenie "Go"
+5. Sub-tasks w `/tasks/tasks-[feature].md`
+6. Task 0.0 = feature branch
+7. Implementacja z odznaczaniem `- [ ]` → `- [x]`
+8. Nie koduj nic co nie jest w task liście
+
+Szablony: `create-prd.md` i `generate-tasks.md` w rootcie projektu.
+
+**Jak unikać:** Traktuj PRD jak warunek konieczny przed otwarciem edytora. Bez PRD nie ma kodu.
+
+---
+
+## Ogólne wnioski (Aktualizacja Marzec 2026)
 
 | Zasada | Dlaczego |
 |--------|----------|
-| **Dane z feedu parsuj od razu** | Nie odkładaj na AI/cron — użytkownik potrzebuje danych natychmiast |
-| **Typy definiuj w jednym miejscu** | `ConditionType` w `banks.ts` — waliduj na wejściu |
-| **Autoryzacja od dnia 0** | Każdy API endpoint potrzebuje auth od początku |
-| **Sekrety w env vars** | Nigdy w kodzie, nigdy w docs |
-| **Rate limity z fallbackiem** | Zawsze delay + retry + alternatywny provider |
-| **Testuj na prawdziwych danych** | Syntetyczne testy nie łapią edge case'ów (polskie odmiany, HTML entities) |
-| **Regex: specyficzne przed ogólnymi** | Kolejność reguł jest krytyczna w klasyfikatorach |
+| **Grosze usuwaj tylko po separatorze** | Zapobiega ucinaniu pełnych kwot (np. 500 -> 5) |
+| **Importy ESM wymagają rozszerzeń** | `node --test` i `strip-types` nie domyślają się rozszerzeń `.ts` |
+| **Python to stabilny File Writer** | Eliminuje problemy z `EOF` i znakami specjalnymi w shellu |
+| **Testy jednostkowe to podstawa** | Pozwoliły wykryć 4 krytyczne błędy w parserze, które "żyły" na produkcji |
+| **Czytaj API przed kodowaniem frontendu** | Unikasz pisania kodu pod endpoint który nie obsługuje twoich parametrów |
+| **Dokumentacja = część feature'a** | Bez docs nikt nie wie co zostało zbudowane — ani AI, ani devs |
+| **Luźne pliki .ts poza src/ psują build** | tsconfig includuje `**/*.ts` — skrypty trzymaj w `scripts/` (excluded) |
+| **Testuj warianty danych na UI** | "Jednorazowo" z requiredCount=5 to UX bug widoczny dopiero z prawdziwymi danymi |
+| **PRD przed kodem, zawsze** | Bez PRD zakres rośnie, progress nieśledzony, dokumentacja powstaje po fakcie |
+

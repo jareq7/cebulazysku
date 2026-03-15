@@ -18,7 +18,9 @@ import {
   EyeOff,
   Save,
   X,
+  SplitSquareHorizontal,
 } from "lucide-react";
+import { RenderMarkdown } from "@/components/RenderMarkdown";
 
 interface BlogPost {
   id: string;
@@ -56,6 +58,7 @@ export default function AdminBlogPage() {
   const [form, setForm] = useState(emptyPost);
   const [saving, setSaving] = useState(false);
   const [tagsInput, setTagsInput] = useState("");
+  const [showPreview, setShowPreview] = useState(false);
 
   const fetchPosts = () => {
     setLoading(true);
@@ -265,16 +268,38 @@ export default function AdminBlogPage() {
             </div>
 
             <div>
-              <Label htmlFor="content">Treść (Markdown)</Label>
-              <textarea
-                id="content"
-                className="flex min-h-[300px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 font-mono"
-                value={form.content}
-                onChange={(e) =>
-                  setForm({ ...form, content: e.target.value })
-                }
-                placeholder="## Nagłówek&#10;&#10;Treść artykułu..."
-              />
+              <div className="flex items-center justify-between mb-1">
+                <Label htmlFor="content">Treść (Markdown)</Label>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1 text-xs h-7"
+                  onClick={() => setShowPreview(!showPreview)}
+                >
+                  <SplitSquareHorizontal className="h-3 w-3" />
+                  {showPreview ? "Ukryj podgląd" : "Podgląd"}
+                </Button>
+              </div>
+              <div className={showPreview ? "grid grid-cols-2 gap-4" : ""}>
+                <textarea
+                  id="content"
+                  className="flex min-h-[300px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 font-mono"
+                  value={form.content}
+                  onChange={(e) =>
+                    setForm({ ...form, content: e.target.value })
+                  }
+                  placeholder="## Nagłówek&#10;&#10;Treść artykułu..."
+                />
+                {showPreview && (
+                  <div className="min-h-[300px] rounded-md border border-input bg-muted/30 px-4 py-3 overflow-auto">
+                    {form.content ? (
+                      <RenderMarkdown text={form.content} />
+                    ) : (
+                      <p className="text-sm text-muted-foreground italic">Wpisz treść aby zobaczyć podgląd...</p>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">

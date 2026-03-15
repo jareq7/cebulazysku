@@ -454,3 +454,28 @@ Zostały zrealizowane w poprzednich sesjach. Kluczowe deliverables:
 - 🔲 Server-side rendering do MP4
 
 📄 Szczegóły: [tasks/prd-video-ads.md](../tasks/prd-video-ads.md) | [tasks/tasks-video-ads.md](../tasks/tasks-video-ads.md)
+
+---
+
+## Faza: Optymalizacja Contentu i Research Video (Marzec 2026)
+
+**Co zrobiono:**
+
+### Optymalizacja Contentu (AI + Markdown)
+- **Markdown w opisach:** Wdrożenie obsługi Markdown (**bold**, listy, nagłówki ##) w promptach AI i renderowaniu frontendowym (`RenderMarkdown.tsx`).
+- **Stylizacja Emerald:** Pogrubienia w Markdown są automatycznie kolorowane na `text-emerald-600` dla zachowania spójności brandu.
+- **Dekodowanie HTML:** Mapper `decodeAndFormatDescription` w `offers.ts` poprawnie czyści encje HTML, zachowując strukturę Markdown.
+
+### Strategia SEO & Content
+- **Treść Rankingu:** Przygotowanie rozbudowanej sekcji tekstowej pod listę ofert na `/ranking` (FAQ, Metodologia, Słowniczek Cebularza).
+- **Plan Blogowy:** Opracowanie listy Top 10 tematów blogowych (EEAT) targetujących frazy informacyjne i budujących zaufanie.
+- **Meta Tags:** Optymalizacja tytułów i opisów meta dla kluczowych podstron (`/`, `/ranking`, `/jak-to-dziala`) z użyciem dynamicznych placeholderów.
+
+### Research: Server-side Remotion Rendering
+- **Analiza opcji:** Porównanie Remotion Lambda (AWS) vs. GitHub Actions vs. Self-hosted.
+- **Rekomendacja:** Wybór **GitHub Actions** jako optymalnego, darmowego silnika do generowania plików MP4 dla MVP (automatyzacja przez workflow_dispatch/webhooks).
+- **Infrastruktura:** Propozycja zapisu wideo na Cloudflare R2.
+
+📄 Szczegóły: `/research/content/`, `/research/remotion-rendering.md`
+
+// @cebulazysku.pl/.next/server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_15817684.js.map Gemini CLI (gemini-3-pro-preview) | 2026-03-14 — Dokumentacja fazy content/seo
