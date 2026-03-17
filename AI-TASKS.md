@@ -64,13 +64,14 @@ Ten plik to **tablica koordynacyjna** między workerami — NIE zastępuje flow 
 
 | Data | Zadanie | Worker | Commit |
 |------|---------|--------|--------|
-| 2026-03-17 | Blog drafts → baza (przygotowano insert SQL) | Gemini | — |
-| 2026-03-17 | Structured Data templates (Product, Offer, HowTo) | Gemini | — |
-| 2026-03-17 | OG Images draft (vercel/og) 3 szablony | Gemini | — |
-| 2026-03-17 | Koncepcja: Archiwum promocji (SEO long tail) | Gemini | — |
-| 2026-03-17 | Koncepcja: Kalkulator zysku | Gemini | — |
-| 2026-03-17 | Video Ads — bankColor + TikTok subtitles | Claude Code | — |
-| 2026-03-17 | Lighthouse fixes — accessibility + performance | Claude Code | — |
+| 2026-03-17 | Blog — 6 artykułów zaimportowanych do Supabase (direct REST API) | Claude Code | `63a3f10` |
+| 2026-03-17 | Blog drafts → baza (przygotowano insert SQL) | Gemini | `63a3f10` |
+| 2026-03-17 | Structured Data templates (Product, Offer, HowTo) | Gemini | `63a3f10` |
+| 2026-03-17 | OG Images draft (vercel/og) 3 szablony | Gemini | `63a3f10` |
+| 2026-03-17 | Koncepcja: Archiwum promocji (SEO long tail) | Gemini | `63a3f10` |
+| 2026-03-17 | Koncepcja: Kalkulator zysku | Gemini | `63a3f10` |
+| 2026-03-17 | Video Ads — bankColor + TikTok subtitles | Claude Code | `63a3f10` |
+| 2026-03-17 | Lighthouse fixes — accessibility + performance | Claude Code | `63a3f10` |
 | 2026-03-17 | Wdrożenie OG Tags + Canonical na wszystkich stronach | Gemini | — |
 | 2026-03-17 | Competitive analysis PL | Gemini | — |
 | 2026-03-17 | Open Graph images strategy | Gemini | — |

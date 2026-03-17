@@ -327,6 +327,7 @@ Szablony: `create-prd.md` i `generate-tasks.md` w rootcie projektu.
 | **Icon-only button = aria-label** | Każdy button z samą ikoną musi mieć aria-label — screen reader czyta "button" |
 | **Headingi sekwencyjnie** | H1→H2→H3, nigdy H1→H3. Jeśli wizualnie zbędny — `sr-only` |
 | **img = width+height+lazy** | Explicit wymiary zapobiegają CLS; below-fold = lazy, above-fold = priority |
+| **Vercel API nie dekryptuje sekretów** | Użyj `vercel env pull` lub omiń admin API — Supabase service role key działa bezpośrednio |
 
 
 
@@ -380,3 +381,13 @@ Szablony: `create-prd.md` i `generate-tasks.md` w rootcie projektu.
 **Rozwiązanie:** Dodano `width` i `height` atrybuty do wszystkich `<img>` (OfferCard: 48x48, ranking: 40x40, ConditionTracker: 48x48, oferta detail: 64x64). Dodano też `loading="lazy"` na below-the-fold images i `priority` na above-the-fold logo.
 
 **Jak unikać:** Każdy `<img>` powinien mieć explicit `width` i `height`. Dla Next.js `<Image>` jest to required. Dla natywnych `<img>` (np. external URLs) dodawaj ręcznie. Above-the-fold = bez lazy; below-the-fold = `loading="lazy"`.
+
+---
+
+## 31. Vercel API nie dekryptuje env vars — ADMIN_PASSWORD niedostępne lokalnie
+
+**Problem:** Skrypt `scripts/import-blog-drafts.ts` wymagał `ADMIN_PASSWORD` (env var ustawiony tylko na Vercel). Vercel API (`/v9/projects/.../env?decrypt=true`) zwraca encrypted blob (base64 JSON z kluczem szyfrującym), NIE plaintext. Nie ma sposobu na pobranie wartości sekretu przez API.
+
+**Rozwiązanie:** Ominięcie warstwy admin API — bezpośredni insert do Supabase przez REST API z `SUPABASE_SERVICE_ROLE_KEY` (który jest w `.env.local`). Skrypt Python użył `urllib.request` do POST na `/rest/v1/blog_posts` z service role key w headerze Authorization.
+
+**Jak unikać:** Jeśli potrzebujesz wartości env var z Vercel lokalnie: 1) Użyj `vercel env pull` (wymaga zalogowanego Vercel CLI), 2) Poproś usera o dodanie do `.env.local`, 3) Lub omiń warstwę API i użyj bezpośredniego dostępu do DB (Supabase service role key). Nie polegaj na Vercel REST API do odczytu sekretów — one nigdy nie są zwracane w plaintext.
