@@ -63,7 +63,7 @@ function mapDbOffer(row: any): BankOffer {
     monthlyFee: row.monthly_fee || 0,
     freeIf: row.free_if || null,
     featured: row.featured || false,
-    lastUpdated: row.last_updated || row.first_seen_at || row.updated_at || "",
+    lastUpdated: row.last_updated || row.updated_at || row.first_seen_at || "",
     bannerUrl: row.banner_url || null,
     forYoung: row.for_young || false,
     isBusiness: row.is_business || false,

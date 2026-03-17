@@ -328,6 +328,9 @@ Szablony: `create-prd.md` i `generate-tasks.md` w rootcie projektu.
 | **Headingi sekwencyjnie** | H1→H2→H3, nigdy H1→H3. Jeśli wizualnie zbędny — `sr-only` |
 | **img = width+height+lazy** | Explicit wymiary zapobiegają CLS; below-fold = lazy, above-fold = priority |
 | **Vercel API nie dekryptuje sekretów** | Użyj `vercel env pull` lub omiń admin API — Supabase service role key działa bezpośrednio |
+| **Fallback chain: świeższe najpierw** | `last_updated \|\| updated_at \|\| first_seen_at` — nie odwrotnie |
+| **sanitizeForTTS: pełna lista skrótów** | np., tj., ok., wg, pkt, tel., max., os., wył., /mies. — sprawdź po dodaniu nowych labelek |
+| **Blog = stan obecny, nie przyszły** | Nie publikuj artykułów o feature'ach których strona jeszcze nie ma |
 
 
 
@@ -391,3 +394,33 @@ Szablony: `create-prd.md` i `generate-tasks.md` w rootcie projektu.
 **Rozwiązanie:** Ominięcie warstwy admin API — bezpośredni insert do Supabase przez REST API z `SUPABASE_SERVICE_ROLE_KEY` (który jest w `.env.local`). Skrypt Python użył `urllib.request` do POST na `/rest/v1/blog_posts` z service role key w headerze Authorization.
 
 **Jak unikać:** Jeśli potrzebujesz wartości env var z Vercel lokalnie: 1) Użyj `vercel env pull` (wymaga zalogowanego Vercel CLI), 2) Poproś usera o dodanie do `.env.local`, 3) Lub omiń warstwę API i użyj bezpośredniego dostępu do DB (Supabase service role key). Nie polegaj na Vercel REST API do odczytu sekretów — one nigdy nie są zwracane w plaintext.
+
+---
+
+## 32. lastUpdated priorytet — first_seen_at zamiast updated_at
+
+**Problem:** Karty ofert wyświetlały "Zaktualizowano: 11.03.2026" mimo że sync biegał codziennie. Pole `updated_at` w DB miało świeżą datę (np. 17.03), ale kod mapper w `offers.ts` używał priorytetu: `last_updated || first_seen_at || updated_at`. Ponieważ `last_updated` było null a `first_seen_at` było ustawione (11.03), `updated_at` nigdy się nie wyświetlał.
+
+**Rozwiązanie:** Zmieniono priorytet na `last_updated || updated_at || first_seen_at` — teraz świeższy `updated_at` (odświeżany przy każdym syncu) ma priorytet nad statycznym `first_seen_at`.
+
+**Jak unikać:** Przy fallback chainach (`a || b || c`) myśl o tym co jest "najbardziej aktualne", nie "najstarsze". `first_seen_at` to data dodania — nigdy się nie zmienia. `updated_at` to data ostatniego syncu — zmienia się codziennie.
+
+---
+
+## 33. sanitizeForTTS — brakujące skróty powodowały nieczytelny voiceover
+
+**Problem:** ElevenLabs czytał "min. 2500 zł/mies." jako bełkot. Funkcja `sanitizeForTTS()` nie obsługiwała wielu popularnych polskich skrótów: np., tj., ok., wg, pkt, /mies. (bez zł przed), max., tel., os., wył.
+
+**Rozwiązanie:** Rozszerzono `sanitizeForTTS()` o 10+ nowych reguł (np., tj., ok., wg, pkt, tel., max., os., wył., /mies., /mc). Dodano też normalizację dużych liczb z separatorami ("2 500" → "2500").
+
+**Jak unikać:** Po każdym dodaniu nowego typu warunku lub zmianie labelek w parserze — sprawdź czy `sanitizeForTTS()` obsługuje wszystkie skróty. Odsłuchaj sample voiceover. Lista polskich skrótów do zapamiętania: min., maks., max., mies., nr, np., tj., ok., wg, pkt, tel., os., r., tys., wył.
+
+---
+
+## 34. Blog content opisujący nieistniejące features
+
+**Problem:** Artykuł "Karta kredytowa a debetowa" sugerował że CebulaZysku ma oferty kart kredytowych. W rzeczywistości strona obsługuje TYLKO konta osobiste — brak pola `card_type` w DB, brak infrastruktury do kart kredytowych.
+
+**Rozwiązanie:** Unpublish artykułu (is_published=false) do czasu aż funkcjonalność kart kredytowych zostanie dodana.
+
+**Jak unikać:** Przed publikacją bloga weryfikuj: czy strona FAKTYCZNIE obsługuje to co opisuje artykuł? Nie pisz o przyszłych feature'ach jak o istniejących.

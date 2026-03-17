@@ -82,25 +82,38 @@ export async function listVoices(): Promise<{ voice_id: string; name: string; la
  */
 export function sanitizeForTTS(text: string): string {
   let t = text;
-  
-  // 1. Złożone skróty najpierw
+
+  // 1. Złożone skróty najpierw (wielowyrazowe)
   t = t.replace(/\bz[łl]\/mies\./gi, 'złotych miesięcznie');
-  
+  t = t.replace(/\/mies\./gi, ' miesięcznie');
+  t = t.replace(/\/mc/gi, ' na miesiąc');
+
   // 2. Skróty z kropką
   t = t.replace(/\bmin\.\s*/gi, 'minimum ');
   t = t.replace(/\bmaks\.\s*/gi, 'maksimum ');
   t = t.replace(/\bmies\.\s*/gi, 'miesięcznie ');
-  t = t.replace(/\bnr\.\s*/gi, 'numer ');
+  t = t.replace(/\bnr\.?\s*/gi, 'numer ');
   t = t.replace(/\btys\.\s*/gi, 'tysięcy ');
   t = t.replace(/\br\.\s*/gi, 'roku ');
-  
-  // 3. Specyficzne dla liczb (np. 5x)
+  t = t.replace(/\bnp\.\s*/gi, 'na przykład ');
+  t = t.replace(/\btj\.\s*/gi, 'to jest ');
+  t = t.replace(/\bok\.\s*/gi, 'około ');
+  t = t.replace(/\bwg\b\.?\s*/gi, 'według ');
+  t = t.replace(/\bpkt\.?\s*/gi, 'punktów ');
+  t = t.replace(/\btel\.\s*/gi, 'telefon ');
+  t = t.replace(/\bkwot[aę]?\s*/gi, (match) => match); // keep as-is, just in case
+  t = t.replace(/\bmax\.\s*/gi, 'maksimum ');
+  t = t.replace(/\bos\.\s*/gi, 'osobiste ');
+  t = t.replace(/\bwył\.\s*/gi, 'wyłącznie ');
+
+  // 3. Specyficzne dla liczb
   t = t.replace(/(\d+)x\b/g, '$1 razy');
-  
+  // Duże liczby z separatorem — "2 500" → "2500" (normalize for reading)
+  t = t.replace(/(\d)\s(\d{3})\b/g, '$1$2');
+
   // 4. Samodzielne "zł" (uważnie, aby nie zepsuć słów)
-  // Używamy ucieczki dla polskich znaków i sprawdzamy granice słów ręcznie jeśli \b zawodzi
   t = t.replace(/(^|\s)z[łl](\s|$|,|\.)/gi, '$1złotych$2');
-  
+
   // 5. Cleanup
   return t.replace(/\s+/g, ' ').trim();
 }

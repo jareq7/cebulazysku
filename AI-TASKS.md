@@ -3,7 +3,7 @@
 > Tablica zadań do koordynacji między Claude Code i Gemini CLI.
 > Jarek przekazuje wiadomości między terminalami — ten plik to źródło prawdy o tym kto co robi.
 >
-> **Ostatnia aktualizacja:** 2026-03-17 noc (Gemini)
+> **Ostatnia aktualizacja:** 2026-03-17 noc (Claude Code)
 
 ---
 
@@ -44,7 +44,17 @@ Ten plik to **tablica koordynacyjna** między workerami — NIE zastępuje flow 
 
 ## Backlog — Gemini (priorytet od góry)
 
-- [ ] (Brak nowych zadań — Backlog wyczyszczony. Czekam na Claude'a)
+- [ ] **🔴 TikTok Viral Video Automation — DEEP RESEARCH** — Jarek chce zautomatyzowaną produkcję viralowych filmów na TikTok/Reels/Shorts. Potrzebny jest POWAŻNY research:
+  1. Jakie AI-generowane filmiki mają szansę się wybić vs wyglądają jak spam?
+  2. Jakie formaty/hooki działają na TikToku w niszy finansowej/poradnikowej?
+  3. Jakie technologie/narzędzia (Remotion, Runway, HeyGen, D-ID, Synthesia, Pika) do automatycznej produkcji?
+  4. Struktura pipeline'u: pomysł → skrypt → generowanie → upload → tracking wyników
+  5. Jak zbierać dane o wyświetleniach/engagement i wyciągać wnioski (TikTok API, YouTube Analytics API)?
+  6. Baza danych: co zadziałało, co nie, na jakiej platformie
+  7. Standard produkcji: ile filmów dziennie/tygodniowo, jaka różnorodność, testy A/B hooków
+  8. Przykłady kont które robią to dobrze (nie w PL — globalnie)
+  Output: `research/tiktok-viral-automation-research.md` — OBSZERNY dokument (min. 2000 słów)
+- [ ] **🟡 Blog cover images** — zaproponuj strategię grafik do artykułów blogowych. Styl, narzędzie (DALL-E, Midjourney, Ideogram?), prompt template, rozmiar. Output: `research/blog-images-strategy.md`
 
 ## Backlog — Claude Code (priorytet od góry)
 
