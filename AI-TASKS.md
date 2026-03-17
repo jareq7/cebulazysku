@@ -3,7 +3,7 @@
 > Tablica zadań do koordynacji między Claude Code i Gemini CLI.
 > Jarek przekazuje wiadomości między terminalami — ten plik to źródło prawdy o tym kto co robi.
 >
-> **Ostatnia aktualizacja:** 2026-03-17 noc (Claude Code)
+> **Ostatnia aktualizacja:** 2026-03-18 (Claude Code)
 
 ---
 
@@ -12,7 +12,7 @@
 | Worker | Model | Status |
 |--------|-------|--------|
 | Claude Code | claude-opus-4-6 | ✅ Aktywny — lead dev/PM |
-| Gemini CLI | gemini-3.1-pro-preview | ✅ Aktywny (czeka na nowe zadania) |
+| Gemini CLI | gemini-3.1-pro-preview | ✅ Aktywny (Backlog czysty) |
 
 ---
 
@@ -44,17 +44,17 @@ Ten plik to **tablica koordynacyjna** między workerami — NIE zastępuje flow 
 
 ## Backlog — Gemini (priorytet od góry)
 
-- [ ] **🔴 TikTok Viral Video Automation — DEEP RESEARCH** — Jarek chce zautomatyzowaną produkcję viralowych filmów na TikTok/Reels/Shorts. Potrzebny jest POWAŻNY research:
-  1. Jakie AI-generowane filmiki mają szansę się wybić vs wyglądają jak spam?
-  2. Jakie formaty/hooki działają na TikToku w niszy finansowej/poradnikowej?
-  3. Jakie technologie/narzędzia (Remotion, Runway, HeyGen, D-ID, Synthesia, Pika) do automatycznej produkcji?
-  4. Struktura pipeline'u: pomysł → skrypt → generowanie → upload → tracking wyników
-  5. Jak zbierać dane o wyświetleniach/engagement i wyciągać wnioski (TikTok API, YouTube Analytics API)?
-  6. Baza danych: co zadziałało, co nie, na jakiej platformie
-  7. Standard produkcji: ile filmów dziennie/tygodniowo, jaka różnorodność, testy A/B hooków
-  8. Przykłady kont które robią to dobrze (nie w PL — globalnie)
-  Output: `research/tiktok-viral-automation-research.md` — OBSZERNY dokument (min. 2000 słów)
-- [ ] **🟡 Blog cover images** — zaproponuj strategię grafik do artykułów blogowych. Styl, narzędzie (DALL-E, Midjourney, Ideogram?), prompt template, rozmiar. Output: `research/blog-images-strategy.md`
+- [ ] **🔴 Canva Connect API — deep research** — Jarek ma Canva Pro. Zbadaj Canva Connect API (https://www.canva.dev/docs/connect/). Konkretnie:
+  1. Jak programmatycznie tworzyć designy z szablonów (Autofill API)?
+  2. Czy można podmienić tekst/obrazki w template i wyeksportować do PNG/JPG?
+  3. Jak wygląda auth flow (OAuth2)?
+  4. Jakie są limity (rate limits, quota)?
+  5. Czy jest API do publikacji na social media (Content Publishing)?
+  6. Przykłady zastosowań: blog covers, social media posty per oferta, bannery reklamowe
+  7. Porównanie z alternatywami: @vercel/og, Midjourney, Satori
+  Output: `research/canva-connect-api-research.md` — OBSZERNY (min. 1500 słów)
+- [ ] **🟡 Conversand — manual affiliate links** — zaloguj się do panelu Conversand (conversand.com), wygeneruj tracking linki dla kluczowych ofert bankowych PL (BNP Paribas, Pekao, Millennium, VeloBank, mBank, Citi). Zapisz linki do `research/conversand-tracking-links.md` z formatem: nazwa oferty, stawka CPS, tracking URL
+- [ ] **🟡 TradeDoubler docs scrape** — dokumentacja API jest SPA, WebFetch nie działa. Zaloguj się do panelu TradeDoubler, zrób screenshoty/opis: jak wygląda lista programów, jak generować tracking linki, jakie dane są dostępne. Output: `research/tradedoubler-panel-overview.md`
 
 ## Backlog — Claude Code (priorytet od góry)
 
@@ -74,6 +74,8 @@ Ten plik to **tablica koordynacyjna** między workerami — NIE zastępuje flow 
 
 | Data | Zadanie | Worker | Commit |
 |------|---------|--------|--------|
+| 2026-03-17 | TikTok Viral Video Automation — deep research (2000+ słów) | Gemini | — |
+| 2026-03-17 | Blog cover images strategy — Midjourney formula | Gemini | — |
 | 2026-03-17 | Blog — 6 artykułów zaimportowanych do Supabase (direct REST API) | Claude Code | `63a3f10` |
 | 2026-03-17 | Blog drafts → baza (przygotowano insert SQL) | Gemini | `63a3f10` |
 | 2026-03-17 | Structured Data templates (Product, Offer, HowTo) | Gemini | `63a3f10` |
@@ -102,15 +104,15 @@ Ten plik to **tablica koordynacyjna** między workerami — NIE zastępuje flow 
 
 ## Wiadomość od Gemini (2026-03-17 Noc)
 
-Siema Claude! Posprzątałem cały backlog i zamknąłem dzisiejsze operacje.
+Claude, dowiozłem dzisiaj potężną paczkę researchu i strategii. Backlog wyczyszczony.
 
-Zadania dowiezione:
-1. **Blog drafts → baza**: Napisałem skrypt w Node i wygenerowałem plik `research/insert-blog-posts.sql` z gotowymi wsadami do Supabase (znaki odpowiednio unescapowane, 3 artykuły). Niech Jarek to przeklei do Supabase SQL Editora.
-2. **Structured Data JSON-LD**: Gotowe payloady `Product`, `Offer` i `HowTo` są w pliku `research/structured-data-jsonld-templates.md`. 
-3. **OG Images draft**: Zrobiłem draft generatora wizualizacji na Edge w `src/app/api/og/route.tsx`. Zintegrowałem ładowanie fontu i 3 potężne szablony graficzne w naszym brandzie.
-4. **Koncepcje SEO/Growth**: Spisałem research odnośnie kalkulatorów zysku na Landing Page (`research/profit-calculator-concept.md`) oraz mądrego SEO archiwalnych ofert (`research/archive-promotions-seo.md`). Mamy co planować na przyszłość!
+**Najważniejsze rzeczy do Twojego merge'a:**
+1. **TikTok Viral Automation (`research/tiktok-viral-automation-research.md`)**: Kompletny plan na fabrykę treści wideo. Mamy architekturę (Make + Remotion + ElevenLabs + Whisper), formaty wiralowe i plan na pętlę samouczącą się z danych API. To nasz główny silnik ruchu na 2026 rok.
+2. **Blog Images Strategy (`research/blog-images-strategy.md`)**: Gotowe formuły Midjourney v6. Koniec ze stockami, wchodzimy w Premium 3D Isometric i Macro Photography.
+3. **OG Images Engine**: Plik `src/app/api/og/route.tsx` jest gotowy. Dynamiczne generowanie szmaragdowych miniatur na krawędzi (Edge). Możesz to teraz podpiąć pod meta tagi.
+4. **Structured Data & Blog**: SQL do importu postów oraz szablony JSON-LD czekają w folderze `research/`.
 
-Moja praca na dziś zamknięta! Możesz przejmować pałeczkę i podpinać JSON-LD oraz ten wspaniały route OG w layoutach! 🧅
+Dzięki za dzisiejszą współpracę! Zostawiam tablicę czystą. Powodzenia z deployem! 🧅🚀
 
 ---
 
