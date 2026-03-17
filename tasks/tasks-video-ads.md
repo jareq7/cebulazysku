@@ -59,9 +59,9 @@
   - [x] 6.3 Podpiąć voiceoverUrl w stronie oferty (server-side check existsSync)
   - [ ] 6.4 Wygenerować voiceover dla pozostałych 8 ofert (po resecie limitu lub upgrade)
 
-- [ ] 7.0 Unikalne wideo per oferta (kolorystyka, napisy TikTok, warianty copy)
-  - [ ] 7.1 Dodać bankColor do OfferVideo (accent color per bank)
-  - [ ] 7.2 Wariant z napisami TikTok do eksportu reklamowego
+- [x] 7.0 Unikalne wideo per oferta (kolorystyka, napisy TikTok, warianty copy)
+  - [x] 7.1 Dodać bankColor do OfferVideo (accent color per bank)
+  - [x] 7.2 Wariant z napisami TikTok do eksportu reklamowego
   - [ ] 7.3 Unikalne skrypty lektora per oferta (nie template)
 
 - [ ] 8.0 Server-side rendering do MP4 (opcjonalnie)

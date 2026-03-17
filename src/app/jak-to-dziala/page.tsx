@@ -11,9 +11,19 @@ import {
 } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Jak to działa?",
+  title: "Jak to działa? Zarabianie na promocjach bankowych | CebulaZysku",
   description:
-    "Dowiedz się, jak zarabiać na promocjach bankowych krok po kroku. Załóż konto, spełniaj warunki i odbieraj premie!",
+    "Dowiedz się, jak zarabiać na promocjach bankowych krok po kroku. Załóż konto, spełniaj warunki i odbieraj premie w 100% legalnie i bezpiecznie!",
+  alternates: {
+    canonical: "https://cebulazysku.pl/jak-to-dziala",
+  },
+  openGraph: {
+    title: "Jak obierać premie bankowe? | CebulaZysku",
+    description: "Poznaj 4 proste kroki, dzięki którym zaczniesz zarabiać na kontach osobistych bez haczyków.",
+    type: "website",
+    locale: "pl_PL",
+    url: "https://cebulazysku.pl/jak-to-dziala",
+  },
 };
 
 export default function HowItWorksPage() {
@@ -79,7 +89,7 @@ export default function HowItWorksPage() {
         <div className="flex items-start gap-4">
           <ShieldCheck className="h-8 w-8 text-emerald-600 shrink-0 mt-1" />
           <div>
-            <h3 className="text-lg font-bold">Czy to bezpieczne?</h3>
+            <h2 className="text-lg font-bold">Czy to bezpieczne?</h2>
             <p className="mt-2 text-muted-foreground leading-relaxed">
               Tak! Zakładasz konta w normalnych, licencjonowanych bankach
               objętych Bankowym Funduszem Gwarancyjnym (BFG). Twoje pieniądze

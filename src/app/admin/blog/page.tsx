@@ -215,7 +215,7 @@ export default function AdminBlogPage() {
               <h2 className="font-bold">
                 {creating ? "Nowy post" : "Edytuj post"}
               </h2>
-              <Button variant="ghost" size="icon" onClick={cancel}>
+              <Button variant="ghost" size="icon" onClick={cancel} aria-label="Zamknij edytor">
                 <X className="h-4 w-4" />
               </Button>
             </div>
@@ -399,9 +399,7 @@ export default function AdminBlogPage() {
                     size="icon"
                     className="h-8 w-8"
                     onClick={() => togglePublish(post)}
-                    title={
-                      post.is_published ? "Cofnij publikację" : "Opublikuj"
-                    }
+                    aria-label={post.is_published ? "Cofnij publikację" : "Opublikuj"}
                   >
                     {post.is_published ? (
                       <EyeOff className="h-4 w-4" />
@@ -414,6 +412,7 @@ export default function AdminBlogPage() {
                     size="icon"
                     className="h-8 w-8"
                     onClick={() => startEdit(post)}
+                    aria-label="Edytuj post"
                   >
                     <Edit2 className="h-4 w-4" />
                   </Button>
@@ -422,6 +421,7 @@ export default function AdminBlogPage() {
                     size="icon"
                     className="h-8 w-8 text-destructive hover:text-destructive"
                     onClick={() => handleDelete(post.id)}
+                    aria-label="Usuń post"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

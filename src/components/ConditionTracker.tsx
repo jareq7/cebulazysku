@@ -146,6 +146,9 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
                 src={offer.bankLogo}
                 alt={`${offer.bankName} logo`}
                 className="h-12 w-12 rounded-xl object-contain bg-white p-1.5 shrink-0"
+                loading="lazy"
+                width={48}
+                height={48}
               />
             ) : (
               <div
@@ -173,6 +176,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
             <button
               onClick={() => setExpanded(!expanded)}
               className="p-2 hover:bg-muted rounded-lg transition-colors"
+              aria-label={expanded ? "Zwiń warunki" : "Rozwiń warunki"}
             >
               {expanded ? (
                 <ChevronUp className="h-5 w-5" />
@@ -364,6 +368,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
+                        aria-label={`Zmniejsz ${condition.label}`}
                         onClick={() =>
                           decrementCondition(
                             offer.id,
@@ -393,6 +398,7 @@ export function ConditionTracker({ offer, tracked }: ConditionTrackerProps) {
                         variant="outline"
                         size="icon"
                         className="h-8 w-8"
+                        aria-label={`Zwiększ ${condition.label}`}
                         onClick={() =>
                           incrementCondition(
                             offer.id,

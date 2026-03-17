@@ -11,6 +11,16 @@ export const metadata: Metadata = {
   title: "Blog i Poradniki – Jak zarabiać na bankach? | CebulaZysku",
   description:
     "Praktyczne poradniki, wyjaśnienie regulaminów i aktualności ze świata promocji bankowych. Dowiedz się, jak bezpiecznie łupić banki i zbierać premie! 🧅",
+  alternates: {
+    canonical: "https://cebulazysku.pl/blog",
+  },
+  openGraph: {
+    title: "Blog i Poradniki – CebulaZysku",
+    description: "Praktyczne poradniki, wyjaśnienie regulaminów i aktualności ze świata promocji bankowych.",
+    type: "website",
+    locale: "pl_PL",
+    url: "https://cebulazysku.pl/blog",
+  },
 };
 
 export const revalidate = 300; // ISR: revalidate every 5 min

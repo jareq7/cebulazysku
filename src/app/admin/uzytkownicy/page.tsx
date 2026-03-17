@@ -422,6 +422,7 @@ export default function AdminUsersPage() {
                       size="icon"
                       className="h-8 w-8 shrink-0"
                       onClick={() => toggleExpand(user.user_id)}
+                      aria-label={expandedUser === user.user_id ? "Zwiń szczegóły" : "Rozwiń szczegóły"}
                     >
                       {expandedUser === user.user_id ? (
                         <ChevronUp className="h-4 w-4" />

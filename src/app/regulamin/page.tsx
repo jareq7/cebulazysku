@@ -2,9 +2,16 @@ import { Metadata } from "next";
 import { FileText } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Regulamin serwisu",
+  title: "Regulamin serwisu | CebulaZysku",
   description:
-    "Regulamin serwisu CebulaZysku – zasady korzystania z porównywarki promocji bankowych.",
+    "Regulamin serwisu CebulaZysku – zasady korzystania z porównywarki promocji bankowych oraz trackera warunków.",
+  alternates: {
+    canonical: "https://cebulazysku.pl/regulamin",
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default function TermsPage() {

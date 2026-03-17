@@ -62,6 +62,7 @@ Wyniki analiz przeprowadzonych przez Gemini CLI w obszarze optymalizacji i rozwo
 
 | Dokument | Opis |
 |----------|------|
+| [Propozycje ulepszeń UX/UI za pomocą AI](../research/ux-ui-ai-ideas.md) | Pomysły na "delighters": Odznaki 3D, maskotki, Lottie, OG backgrounds |
 | [Research: Remotion Rendering](../research/remotion-rendering.md) | Analiza opcji generowania MP4 (AWS Lambda vs GitHub Actions) |
 | [SEO: Strategia Contentowa](../research/content/blog-topics.md) | Plan 10 tematów blogowych pod EEAT i ruch organiczny |
 | [SEO: Treści Rankingu](../research/content/ranking-copy.md) | Propozycja unikalnych treści "cebulowych" dla strony /ranking |
@@ -82,8 +83,9 @@ Wyniki analiz przeprowadzonych przez Gemini CLI w obszarze optymalizacji i rozwo
 |---------|-----|-------|--------|
 | CebulaZysku v2 | [prd-cebulazysku-v2.md](../tasks/prd-cebulazysku-v2.md) | [tasks-cebulazysku-v2.md](../tasks/tasks-cebulazysku-v2.md) | ✅ Done |
 | Auto-sync XML | [prd-auto-sync-xml.md](../tasks/prd-auto-sync-xml.md) | [tasks-auto-sync-xml.md](../tasks/tasks-auto-sync-xml.md) | ✅ Done |
-| Video Ads | [prd-video-ads.md](../tasks/prd-video-ads.md) | [tasks-video-ads.md](../tasks/tasks-video-ads.md) | ⚠️ 80% |
-| Admin Panel v2 | [prd-admin-panel-v2.md](../tasks/prd-admin-panel-v2.md) | [tasks-admin-panel-v2.md](../tasks/tasks-admin-panel-v2.md) | ⚠️ 90% |
+| Video Ads | [prd-video-ads.md](../tasks/prd-video-ads.md) | [tasks-video-ads.md](../tasks/tasks-video-ads.md) | ⚠️ 90% |
+| Admin Panel v2 | [prd-admin-panel-v2.md](../tasks/prd-admin-panel-v2.md) | [tasks-admin-panel-v2.md](../tasks/tasks-admin-panel-v2.md) | ✅ Done |
+| Analytics | [prd-analytics.md](../tasks/prd-analytics.md) | [tasks-analytics.md](../tasks/tasks-analytics.md) | ✅ Done |
 
 ---
 

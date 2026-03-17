@@ -5,9 +5,19 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 export const metadata: Metadata = {
-  title: "O nas",
+  title: "O nas – Misja CebulaZysku | CebulaZysku",
   description:
-    "Poznaj CebulaZysku – serwis, który obiera premie bankowe warstwa po warstwie. Dowiedz się o naszej misji.",
+    "Poznaj CebulaZysku – niezależny serwis, który obiera premie bankowe warstwa po warstwie. Dowiedz się o naszej misji i zobacz jak pomagamy zarabiać.",
+  alternates: {
+    canonical: "https://cebulazysku.pl/o-nas",
+  },
+  openGraph: {
+    title: "Kim jesteśmy? Misja | CebulaZysku",
+    description: "Poznaj zespół, który testuje i śledzi promocje bankowe w Polsce. Ołupimy banki legalnie!",
+    type: "website",
+    locale: "pl_PL",
+    url: "https://cebulazysku.pl/o-nas",
+  },
 };
 
 export default function AboutPage() {
@@ -102,7 +112,7 @@ export default function AboutPage() {
       {/* Disclaimer */}
       <section className="mb-12">
         <div className="rounded-2xl border border-emerald-200 dark:border-emerald-800/40 bg-emerald-50 dark:bg-emerald-950/30 p-6">
-          <h3 className="font-bold text-emerald-900 dark:text-emerald-200 mb-2">Ważna informacja</h3>
+          <h2 className="font-bold text-emerald-900 dark:text-emerald-200 mb-2">Ważna informacja</h2>
           <p className="text-sm text-emerald-800 dark:text-emerald-300 leading-relaxed">
             CebulaZysku ma charakter wyłącznie informacyjny i{" "}
             <strong>nie stanowi doradztwa finansowego</strong>, inwestycyjnego

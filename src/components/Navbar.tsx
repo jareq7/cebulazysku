@@ -42,6 +42,7 @@ export function Navbar() {
             width={44}
             height={44}
             className="rounded-lg"
+            priority
           />
           <span className="bg-gradient-to-r from-emerald-700 to-green-500 bg-clip-text text-transparent">
             CebulaZysku

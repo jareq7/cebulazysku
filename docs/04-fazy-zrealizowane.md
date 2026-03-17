@@ -530,3 +530,41 @@ Zostały zrealizowane w poprzednich sesjach. Kluczowe deliverables:
 - Przeprowadzono **Audyt Lighthouse na Produkcji** (wynik w `research/lighthouse-audit.md`), wyodrębniając szybkie poprawki do implementacji przez zespół developerski (LCP, a11y dla buttonów).
 
 // @author Gemini CLI (gemini-3.1-pro-preview) | 2026-03-17 — Zapis infrastruktury analitycznej i wyników audytów
+
+
+### SEO: Audyt Structured Data
+- Opracowano listę sugerowanych znaczników na bazie Schema.org (Product, Offer, HowTo).
+- Zaproponowano sposób integracji dynamicznych snippetów na podstronach ofert (), co poprawi klikalność i wygląd wyników w SERP-ach.
+
+### SEO: Treści Blogowe
+- Przygotowano 3 artykuły informacyjne (karencja, karty kredytowe a debetowe, blik) skierowane na edukację i rozwiązywanie problemów początkujących użytkowników.
+
+
+### SEO: Audyt Structured Data
+- Opracowano listę sugerowanych znaczników na bazie Schema.org (Product, Offer, HowTo).
+- Zaproponowano sposób integracji dynamicznych snippetów na podstronach ofert, co poprawi klikalność i wygląd wyników w SERP-ach.
+
+### SEO: Treści Blogowe
+- Przygotowano 3 artykuły informacyjne (karencja, karty kredytowe a debetowe, blik) skierowane na edukację i rozwiązywanie problemów początkujących użytkowników.
+
+
+### Strategia Growth & Content
+- Opracowano strategię wdrożenia dynamicznych Open Graph Images z użyciem  w celu zwiększenia CTR w mediach społecznościowych.
+- Przygotowano analizę konkurencji, w tym silne/słabe strony głównych graczy na rynku oraz zdefiniowano luki do wykorzystania przez projekt CebulaZysku.pl (Trackery, PWA).
+
+
+### Strategia Growth & Content
+- Opracowano strategię wdrożenia dynamicznych Open Graph Images z użyciem vercel/og w celu zwiększenia CTR w mediach społecznościowych.
+- Przygotowano analizę konkurencji, w tym silne/słabe strony głównych graczy na rynku oraz zdefiniowano luki do wykorzystania przez projekt CebulaZysku.pl (Trackery, PWA).
+
+
+### SEO: Optymalizacja Metadata
+- Wdrożono pełne tagi Open Graph () na wszystkich głównych podstronach statycznych (Ranking, Blog, O nas, Jak to działa, Strona główna) w celu poprawy widoczności w social mediach.
+- Zaimplementowano tagi kanoniczne () chroniące serwis przed powielaniem treści.
+- Wprowadzono tagi  dla stron prawnych (Regulamin, Polityka Prywatności), oszczędzając crawl budget na kluczowe podstrony sprzedażowe.
+
+
+### SEO: Optymalizacja Metadata
+- Wdrożono pełne tagi Open Graph na wszystkich głównych podstronach statycznych (Ranking, Blog, O nas, Jak to działa, Strona główna) w celu poprawy widoczności w social mediach.
+- Zaimplementowano tagi kanoniczne chroniące serwis przed powielaniem treści.
+- Wprowadzono dyrektywy no-index dla stron prawnych (Regulamin, Polityka Prywatności), oszczędzając crawl budget na kluczowe podstrony sprzedażowe.

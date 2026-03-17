@@ -2,9 +2,16 @@ import { Metadata } from "next";
 import { Shield } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Polityka prywatności",
+  title: "Polityka prywatności | CebulaZysku",
   description:
-    "Polityka prywatności serwisu CebulaZysku. Informacje o przetwarzaniu danych osobowych zgodnie z RODO.",
+    "Polityka prywatności serwisu CebulaZysku. Informacje o przetwarzaniu danych osobowych zgodnie z RODO, plikach cookies i analityce.",
+  alternates: {
+    canonical: "https://cebulazysku.pl/polityka-prywatnosci",
+  },
+  robots: {
+    index: false,
+    follow: true,
+  },
 };
 
 export default function PrivacyPolicyPage() {

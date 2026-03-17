@@ -72,6 +72,9 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
               src={offer.bankLogo}
               alt={`${offer.bankName} logo`}
               className="h-12 w-12 rounded-xl object-contain bg-white p-1 shrink-0"
+              loading="lazy"
+              width={48}
+              height={48}
             />
           ) : (
             <div

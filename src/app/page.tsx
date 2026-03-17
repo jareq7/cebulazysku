@@ -17,9 +17,22 @@ import { JsonLd } from "@/components/JsonLd";
 
 export async function generateMetadata(): Promise<Metadata> {
   const totalEarnings = await getTotalPotentialEarnings();
+  const title = "Promocje Bankowe i Ranking Kont 2026 – Zgarnij Premie | CebulaZysku";
+  const description = `Aktualne promocje bankowe i ranking kont osobistych. Porównaj oferty, sprawdź haczyki i zyskaj nawet ${totalEarnings} zł na start. Łupimy banki legalnie! 🧅`;
+
   return {
-    title: "Promocje Bankowe i Ranking Kont 2026 – Zgarnij Premie | CebulaZysku",
-    description: `Aktualne promocje bankowe i ranking kont osobistych. Porównaj oferty, sprawdź haczyki i zyskaj nawet ${totalEarnings} zł na start. Łupimy banki legalnie! 🧅`,
+    title,
+    description,
+    alternates: {
+      canonical: "https://cebulazysku.pl",
+    },
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      locale: "pl_PL",
+      url: "https://cebulazysku.pl",
+    },
   };
 }
 

@@ -19,6 +19,28 @@ export interface OfferVideoProps {
   bankLogo: string;
   voiceoverUrl?: string;
   musicStartFrom?: number;
+  bankColor?: string;
+  showSubtitles?: boolean;
+}
+
+// Bank brand colors — used as accent in video
+const BANK_COLORS: Record<string, string> = {
+  "mBank": "#d4001a",
+  "Alior Bank": "#e30613",
+  "BNP Paribas": "#00965e",
+  "Bank Pekao": "#c41230",
+  "Santander": "#ec0000",
+  "Citi Handlowy": "#003da5",
+  "VeloBank": "#00a3e0",
+  "PKO BP": "#004b87",
+  "Bank Millennium": "#640a6e",
+};
+
+function getBankColor(bankName: string): string {
+  for (const [key, color] of Object.entries(BANK_COLORS)) {
+    if (bankName.toLowerCase().includes(key.toLowerCase())) return color;
+  }
+  return "#10b981"; // default emerald
 }
 
 // 9:16 vertical (1080×1920)
@@ -89,14 +111,15 @@ const BankLogo: React.FC<{
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const OfferVideo: React.FC<any> = ({
   bankName, offerName, reward, conditions, pros, bankLogo,
-  voiceoverUrl, musicStartFrom,
+  voiceoverUrl, musicStartFrom, bankColor: bankColorProp, showSubtitles,
 }) => {
   const musicOffset = musicStartFrom ?? Math.floor((hashString(bankName) % 60) * FPS);
+  const accent = bankColorProp || getBankColor(bankName);
 
   return (
     <AbsoluteFill style={{ backgroundColor: "#0f172a", fontFamily: "Inter, system-ui, sans-serif" }}>
       <AbsoluteFill style={{
-        background: "radial-gradient(ellipse at 50% 30%, rgba(16,185,129,0.12) 0%, transparent 70%)",
+        background: `radial-gradient(ellipse at 50% 30%, ${accent}1f 0%, transparent 70%)`,
       }} />
 
       {/* Background music */}
@@ -132,17 +155,17 @@ export const OfferVideo: React.FC<any> = ({
 
       {/* 1. Intro — kwota (0–6s) */}
       <Sequence from={s(0)} durationInFrames={s(6)}>
-        <IntroScene reward={reward} />
+        <IntroScene reward={reward} accent={accent} />
       </Sequence>
 
       {/* 2. Bank + "musisz spełnić warunki" (6–10s) */}
       <Sequence from={s(6)} durationInFrames={s(4)}>
-        <BankScene bankName={bankName} bankLogo={bankLogo} offerName={offerName} />
+        <BankScene bankName={bankName} bankLogo={bankLogo} offerName={offerName} accent={accent} />
       </Sequence>
 
       {/* 3. Warunki po kolei (10–23s) */}
       <Sequence from={s(10)} durationInFrames={s(13)}>
-        <ConditionsScene conditions={conditions} />
+        <ConditionsScene conditions={conditions} accent={accent} />
       </Sequence>
 
       {/* 4. Problem — zapominasz (23–37.5s) */}
@@ -152,13 +175,18 @@ export const OfferVideo: React.FC<any> = ({
 
       {/* 5. Rozwiązanie — Cebula Zysku + tracker (37.5–61s) */}
       <Sequence from={s(37.5)} durationInFrames={s(23.5)}>
-        <TrackerScene conditions={conditions} bankName={bankName} reward={reward} bankLogo={bankLogo} />
+        <TrackerScene conditions={conditions} bankName={bankName} reward={reward} bankLogo={bankLogo} accent={accent} />
       </Sequence>
 
       {/* 6. CTA (61–70s) */}
       <Sequence from={s(61)} durationInFrames={s(9)}>
-        <CtaScene reward={reward} />
+        <CtaScene reward={reward} accent={accent} />
       </Sequence>
+
+      {/* TikTok-style subtitles */}
+      {showSubtitles && voiceoverUrl && (
+        <SubtitleOverlay bankName={bankName} reward={reward} conditions={conditions} accent={accent} />
+      )}
 
       {/* Watermark */}
       <Watermark />
@@ -191,7 +219,7 @@ const Watermark: React.FC = () => {
 };
 
 // ─── 1. Intro: "720 zł. Tyle możesz dostać..." (7.8s) ──────────
-const IntroScene: React.FC<{ reward: number }> = ({ reward }) => {
+const IntroScene: React.FC<{ reward: number; accent: string }> = ({ reward, accent }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -214,9 +242,9 @@ const IntroScene: React.FC<{ reward: number }> = ({ reward }) => {
       </div>
 
       <div style={{
-        fontSize: 200, fontWeight: 900, color: "#10b981",
+        fontSize: 200, fontWeight: 900, color: accent,
         textAlign: "center", lineHeight: 1, opacity: rewardFade,
-        textShadow: "0 0 100px rgba(16,185,129,0.4)",
+        textShadow: `0 0 100px ${accent}66`,
       }}>
         {displayReward}
         <span style={{ fontSize: 100 }}> zł</span>
@@ -234,8 +262,8 @@ const IntroScene: React.FC<{ reward: number }> = ({ reward }) => {
 
 // ─── 2. Bank: "musisz spełnić warunki" (2.8s) ──────────────────
 const BankScene: React.FC<{
-  bankName: string; bankLogo: string; offerName: string;
-}> = ({ bankName, bankLogo, offerName }) => {
+  bankName: string; bankLogo: string; offerName: string; accent: string;
+}> = ({ bankName, bankLogo, offerName, accent }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   const scale = spring({ frame, fps, config: { damping: 14, stiffness: 120 } });
@@ -255,7 +283,7 @@ const BankScene: React.FC<{
 };
 
 // ─── 3. Conditions: "Po pierwsze... To wszystko." (16.1s) ───────
-const ConditionsScene: React.FC<{ conditions: { label: string }[] }> = ({ conditions }) => {
+const ConditionsScene: React.FC<{ conditions: { label: string }[]; accent: string }> = ({ conditions, accent }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -288,8 +316,8 @@ const ConditionsScene: React.FC<{ conditions: { label: string }[] }> = ({ condit
           }}>
             <div style={{
               width: 80, height: 80, borderRadius: 40,
-              backgroundColor: isChecked ? "#10b981" : "#1e293b",
-              border: "3px solid #10b981",
+              backgroundColor: isChecked ? accent : "#1e293b",
+              border: `3px solid ${accent}`,
               display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
             }}>
               <span style={{ fontSize: 38, color: "white", fontWeight: 700 }}>
@@ -305,7 +333,7 @@ const ConditionsScene: React.FC<{ conditions: { label: string }[] }> = ({ condit
 
       {/* "To wszystko." */}
       <div style={{
-        fontSize: 56, color: "#10b981", fontWeight: 700, marginTop: 30, textAlign: "center",
+        fontSize: 56, color: accent, fontWeight: 700, marginTop: 30, textAlign: "center",
         opacity: interpolate(frame, [s(10), s(11)], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }),
       }}>
         To wszystko.
@@ -370,8 +398,8 @@ const ProblemScene: React.FC<{ reward: number }> = ({ reward }) => {
 
 // ─── 5. Solution: Cebula Zysku + tracker + objection handling (21.7s) ──
 const TrackerScene: React.FC<{
-  conditions: { label: string }[]; bankName: string; reward: number; bankLogo: string;
-}> = ({ conditions, bankName, reward, bankLogo }) => {
+  conditions: { label: string }[]; bankName: string; reward: number; bankLogo: string; accent: string;
+}> = ({ conditions, bankName, reward, bankLogo, accent }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -457,7 +485,7 @@ const TrackerScene: React.FC<{
                 </div>
               </div>
               <div style={{ textAlign: "right" }}>
-                <div style={{ fontSize: 42, fontWeight: 800, color: "#059669" }}>{reward} zł</div>
+                <div style={{ fontSize: 42, fontWeight: 800, color: accent }}>{reward} zł</div>
                 <div style={{ fontSize: 18, color: "#64748b" }}>{Math.round(progressValue)}%</div>
               </div>
             </div>
@@ -466,7 +494,7 @@ const TrackerScene: React.FC<{
               <div style={{
                 width: "100%", height: 12, backgroundColor: "#e2e8f0", borderRadius: 6, overflow: "hidden",
               }}>
-                <div style={{ width: `${progressValue}%`, height: "100%", backgroundColor: "#10b981", borderRadius: 6 }} />
+                <div style={{ width: `${progressValue}%`, height: "100%", backgroundColor: accent, borderRadius: 6 }} />
               </div>
             </div>
 
@@ -483,27 +511,27 @@ const TrackerScene: React.FC<{
                   <div key={i} style={{
                     opacity: itemFade, marginBottom: i < conditionItems.length - 1 ? 10 : 0,
                     padding: "12px 18px", borderRadius: 12,
-                    border: `2px solid ${isDone ? "#a7f3d0" : "#e2e8f0"}`,
-                    backgroundColor: isDone ? "#ecfdf5" : "#fff",
+                    border: `2px solid ${isDone ? `${accent}44` : "#e2e8f0"}`,
+                    backgroundColor: isDone ? `${accent}0d` : "#fff",
                   }}>
                     <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
                         <div style={{
                           width: 32, height: 32, borderRadius: 7,
-                          backgroundColor: isDone ? "#10b981" : "#f1f5f9",
+                          backgroundColor: isDone ? accent : "#f1f5f9",
                           border: isDone ? "none" : "2px solid #cbd5e1",
                           display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
                         }}>
                           {isDone && <span style={{ fontSize: 18, color: "white", fontWeight: 700 }}>✓</span>}
                         </div>
-                        <div style={{ fontSize: 22, fontWeight: 600, color: isDone ? "#047857" : "#0f172a" }}>{c.label}</div>
+                        <div style={{ fontSize: 22, fontWeight: 600, color: isDone ? accent : "#0f172a" }}>{c.label}</div>
                       </div>
-                      <div style={{ fontSize: 24, fontWeight: 700, color: isDone ? "#059669" : "#0f172a" }}>
+                      <div style={{ fontSize: 24, fontWeight: 700, color: isDone ? accent : "#0f172a" }}>
                         {count}/5
                       </div>
                     </div>
                     <div style={{ marginTop: 8, width: "100%", height: 6, backgroundColor: "#e2e8f0", borderRadius: 3, overflow: "hidden" }}>
-                      <div style={{ width: `${Math.min(100, (count / 5) * 100)}%`, height: "100%", backgroundColor: isDone ? "#10b981" : "#3b82f6", borderRadius: 3 }} />
+                      <div style={{ width: `${Math.min(100, (count / 5) * 100)}%`, height: "100%", backgroundColor: isDone ? accent : `${accent}99`, borderRadius: 3 }} />
                     </div>
                   </div>
                 );
@@ -517,7 +545,7 @@ const TrackerScene: React.FC<{
               display: "flex", alignItems: "center", gap: 16, opacity: obj1Fade,
             }}>
               <div style={{
-                width: 44, height: 44, borderRadius: 22, backgroundColor: "#10b981",
+                width: 44, height: 44, borderRadius: 22, backgroundColor: accent,
                 display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
               }}>
                 <span style={{ fontSize: 26, color: "white" }}>✓</span>
@@ -531,7 +559,7 @@ const TrackerScene: React.FC<{
               display: "flex", alignItems: "center", gap: 16, opacity: obj2Fade,
             }}>
               <div style={{
-                width: 44, height: 44, borderRadius: 22, backgroundColor: "#10b981",
+                width: 44, height: 44, borderRadius: 22, backgroundColor: accent,
                 display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0,
               }}>
                 <span style={{ fontSize: 26, color: "white" }}>✓</span>
@@ -544,7 +572,7 @@ const TrackerScene: React.FC<{
 
           {/* "Krok po kroku. Bez stresu. Za darmo." */}
           <div style={{
-            fontSize: 48, color: "#10b981", fontWeight: 700,
+            fontSize: 48, color: accent, fontWeight: 700,
             textAlign: "center", marginTop: 30, opacity: closerFade,
           }}>
             Krok po kroku. Bez stresu. Za darmo.
@@ -556,7 +584,7 @@ const TrackerScene: React.FC<{
 };
 
 // ─── 6. CTA: "Wejdź na cebulazysku.pl" (5.9s) ──────────────────
-const CtaScene: React.FC<{ reward: number }> = ({ reward }) => {
+const CtaScene: React.FC<{ reward: number; accent: string }> = ({ reward, accent }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
 
@@ -570,9 +598,9 @@ const CtaScene: React.FC<{ reward: number }> = ({ reward }) => {
     <AbsoluteFill style={{ justifyContent: "center", alignItems: "center", padding: "0 70px", opacity: fadeIn }}>
       {/* Big CTA */}
       <div style={{
-        padding: "40px 80px", backgroundColor: "#10b981", borderRadius: 28,
+        padding: "40px 80px", backgroundColor: accent, borderRadius: 28,
         transform: `scale(${buttonScale * pulse})`,
-        boxShadow: `0 0 ${80 * glow}px rgba(16,185,129,${glow})`,
+        boxShadow: `0 0 ${80 * glow}px ${accent}${Math.round(glow * 255).toString(16).padStart(2, "0")}`,
         marginBottom: 40,
       }}>
         <div style={{ fontSize: 64, fontWeight: 900, color: "white", textAlign: "center" }}>
@@ -591,7 +619,7 @@ const CtaScene: React.FC<{ reward: number }> = ({ reward }) => {
         }}>
           <Img src={staticFile("logo-icon.png")} style={{ width: 60, height: 60 }} />
         </div>
-        <div style={{ fontSize: 56, color: "#10b981", fontWeight: 800 }}>
+        <div style={{ fontSize: 56, color: accent, fontWeight: 800 }}>
           cebulazysku.pl
         </div>
       </div>
@@ -603,5 +631,66 @@ const CtaScene: React.FC<{ reward: number }> = ({ reward }) => {
         Rejestracja za darmo
       </div>
     </AbsoluteFill>
+  );
+};
+
+// ─── TikTok-style subtitle overlay ─────────────────────────────
+interface SubtitleSegment { text: string; from: number; to: number; }
+
+const SubtitleOverlay: React.FC<{
+  bankName: string; reward: number; conditions: { label: string }[]; accent: string;
+}> = ({ bankName, reward, conditions, accent }) => {
+  const frame = useCurrentFrame();
+
+  // Subtitle segments synced to voiceover script timing
+  const segments: SubtitleSegment[] = [
+    { text: `${reward} złotych premii`, from: s(0), to: s(3) },
+    { text: `za konto w ${bankName}`, from: s(3), to: s(6) },
+    { text: "Musisz spełnić kilka warunków", from: s(7), to: s(10) },
+    ...conditions.slice(0, 4).map((c, i) => ({
+      text: c.label,
+      from: s(10 + i * 3.25),
+      to: s(10 + (i + 1) * 3.25),
+    })),
+    { text: "To wszystko.", from: s(21), to: s(23) },
+    { text: "Ale... wiesz jak to jest.", from: s(23), to: s(26) },
+    { text: "Zapomniałeś o jednym warunku.", from: s(28), to: s(32) },
+    { text: "Premia przepada.", from: s(32.5), to: s(35) },
+    { text: "Właśnie dlatego powstała Cebula Zysku.", from: s(37.5), to: s(41) },
+    { text: "Twój osobisty tracker promocji", from: s(41), to: s(45) },
+    { text: "Widzisz co zrobiłeś i co zostało", from: s(45), to: s(50) },
+    { text: "Bez danych bankowych", from: s(50), to: s(54) },
+    { text: "Krok po kroku. Bez stresu.", from: s(57), to: s(61) },
+    { text: "Wejdź na cebulazysku.pl!", from: s(61), to: s(68) },
+  ];
+
+  const current = segments.find((seg) => frame >= seg.from && frame < seg.to);
+  if (!current) return null;
+
+  const progress = (frame - current.from) / (current.to - current.from);
+  const fadeIn = Math.min(1, progress * 5);
+  const fadeOut = Math.min(1, (1 - progress) * 5);
+  const opacity = Math.min(fadeIn, fadeOut);
+
+  return (
+    <div style={{
+      position: "absolute", bottom: 160, left: 40, right: 40,
+      display: "flex", justifyContent: "center", opacity,
+    }}>
+      <div style={{
+        padding: "16px 32px",
+        backgroundColor: "rgba(0,0,0,0.75)",
+        borderRadius: 16,
+        borderBottom: `4px solid ${accent}`,
+      }}>
+        <div style={{
+          fontSize: 48, fontWeight: 800, color: "white",
+          textAlign: "center", lineHeight: 1.3,
+          textShadow: "0 2px 8px rgba(0,0,0,0.5)",
+        }}>
+          {current.text}
+        </div>
+      </div>
+    </div>
   );
 };

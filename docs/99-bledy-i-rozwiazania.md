@@ -324,6 +324,9 @@ Szablony: `create-prd.md` i `generate-tasks.md` w rootcie projektu.
 | **Consent PRZED GTM** | gtag consent default musi być w tym samym script PRZED GTM bootstrap |
 | **sendBeacon = brak headerów** | Tracking endpoint musi działać bez auth; beacon nie obsługuje custom headers |
 | **Multi-worker = jasny podział** | Przy 2 workerach: kto rusza jakie pliki, kto robi co, review przed merge |
+| **Icon-only button = aria-label** | Każdy button z samą ikoną musi mieć aria-label — screen reader czyta "button" |
+| **Headingi sekwencyjnie** | H1→H2→H3, nigdy H1→H3. Jeśli wizualnie zbędny — `sr-only` |
+| **img = width+height+lazy** | Explicit wymiary zapobiegają CLS; below-fold = lazy, above-fold = priority |
 
 
 
@@ -336,3 +339,44 @@ Szablony: `create-prd.md` i `generate-tasks.md` w rootcie projektu.
 **Rozwiązanie:** Zastąpienie komend bashowych zapisujących tekst na dysk prostymi, jednowierszowymi skryptami Pythona (`python3 -c "with open(...) ..."`), które lepiej radzą sobie ze znakami specjalnymi. Zawsze preferowane powinno być w tym celu narzędzie `replace` lub `write_file`.
 
 **Jak unikać:** Pamiętać o złotych dyrektywach: `NEVER run cat inside a bash command to create a new file or append to an existing file if custom tools exist`. 
+
+
+---
+
+## 27. Pułapki wstrzykiwania skryptów Python z poziomu bash (backticki)
+
+**Problem:** Podczas uruchamiania skryptu `python3 -c "..."` z poziomu CLI basha, wystąpiły błędy typu `command not found`. Działo się tak dlatego, że string do wstrzyknięcia zawierał kod w Markdown z backtickami (`kod`). Bash interpretuje tekst w backtickach wewnątrz podwójnego cudzysłowu jako komendę do wykonania.
+
+**Rozwiązanie:** Należy unikać używania backticków wewnątrz interpolowanych stringów bashowych dla jednowierszowców Pythona. Lepszą praktyką jest czysty zapis lub użycie wbudowanych narzędzi `write_file`.
+
+**Jak unikać:** Używając basha jako wrappera do skryptów w innym języku, miej świadomość, że backticki wewnątrz `" "` wciąż wykonują kod jako podproces basha.
+
+---
+
+## 28. Icon-only buttons bez aria-label — accessibility fail
+
+**Problem:** Lighthouse wykazał "Buttons do not have an accessible name". Dotyczyło 10 icon-only buttons w projekcie: ConditionTracker (+/- i expand), ThemeToggle placeholder, admin blog (publish/edit/delete), admin users (expand). Screen reader czytał je jako "button" bez kontekstu.
+
+**Rozwiązanie:** Dodano `aria-label` do każdego icon-only buttona z opisem po polsku (np. "Zwiększ transakcje kartą", "Edytuj post", "Rozwiń warunki").
+
+**Jak unikać:** Każdy `<Button size="icon">` lub `<button>` z samą ikoną (Lucide) MUSI mieć `aria-label`. Sprawdzaj to podczas code review. Rule of thumb: jeśli button nie ma widocznego tekstu — potrzebuje aria-label.
+
+---
+
+## 29. Heading hierarchy breaks — SEO i accessibility
+
+**Problem:** Lighthouse raportował "Heading elements are not in a sequentially-descending order". Na 4 stronach (jak-to-dziala, o-nas, ranking, homepage) heading levels przeskakiwały (H1→H3 bez H2, sekcja bez headinga).
+
+**Rozwiązanie:** Zmieniono H3→H2 tam gdzie brakowało pośredniego poziomu. Na ranking dodano `<h2 class="sr-only">` (widoczne dla screen readerów, niewidoczne wizualnie).
+
+**Jak unikać:** Headingi muszą iść sekwencyjnie: H1→H2→H3. Jeśli wizualnie nie chcesz headinga ale semantycznie go potrzebujesz — użyj `sr-only`. Przy tworzeniu nowych stron sprawdzaj: czy po H1 jest H2, czy H3 zawsze jest wewnątrz sekcji z H2.
+
+---
+
+## 30. Brak explicit width/height na img — layout shift (CLS)
+
+**Problem:** `<img>` tagi na bank logos nie miały `width` i `height` atrybutów. Powodowało to layout shift (CLS) — przeglądarka nie wie ile miejsca zarezerwować przed załadowaniem obrazka.
+
+**Rozwiązanie:** Dodano `width` i `height` atrybuty do wszystkich `<img>` (OfferCard: 48x48, ranking: 40x40, ConditionTracker: 48x48, oferta detail: 64x64). Dodano też `loading="lazy"` na below-the-fold images i `priority` na above-the-fold logo.
+
+**Jak unikać:** Każdy `<img>` powinien mieć explicit `width` i `height`. Dla Next.js `<Image>` jest to required. Dla natywnych `<img>` (np. external URLs) dodawaj ręcznie. Above-the-fold = bez lazy; below-the-fold = `loading="lazy"`.

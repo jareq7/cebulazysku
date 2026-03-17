@@ -30,6 +30,7 @@ export const metadata: Metadata = {
       "Sprawdź aktualny ranking najlepszych promocji bankowych. Porównaj premie, trudność i warunki.",
     type: "website",
     locale: "pl_PL",
+    url: "https://cebulazysku.pl/ranking",
   },
 };
 
@@ -127,6 +128,7 @@ export default async function RankingPage() {
       </div>
 
       {/* Ranking table */}
+      <h2 className="sr-only">Lista ofert w rankingu</h2>
       <div className="space-y-3">
         {sorted.map((offer, index) => {
           const dlMs = offer.deadline ? new Date(offer.deadline).getTime() : NaN;
@@ -173,6 +175,9 @@ export default async function RankingPage() {
                       src={offer.bankLogo}
                       alt={`${offer.bankName} logo`}
                       className="h-10 w-10 rounded-xl object-contain bg-white p-1 shrink-0"
+                      loading="lazy"
+                      width={40}
+                      height={40}
                     />
                   ) : (
                     <div

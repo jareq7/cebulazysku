@@ -146,6 +146,8 @@ export default async function OfferDetailPage({
             src={offer.bankLogo}
             alt={`${offer.bankName} logo`}
             className="h-16 w-16 rounded-2xl object-contain bg-white p-1.5 shrink-0"
+            width={64}
+            height={64}
           />
         ) : (
           <div
