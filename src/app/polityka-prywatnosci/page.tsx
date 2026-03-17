@@ -15,7 +15,7 @@ export default function PrivacyPolicyPage() {
         <h1 className="text-3xl font-extrabold">Polityka prywatności</h1>
       </div>
       <p className="text-sm text-muted-foreground mb-8">
-        Ostatnia aktualizacja: 6 marca 2026 r.
+        Ostatnia aktualizacja: 17 marca 2026 r.
       </p>
 
       <div className="prose prose-gray max-w-none space-y-8 text-sm leading-relaxed text-muted-foreground">
@@ -79,7 +79,7 @@ export default function PrivacyPolicyPage() {
           <p>Dane osobowe mogą być przekazywane następującym kategoriom odbiorców:</p>
           <ul className="list-disc pl-6 space-y-2">
             <li>Dostawcy usług hostingowych i infrastruktury IT</li>
-            <li>Dostawcy narzędzi analitycznych (Google Analytics, Meta Pixel)</li>
+            <li>Dostawcy narzędzi analitycznych i reklamowych (Google Analytics, Google Ads, Meta, TikTok, X, LinkedIn, Microsoft Ads — szczegóły w sekcji 7)</li>
             <li>Dostawcy usług e-mail</li>
           </ul>
           <p>
@@ -124,39 +124,119 @@ export default function PrivacyPolicyPage() {
 
         <section>
           <h2 className="text-lg font-bold text-foreground">
-            6. Pliki cookies
+            6. Pliki cookies i narzędzia śledzące
           </h2>
           <p>
-            Serwis wykorzystuje pliki cookies w celu zapewnienia prawidłowego
-            działania, analizy ruchu oraz personalizacji treści. Rodzaje
-            wykorzystywanych cookies:
+            W serwisie CebulaZysku używamy plików cookies (ciasteczek) oraz
+            innych podobnych technologii (np. local storage, znaczniki pikselowe)
+            w celu prawidłowego działania strony, analizy ruchu, poprawy
+            komfortu użytkowania oraz personalizacji treści i reklam.
+          </p>
+          <p>
+            Korzystamy z mechanizmu Google Consent Mode v2, co oznacza, że
+            szanujemy Twoje decyzje. Dopóki nie wyrazisz na to wyraźnej zgody
+            na bannerze plików cookies, zablokowane zostaną wszystkie
+            technologie analityczne i reklamowe (poza absolutnie niezbędnymi
+            do technicznego działania serwisu).
+          </p>
+          <p>
+            Możesz w każdej chwili zarządzać swoimi zgodami (wycofać je lub
+            zmienić) korzystając z linku <strong>„Ustawienia cookies"</strong>{" "}
+            dostępnego w stopce naszej strony.
+          </p>
+          <p>Podzieliliśmy nasze pliki cookies na trzy główne kategorie:</p>
+          <ul className="list-disc pl-6 space-y-2">
+            <li>
+              <strong>Niezbędne (zawsze aktywne)</strong> – kluczowe dla
+              działania strony: funkcje nawigacyjne, zapamiętanie statusu
+              zalogowania, a także sam wybór i zapamiętanie zgód dotyczących
+              plików cookies. Podstawa: art. 6 ust. 1 lit. f RODO.
+            </li>
+            <li>
+              <strong>Analityczne (wymagają zgody)</strong> – pozwalają nam
+              liczyć wizyty i źródła ruchu. Dzięki nim wiemy, które podstrony
+              są najpopularniejsze i jak użytkownicy poruszają się po serwisie
+              (np. za pomocą Google Analytics 4). Zebrane dane są agregowane
+              i nie służą bezpośrednio identyfikacji konkretnej osoby. Podstawa:
+              art. 6 ust. 1 lit. a RODO (zgoda).
+            </li>
+            <li>
+              <strong>Reklamowe i personalizacyjne (wymagają zgody)</strong> –
+              mogą być wykorzystywane przez nas oraz naszych partnerów
+              reklamowych do budowania profilu zainteresowań i wyświetlania
+              dopasowanych reklam na innych stronach internetowych, a także
+              precyzyjnego mierzenia efektywności kampanii. Podstawa:
+              art. 6 ust. 1 lit. a RODO (zgoda).
+            </li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 className="text-lg font-bold text-foreground">
+            7. Platformy i partnerzy analityczno-reklamowi
+          </h2>
+          <p>
+            Wykorzystujemy scentralizowany system Google Tag Manager (GTM),
+            który zarządza aktywnością poniższych skryptów na podstawie
+            wyrażonej przez Ciebie zgody:
           </p>
           <ul className="list-disc pl-6 space-y-2">
             <li>
-              <strong>Niezbędne</strong> – wymagane do działania Serwisu (np.
-              sesja użytkownika). Podstawa: art. 6 ust. 1 lit. f RODO.
+              <strong>Google (Google Analytics 4, Google Ads)</strong> –
+              mierzenie statystyk używalności i skuteczności reklam w
+              wyszukiwarce.
             </li>
             <li>
-              <strong>Analityczne</strong> – zbierają anonimowe dane o
-              korzystaniu z Serwisu (np. Google Analytics). Podstawa: zgoda
-              użytkownika.
+              <strong>Meta (Facebook, Instagram Pixel)</strong> – mierzenie
+              zdarzeń, skuteczności kampanii reklamowych oraz remarketing.
             </li>
             <li>
-              <strong>Marketingowe</strong> – umożliwiają wyświetlanie
-              spersonalizowanych reklam (np. Meta Pixel, Google Ads). Podstawa:
-              zgoda użytkownika.
+              <strong>TikTok (TikTok Pixel)</strong> – analiza konwersji reklam
+              w sieci TikTok.
+            </li>
+            <li>
+              <strong>X / Twitter (X Pixel)</strong> – optymalizacja kampanii
+              w tej sieci.
+            </li>
+            <li>
+              <strong>LinkedIn (Insight Tag)</strong> – cele reklamowe i
+              analityczne na platformie LinkedIn.
+            </li>
+            <li>
+              <strong>Microsoft Ads (UET Tag)</strong> – śledzenie konwersji
+              pochodzących z reklam w sieci wyszukiwania Bing/Yahoo.
             </li>
           </ul>
+        </section>
+
+        <section>
+          <h2 className="text-lg font-bold text-foreground">
+            8. Zabezpieczone śledzenie konwersji (Enhanced Conversions)
+          </h2>
           <p>
-            Użytkownik może zarządzać ustawieniami cookies w przeglądarce.
-            Wyłączenie cookies niezbędnych może ograniczyć funkcjonalność
-            Serwisu.
+            W celu podniesienia dokładności prowadzonych działań afiliacyjnych
+            korzystamy z funkcji Zaawansowanych Konwersji (Enhanced Conversions)
+            w systemach Google i Meta.
+          </p>
+          <p>
+            Gdy podejmujesz na stronie działania (np. rejestrujesz konto lub
+            klikasz wybraną promocję bankową), dane takie jak Twój adres e-mail{" "}
+            <strong>nie są przesyłane w sposób jawny</strong>. Przed wysłaniem
+            do serwisu partnerskiego adres e-mail zostaje natychmiast i
+            nieodwracalnie zahashowany po stronie Twojej przeglądarki (za
+            pomocą algorytmu SHA-256). Mechanizm ten pozwala platformom
+            zewnętrznym na powiązanie wizyty z wcześniejszymi działaniami
+            bez posiadania czytelnego tekstu Twojego maila.
+          </p>
+          <p>
+            Możesz z tego zrezygnować, wycofując zgodę w kategorii
+            „Reklamowe" w ustawieniach cookies.
           </p>
         </section>
 
         <section>
           <h2 className="text-lg font-bold text-foreground">
-            7. Bezpieczeństwo danych
+            9. Bezpieczeństwo danych
           </h2>
           <p>
             Administrator stosuje odpowiednie środki techniczne i organizacyjne
@@ -168,7 +248,7 @@ export default function PrivacyPolicyPage() {
 
         <section>
           <h2 className="text-lg font-bold text-foreground">
-            8. Zmiany polityki prywatności
+            10. Zmiany polityki prywatności
           </h2>
           <p>
             Administrator zastrzega sobie prawo do zmiany niniejszej polityki

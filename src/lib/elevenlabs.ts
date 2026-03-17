@@ -143,7 +143,7 @@ export function generateVoiceoverScript(
   ].filter(Boolean).join(" ");
 }
 
-function numberToPolish(n: number): string {
+export function numberToPolish(n: number): string {
   const hundreds: Record<number, string> = {
     1: "sto", 2: "dwieście", 3: "trzysta", 4: "czterysta",
     5: "pięćset", 6: "sześćset", 7: "siedemset", 8: "osiemset", 9: "dziewięćset",

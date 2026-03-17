@@ -15,6 +15,8 @@ import { SlidersHorizontal } from "lucide-react";
 import { useUserBanks } from "@/context/UserBanksContext";
 import { useAuth } from "@/context/AuthContext";
 import { createClient } from "@/lib/supabase/client";
+import { trackEvent } from "@/lib/analytics";
+import { AnalyticsEvents } from "@/lib/analytics-events";
 
 type Difficulty = "easy" | "medium" | "hard";
 type SortOption = "reward-desc" | "reward-asc" | "deadline" | "difficulty";
@@ -92,6 +94,34 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
       prev.includes(d) ? prev.filter((x) => x !== d) : [...prev, d]
     );
   };
+
+  // Track view_item_list on mount
+  useEffect(() => {
+    trackEvent(AnalyticsEvents.VIEW_ITEM_LIST, {
+      item_list_name: "all_offers",
+      items: offers.slice(0, 10).map((o, i) => ({
+        item_id: o.slug,
+        item_name: o.bankName,
+        price: o.reward,
+        currency: "PLN",
+        index: i,
+      })),
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Track search/filter changes
+  useEffect(() => {
+    if (activeDifficulties.length > 0 || accountType !== "personal" || hideYoung || hideMyBanks) {
+      trackEvent(AnalyticsEvents.SEARCH, {
+        search_term: [
+          ...activeDifficulties,
+          accountType !== "personal" ? accountType : "",
+          hideYoung ? "hide_young" : "",
+          hideMyBanks ? "hide_my_banks" : "",
+        ].filter(Boolean).join(","),
+      });
+    }
+  }, [activeDifficulties, accountType, hideYoung, hideMyBanks]);
 
   const filtered = useMemo(() => {
     let result = [...offers];

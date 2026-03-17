@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useConsent } from "@/hooks/useConsent";
 
 export function Footer() {
+  const { reopenBanner } = useConsent();
   return (
     <footer className="border-t bg-muted/30">
       <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
@@ -81,6 +83,14 @@ export function Footer() {
                 <Link href="/regulamin" className="hover:text-foreground transition-colors">
                   Regulamin
                 </Link>
+              </li>
+              <li>
+                <button
+                  onClick={reopenBanner}
+                  className="hover:text-foreground transition-colors"
+                >
+                  Ustawienia cookies
+                </button>
               </li>
             </ul>
           </div>

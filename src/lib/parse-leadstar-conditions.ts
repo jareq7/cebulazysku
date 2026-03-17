@@ -42,10 +42,9 @@ function detectType(text: string): ConditionType {
   if (/\bkart[ąa].*\bblik|\bblik.*\bkart[ąa]/.test(t)) return "card_payment";
 
   // Karta — PRZED contactless (bo "płatności kartą ... telefon" to karta, nie telefon)
-  if (/p[łl]atno[śs].*kart|transakcj.*kart|kart.*transakcj|zap[łl]a[ćc].*kart|kart.*debetow|transakcj.*bezgot[óo]wkow|zrobieni.*transakcj.*kart/.test(t)) return "card_payment";
+  if (/p[łl]atno[śs].*kart|transakcj.*kart|kart.*transakcj|zap[łl]a[ćc].*kart|kart.*debetow|transakcj.*bezgot[óo]wkow|zrobieni.*transakcj.*kart|p[łl]a[ćc].*kart/.test(t)) return "card_payment";
 
   // Płatność telefonem / portfel cyfrowy / zbliżeniowo — PRZED BLIK
-  // (bo "płatności telefonem (np. BLIK)" to contactless, nie BLIK)
   if (/p[łl]atno[śs].*telefon|portfel.*cyfrow|apple pay|google pay|samsung pay/.test(t)) return "contactless_payment";
   if (/p[łl]atno[śs].*zbli[żz]eniow|zbli[żz]eniow/.test(t)) return "contactless_payment";
   if (/p[łl]atno[śs].*mobiln/.test(t)) return "contactless_payment";
@@ -63,16 +62,16 @@ function detectType(text: string): ConditionType {
   if (/wp[łl]yw.*min|wp[łl]yw.*z[łl]|zapewni[ćc].*wp[łl]yw|jednorazow.*wp[łl]yw|wynagrodzeni/.test(t)) return "income";
 
   // Zlecenie stałe
-  if (/zleceni.*sta[łl]/.test(t)) return "standing_order";
+  if (/zleceni.*sta[łl]|sta[łl].*zleceni/.test(t)) return "standing_order";
 
   // Polecenie zapłaty
-  if (/poleceni.*zap[łl]aty/.test(t)) return "direct_debit";
+  if (/poleceni.*zap[łl]aty|aktywuj.*poleceni/.test(t)) return "direct_debit";
 
   // Logowanie
-  if (/zalogowa|zaloguj|logowani.*aplik/.test(t)) return "mobile_app_login";
+  if (/zalogowa|zaloguj|logowani.*aplik|pobierz.*aplik|aktywuj.*aplik/.test(t)) return "mobile_app_login";
 
   // Oszczędności / saldo / lokata
-  if (/lokata|oszcz[ęe]dno[śs]ciow|saldo.*min|moje cele|skarbonk/.test(t)) return "savings";
+  if (/lokata|oszcz[ęe]dno[śs]ciow|saldo.*min|moje cele|skarbonk|za[łl][óo][żz].*lokat/.test(t)) return "savings";
 
   // Otwarcie konta / założenie
   if (/otworzy[ćc].*kont|za[łl]o[żz]eni.*kont|otwarci.*kont|otw[óo]rz.*kont/.test(t)) return "setup";
@@ -87,6 +86,10 @@ function detectType(text: string): ConditionType {
 
 function extractCount(text: string): number {
   const t = text.toLowerCase();
+
+  // "5x", "5 x"
+  const xMatch = t.match(/(\d+)\s*[xX]\b/);
+  if (xMatch) return parseInt(xMatch[1]);
 
   // "min. 5 transakcji", "minimum 5 płatności", "co najmniej 5"
   const minMatch = t.match(/(?:min(?:imum|\.)?|co najmniej)\s*(\d+)\s*(?:transakcj|p[łl]atno[śs]|przelew|p[łl]atno[śs]ci)/);
@@ -108,15 +111,16 @@ function extractMonths(text: string): { perMonth: boolean; monthsRequired: numbe
 
   // "w każdym z 5 kolejnych miesięcy", "w każdym z trzech kolejnych miesięcy"
   const wordToNum: Record<string, number> = {
-    "dwóch": 2, "dwoch": 2, "trzech": 3, "czterech": 4, "pięciu": 5, "pieciu": 5,
-    "sześciu": 6, "szesciu": 6,
+    "dwóch": 2, "dwoch": 2, "dwie": 2, "trzech": 3, "trzy": 3,
+    "czterech": 4, "cztery": 4, "pięciu": 5, "pieciu": 5, "pięć": 5,
+    "sześciu": 6, "szesciu": 6, "sześć": 6,
   };
 
-  const monthMatch = t.match(/(?:ka[żz]d(?:ym|ego).*?|przez\s+)(\d+|dwóch|dwoch|trzech|czterech|pięciu|pieciu|sześciu|szesciu)\s*(?:kolejnych\s*)?(?:pe[łl]nych\s*)?miesi[ęe]c/);
+  const monthMatch = t.match(/(?:ka[żz]d(?:ym|ego).*?|przez\s+)(\d+|dwóch|dwoch|dwie|trzech|trzy|czterech|cztery|pięciu|pieciu|pięć|sześciu|szesciu|sześć)\s*(?:kolejnych\s*)?(?:pe[łl]nych\s*)?miesi[ęe]c/);
   if (monthMatch) {
     const val = monthMatch[1];
     const n = wordToNum[val] ?? parseInt(val);
-    if (n > 0) return { perMonth: true, monthsRequired: n };
+    if (!isNaN(n) && n > 0) return { perMonth: true, monthsRequired: n };
   }
 
   // "w każdym z kolejnych miesięcy" (bez konkretnej liczby)
@@ -228,8 +232,8 @@ function isTrackableAction(text: string): boolean {
   if (/^utrzyma[ćc].*zgod/.test(t)) return false;
 
   // Must contain an action verb or specific condition keyword
-  // Polish verbs: wykonaj, zapewnij, zapłać, zaloguj, otwórz, włóż, kup, pobierz, aktywuj
-  return /wykona[ćc]|zapewni[ćc]|z[łl]o[żz]y[ćc]|otworzy[ćc]|za[łl]o[żz]y[ćc]|zalogowa[ćc]|zarejestrowa[ćc]|op[łl]aci[ćc]|ustawi[ćc]|zawrze[ćc]|przyst[ąa]pi[ćc]|transakcj|p[łl]atno[śs]|przelew|wp[łl]yw|wp[łl]at|logowani|saldo|lokata|portfel.*cyfrow|zrobieni|otw[óo]rz|zap[łl]a[ćc]|zaloguj|pobierz|aktywuj|kup/.test(t);
+  // Polish verbs: wykonaj, zapewnij, zapłać, zaloguj, otwórz, włóż, kup, pobierz, aktywuj, płać, loguj, rób
+  return /wykona[ćc]|zapewni[ćc]|z[łl]o[żz]y[ćc]|otworzy[ćc]|za[łl]o[żz]y[ćc]|zalogowa[ćc]|zarejestrowa[ćc]|op[łl]aci[ćc]|ustawi[ćc]|zawrze[ćc]|przyst[ąa]pi[ćc]|transakcj|p[łl]atno[śs]|przelew|wp[łl]yw|wp[łl]at|logowani|saldo|lokata|portfel.*cyfrow|zrobieni|otw[óo]rz|zap[łl]a[ćc]|zaloguj|pobierz|aktywuj|kup|aktywowa[ćc]|zap[łl]aci[ćc]|p[łl]aci[ćc]|p[łl]a[ćc]|loguj|r[óo]b|wykonuj/.test(t);
 }
 
 
@@ -271,7 +275,7 @@ function splitMultiAction(block: string): string[] {
   const parts = block.split(/\s+-\s+/).filter(p => p.trim().length > 10);
   if (parts.length > 1) return parts;
   // Split on comma + action verb
-  const commaParts = block.split(/,\s*(?=(?:wykona[ćc]|zapewni[ćc]|z[łl]o[żz]y[ćc]|utrzyma[ćc]))/i);
+  const commaParts = block.split(/,\s*(?=(?:wykona[ćc]|zapewni[ćc]|z[łl]o[żz]y[ćc]|utrzyma[ćc]|zap[łl]a[ćc]|zalogowa|p[łl]aci[ćc]|zap[łl]aci[ćc]|aktywowa[ćc]|loguj|p[łl]a[ćc]|wykonuj|r[óo]b))/i);
   if (commaParts.length > 1) return commaParts;
   return [block];
 }
@@ -290,14 +294,14 @@ function annotateBlocks(blocks: string[]): AnnotatedBlock[] {
   let currentParentMonths = { perMonth: false, monthsRequired: 1 };
 
   for (const block of blocks) {
-    const isTopLevel = /^\d+[.),]\s/.test(block) || /^KROK\s+\d/i.test(block);
-
-    if (isTopLevel) {
-      // Check if this top-level block sets monthly context
-      const months = extractMonths(block);
-      if (months.perMonth) {
-        currentParentMonths = months;
-      } else {
+    // Check if this block sets monthly context (even if not top-level)
+    const months = extractMonths(block);
+    if (months.perMonth) {
+      currentParentMonths = months;
+    } else {
+      // If block starts with a number (new step), reset context if it doesn't have its own
+      const isTopLevel = /^\d+[.),]\s/.test(block) || /^KROK\s+\d/i.test(block);
+      if (isTopLevel) {
         currentParentMonths = { perMonth: false, monthsRequired: 1 };
       }
     }

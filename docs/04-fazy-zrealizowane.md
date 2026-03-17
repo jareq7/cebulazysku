@@ -478,4 +478,55 @@ Zostały zrealizowane w poprzednich sesjach. Kluczowe deliverables:
 
 📄 Szczegóły: `/research/content/`, `/research/remotion-rendering.md`
 
-// @cebulazysku.pl/.next/server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_15817684.js.map Gemini CLI (gemini-3-pro-preview) | 2026-03-14 — Dokumentacja fazy content/seo
+---
+
+## Faza: Stabilizacja Danych i Automatyzacja Contentu (Marzec 2026)
+
+**Co zrobiono:**
+
+### Optymalizacja Parserów (Deterministic logic)
+- **Parser Warunków:** Naprawiono krytyczne błędy w `src/lib/parse-leadstar-conditions.ts`. Parser obsługuje teraz:
+  - Kwoty ze spacjami i kropkami (np. `1.500 zł`) oraz inteligentne usuwanie groszy (tylko po separatorze).
+  - Zagnieżdżone listy `<li>` i podpunkty literowe `a)`, `b)` jako osobne akcje.
+  - Szeroki słownik czasowników akcji (*zaloguj, płać, aktywuj, pobierz, otwórz*).
+  - Dziedziczenie kontekstu miesięcznego z bloków nadrzędnych do podpunktów.
+- **Lektor (TTS):** Naprawiono funkcję `sanitizeForTTS` w `src/lib/elevenlabs.ts`. Poprawiono kolejność zamian (np. `zł/mies` przed `zł`), dodano obsługę Unicode i flagę `insensitive`. Wszystkie 16 testów przechodzi pomyślnie.
+
+### Automatyzacja i Narzędzia (`scripts/`)
+- **Generator Voiceoverów:** Stworzono nowy skrypt `scripts/generate-all-voiceovers.ts` (TS), który importuje logikę bezpośrednio z `lib`. Dodano obsługę flagi `--force` oraz zaawansowane czyszczenie nazw banków.
+- **Import Bloga:** Stworzono skrypt `scripts/import-blog-drafts.ts` do masowego wrzucania szkiców Markdown do bazy danych przez API admina.
+- **Testy Jednostkowe:** Rozszerzono zestaw testów parsera do 17 kompleksowych przypadków w `scripts/test-parser.ts`.
+
+### SEO i Content
+- **Blog:** Napisano 3 kompletne artykuły (Bezpieczeństwo, Podatki, Zamykanie konta) w `/research/content/blog-drafts/`.
+- **Meta Tagi:** Zaimplementowano dynamiczne metadane (generateMetadata) na Stronie Głównej (z kwotą `totalEarnings`), Blogu, Ofertach i Dashboardzie.
+
+### Standardy Współpracy (Gemini + Claude)
+- **Tablica Zadań:** Wdrożono `AI-TASKS.md` jako centralny punkt koordynacji między modelami AI.
+- **Zasada CAT:** Wprowadzono obowiązek weryfikacji plików po edycji (`cat | head`), aby zapobiec wyciekowi artefaktów narzędziowych do kodu.
+
+📄 Szczegóły: `scripts/`, `/research/content/blog-drafts/`, `AI-TASKS.md`
+
+// @cebulazysku.pl/.next/server/chunks/ssr/node_modules_next_dist_client_components_builtin_unauthorized_15817684.js.map Gemini CLI (gemini-3-pro-preview) | 2026-03-14 — Dokumentacja fazy stabilizacji danych
+
+---
+
+## Faza: Analytics, GTM i Consent Mode (Marzec 2026)
+
+**Co zrobiono:**
+
+### Infrastruktura Analityczna (GTM)
+- Skonfigurowano w 100% asynchroniczny i bezpieczny ekosystem śledzący za pośrednictwem **Google Tag Manager** (zastąpienie hardcoded pikseli z `TrackingPixels.tsx`).
+- Przygotowano gotowy kontener JSON (`config/gtm-container-cebulazysku.json`) zawierający strukturę zintegrowaną z 7 platformami: GA4, Meta, TikTok, X (Twitter), LinkedIn, Google Ads, Microsoft Ads.
+- Opracowano pełen wykaz DataLayer Events (e-commerce + gamifikacja/custom events aplikacji) w `docs/40-analytics-gtm.md`.
+- Zaimplementowano reguły Google Consent Mode v2 bezpośrednio na poziomie reguł GTM (`analytics_storage` i `ad_storage`).
+
+### Jakość Śledzenia (Enhanced Conversions)
+- Wdrożono dokumentację dotyczącą przesyłania zahashowanych danych użytkowników (SHA-256 email) przy leadach i logowaniach dla platform Ads w celu lepszej atrybucji.
+- Zaktualizowano Politykę Prywatności (`research/privacy-policy-cookies.md`) pod kątem RODO i listy platform zewnętrznych z jakich korzysta GTM.
+
+### Rozwój Narzędzi i Danych
+- Rozbudowano i sfinalizowano testy jednostkowe `parseLeadstarConditions` (ponad 21 udokumentowanych edge-case'ów z wynikami `pass`). 
+- Przeprowadzono **Audyt Lighthouse na Produkcji** (wynik w `research/lighthouse-audit.md`), wyodrębniając szybkie poprawki do implementacji przez zespół developerski (LCP, a11y dla buttonów).
+
+// @author Gemini CLI (gemini-3.1-pro-preview) | 2026-03-17 — Zapis infrastruktury analitycznej i wyników audytów

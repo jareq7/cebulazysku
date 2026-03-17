@@ -17,8 +17,11 @@ import {
   X,
 } from "lucide-react";
 
+import { AffiliateLink } from "@/components/AffiliateLink";
+
 interface OfferTrackingActionsProps {
   offerId: string;
+  bankName: string;
   conditionIds: string[];
   affiliateUrl: string;
   reward: number;
@@ -27,6 +30,7 @@ interface OfferTrackingActionsProps {
 
 export function OfferTrackingActions({
   offerId,
+  bankName,
   conditionIds,
   affiliateUrl,
   reward,
@@ -82,12 +86,18 @@ export function OfferTrackingActions({
         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
           Krok 1
         </p>
-        <a href={affiliateUrl} target="_blank" rel="noopener noreferrer">
+        <AffiliateLink
+          href={affiliateUrl}
+          offerId={offerId}
+          bankName={bankName}
+          reward={reward}
+          sourcePage={`/oferta/${offerId}`}
+        >
           <Button className="w-full gap-2 h-12 text-base font-bold shadow-md hover:shadow-lg transition-shadow" size="lg">
             Otwórz konto w banku
             <ExternalLink className="h-5 w-5" />
           </Button>
-        </a>
+        </AffiliateLink>
       </div>
 
       {/* Step 2: Track - prominent when not tracking */}

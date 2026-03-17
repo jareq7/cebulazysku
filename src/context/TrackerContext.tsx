@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from "react";
 import { useAuth } from "./AuthContext";
 import { createClient } from "@/lib/supabase/client";
+import { trackEvent } from "@/lib/analytics";
+import { AnalyticsEvents } from "@/lib/analytics-events";
 
 export interface TrackedCondition {
   conditionId: string;
@@ -124,6 +126,8 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
         },
         { onConflict: "user_id,offer_id" }
       );
+
+      trackEvent(AnalyticsEvents.TRACKER_START, { offer_id: offerId, bank_name: "" });
     },
     [user, supabase]
   );
@@ -131,6 +135,11 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
   const stopTracking = useCallback(
     async (offerId: string) => {
       if (!user) return;
+
+      const tracked = trackedOffers.find((o) => o.offerId === offerId);
+      const daysTracked = tracked
+        ? Math.ceil((Date.now() - new Date(tracked.startedAt).getTime()) / 86400000)
+        : 0;
 
       // Optimistic update
       setTrackedOffers((prev) => prev.filter((o) => o.offerId !== offerId));
@@ -147,8 +156,10 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
         .delete()
         .eq("user_id", user.id)
         .eq("offer_id", offerId);
+
+      trackEvent(AnalyticsEvents.TRACKER_STOP, { offer_id: offerId, bank_name: "", days_tracked: daysTracked });
     },
-    [user, supabase]
+    [user, supabase, trackedOffers]
   );
 
   const isTracking = useCallback(
@@ -223,6 +234,12 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
         },
         { onConflict: "user_id,offer_id,condition_id,month" }
       );
+
+      trackEvent(AnalyticsEvents.CONDITION_COMPLETE, {
+        offer_id: offerId,
+        condition_type: conditionId,
+        condition_label: conditionId,
+      });
     },
     [user, supabase]
   );
@@ -295,6 +312,8 @@ export function TrackerProvider({ children }: { children: React.ReactNode }) {
         .update({ payout_received_at: now, payout_amount: amount })
         .eq("user_id", user.id)
         .eq("offer_id", offerId);
+
+      trackEvent(AnalyticsEvents.PAYOUT_RECEIVED, { offer_id: offerId, bank_name: "", value: amount });
     },
     [user, supabase]
   );

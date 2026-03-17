@@ -243,6 +243,68 @@ Szablony: `create-prd.md` i `generate-tasks.md` w rootcie projektu.
 
 ---
 
+## 14. Artefakty narzędziowe w kodzie źródłowym (Leakage)
+
+**Problem:** Podczas masowej edycji `src/app/page.tsx` za pomocą narzędzia `replace`, wewnątrz pliku zapisały się komunikaty techniczne modelu (np. „User modified the new_string content to be:”) oraz zduplikowane bloki kodu.
+
+**Przyczyna:** Błąd w interpretacji wyjścia narzędzia przez interfejs CLI lub nieostrożne zatwierdzenie zamiany, która zawierała tekst opisu operacji zamiast czystego kodu.
+
+**Rozwiązanie:** Claude Code musiał ręcznie przywrócić czystą wersję pliku.
+
+**Jak unikać:** Po każdej operacji zapisu lub zamiany w plikach źródłowych (`src/`), należy wykonać podgląd pliku: `cat [sciezka] | head -n 40` lub `tail -n 20`. Nigdy nie ufaj bezgranicznie, że narzędzie `replace` wstawiło dokładnie to, co planowałeś, bez zbędnego "gadania".
+
+---
+
+## 21. useSearchParams wymaga Suspense w Next.js App Router
+
+**Problem:** Hook `useTrackPageView` używa `useSearchParams()` z Next.js. W App Router ten hook wymaga owinięcia w `<Suspense>` — bez tego build failuje lub SSR rzuca błąd hydration mismatch.
+
+**Rozwiązanie:** Zamiast wywoływać hook bezpośrednio w providers, stworzono wrapper component `PageViewTracker` owinięty w `<Suspense fallback={null}>`.
+
+**Jak unikać:** Każdy komponent client-side używający `useSearchParams()` musi być w `<Suspense>`. Twórz lekkie wrapper components (`TrackViewItem`, `PageViewTracker`) zamiast próbować wstrzykiwać hooki bezpośrednio w server components.
+
+---
+
+## 22. Server Components nie mogą używać hooków — potrzebne client wrappers
+
+**Problem:** Strona `oferta/[slug]/page.tsx` to Server Component (brak `"use client"`). Nie można w niej wywołać `trackEvent()` ani żadnego hooka. Próba dodania `useEffect` powodowałaby błąd build.
+
+**Rozwiązanie:** Stworzono dedykowane client components (`TrackViewItem`, `PageViewTracker`) które renderują `null` ale odpalają eventy w `useEffect`. Server Component po prostu importuje i renderuje: `<TrackViewItem itemId={...} />`.
+
+**Jak unikać:** W Next.js App Router: jeśli potrzebujesz client-side efektu na serwerowej stronie, zawsze twórz osobny komponent `"use client"` który renderuje null. Nigdy nie dodawaj `"use client"` do page.tsx jeśli strona korzysta z SSR/ISR.
+
+---
+
+## 23. Consent Mode — gtag consent musi być PRZED GTM snippet
+
+**Problem:** Jeśli `gtag('consent', 'default', ...)` załaduje się PO snippecie GTM, tagi zdążą się odpalić zanim consent zostanie ustawiony na denied. To narusza RODO.
+
+**Rozwiązanie:** W `TrackingPixels.tsx` consent default jest w tym samym `<script>` co GTM snippet, ALE PRZED nim. Kolejność: `window.dataLayer = []` → `gtag('consent', 'default', ...)` → GTM bootstrap.
+
+**Jak unikać:** Zawsze ustawiaj consent default w tym samym bloku `<script>` co inicjalizacja GTM, przed wywołaniem `gtm.js`. Nie polegaj na osobnym komponencie do ustawienia default consent — może się załadować za późno.
+
+---
+
+## 24. sendBeacon nie obsługuje headerów — auth token nie trafi do track-click
+
+**Problem:** `navigator.sendBeacon()` nie pozwala na ustawienie custom headerów (Authorization, cookies). Więc `/api/track-click` nie może polegać na session cookie do identyfikacji usera — beacon wysyła request bez headerów auth.
+
+**Rozwiązanie:** Endpoint `/api/track-click` działa bez auth — zapisuje `user_id: null` dla niezalogowanych. Identyfikacja usera jest opcjonalna (z Authorization header jeśli przesłany przez fetch fallback). Beacon jest preferowany bo nie blokuje redirect do banku.
+
+**Jak unikać:** Przy projektowaniu tracking endpointów pamiętaj: beacon = brak headerów. Jeśli potrzebujesz auth, użyj `fetch(..., { keepalive: true })` jako fallback. Ale tracking kliknięć afiliacyjnych powinien działać bez auth — lepszy tracking anonimowy niż brak trackingu.
+
+---
+
+## 25. Dual-worker analytics — podział pracy musi być krystalicznie jasny
+
+**Problem:** Przy feature'ze Analytics zarówno Claude Code (kod) jak i Gemini (research/JSON/docs) pracowali równolegle. Ryzyko konfliktów na plikach, ryzyko że Gemini wygeneruje JSON niezgodny z kodem.
+
+**Rozwiązanie:** Jasny podział w `tasks-analytics.md` i `AI-TASKS.md`: Claude Code = fazy 1,2,4 (cały TypeScript), Gemini = faza 3 (GTM JSON + docs). Gemini NIE rusza plików w `src/`. Gemini raportuje przez AI-TASKS.md i Jarka.
+
+**Jak unikać:** Przy multi-worker taskach zawsze: 1) Wypisz kto robi co w task liście, 2) Wypisz które pliki rusza który worker, 3) Worker "kodowy" NIGDY nie deleguje plików w src/ drugiemu workerowi, 4) Review outputu drugiego workera przed merge.
+
+---
+
 ## Ogólne wnioski (Aktualizacja Marzec 2026)
 
 | Zasada | Dlaczego |
@@ -250,10 +312,27 @@ Szablony: `create-prd.md` i `generate-tasks.md` w rootcie projektu.
 | **Grosze usuwaj tylko po separatorze** | Zapobiega ucinaniu pełnych kwot (np. 500 -> 5) |
 | **Importy ESM wymagają rozszerzeń** | `node --test` i `strip-types` nie domyślają się rozszerzeń `.ts` |
 | **Python to stabilny File Writer** | Eliminuje problemy z `EOF` i znakami specjalnymi w shellu |
-| **Testy jednostkowe to podstawa** | Pozwoliły wykryć 4 krytyczne błędy w parserze, które "żyły" na produkcji |
+| **Testy jednostkowe to podstawa** | Pozwoliły wykryć 4 krytyczne błędy w parserze |
+| **Sprawdzaj plik po edycji (CAT)** | Zapobiega wyciekowi artefaktów narzędziowych do kodu |
 | **Czytaj API przed kodowaniem frontendu** | Unikasz pisania kodu pod endpoint który nie obsługuje twoich parametrów |
 | **Dokumentacja = część feature'a** | Bez docs nikt nie wie co zostało zbudowane — ani AI, ani devs |
 | **Luźne pliki .ts poza src/ psują build** | tsconfig includuje `**/*.ts` — skrypty trzymaj w `scripts/` (excluded) |
 | **Testuj warianty danych na UI** | "Jednorazowo" z requiredCount=5 to UX bug widoczny dopiero z prawdziwymi danymi |
 | **PRD przed kodem, zawsze** | Bez PRD zakres rośnie, progress nieśledzony, dokumentacja powstaje po fakcie |
+| **useSearchParams = Suspense** | Next.js App Router wymaga Suspense wokół komponentów z useSearchParams |
+| **Server Component ≠ hooks** | Twórz client wrapper components (render null) dla efektów na SSR stronach |
+| **Consent PRZED GTM** | gtag consent default musi być w tym samym script PRZED GTM bootstrap |
+| **sendBeacon = brak headerów** | Tracking endpoint musi działać bez auth; beacon nie obsługuje custom headers |
+| **Multi-worker = jasny podział** | Przy 2 workerach: kto rusza jakie pliki, kto robi co, review przed merge |
 
+
+
+---
+
+## 26. Narzędzia zapisu plików vs run_shell_command (cat EOF)
+
+**Problem:** Próba dopisywania znaczników markdown do logów na koniec sesji za pomocą `cat <<EOF` skutkowała błędami basha typu `syntax error: unexpected end of file`.
+
+**Rozwiązanie:** Zastąpienie komend bashowych zapisujących tekst na dysk prostymi, jednowierszowymi skryptami Pythona (`python3 -c "with open(...) ..."`), które lepiej radzą sobie ze znakami specjalnymi. Zawsze preferowane powinno być w tym celu narzędzie `replace` lub `write_file`.
+
+**Jak unikać:** Pamiętać o złotych dyrektywach: `NEVER run cat inside a bash command to create a new file or append to an existing file if custom tools exist`. 

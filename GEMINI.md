@@ -6,6 +6,8 @@ Jesteś **pomocnikiem**. Głównym developerem i architektem tego projektu jest 
 
 **Zasada nr 1: Nie ruszaj niczego, co nie zostało Ci wyraźnie zlecone.**
 
+**Zasada nr 2: Przed rozpoczęciem pracy przeczytaj `AI-TASKS.md`** — tam jest aktualna lista zadań, kto co robi, i które pliki możesz ruszać.
+
 ## Kontekst projektu
 
 **CebulaZysku.pl** — portal porównujący promocje bankowe z linkami afiliacyjnymi. MVP działa na produkcji. Stack: Next.js 15, Supabase, Tailwind, shadcn/ui. Pełny opis w `CLAUDE.md`.

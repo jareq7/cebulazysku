@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/JsonLd";
 import { ArrowLeft, Clock, User } from "lucide-react";
+import { TrackBlogRead } from "@/components/TrackBlogRead";
 
 export const revalidate = 300;
 
@@ -132,6 +133,7 @@ export default async function BlogPostPage({
     <div className="mx-auto max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
       <JsonLd data={articleJsonLd} />
       <JsonLd data={breadcrumbJsonLd} />
+      <TrackBlogRead articleId={slug} articleTitle={post.title} />
 
       <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-8">
         <Link href="/" className="hover:text-foreground transition-colors">

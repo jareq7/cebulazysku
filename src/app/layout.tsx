@@ -4,7 +4,7 @@ import "./globals.css";
 import { Providers } from "./providers";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
-import { TrackingPixels } from "@/components/TrackingPixels";
+import { TrackingPixels, GTMNoScript } from "@/components/TrackingPixels";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { InstallPrompt } from "@/components/InstallPrompt";
 
@@ -65,6 +65,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <GTMNoScript />
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:absolute focus:z-[100] focus:top-2 focus:left-2 focus:rounded-lg focus:bg-primary focus:text-primary-foreground focus:px-4 focus:py-2 focus:text-sm focus:font-medium"

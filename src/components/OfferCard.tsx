@@ -27,6 +27,8 @@ import {
   ConditionType,
 } from "@/data/banks";
 import { useUserBanks } from "@/context/UserBanksContext";
+import { trackEvent } from "@/lib/analytics";
+import { AnalyticsEvents } from "@/lib/analytics-events";
 
 const iconMap: Record<ConditionType, React.ReactNode> = {
   transfer: <ArrowRightLeft className="h-3.5 w-3.5" />,
@@ -145,7 +147,18 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
       )}
 
       <CardFooter className="mt-auto">
-        <Link href={`/oferta/${offer.slug}`} className="w-full">
+        <Link
+          href={`/oferta/${offer.slug}`}
+          className="w-full"
+          onClick={() => {
+            trackEvent(AnalyticsEvents.SELECT_ITEM, {
+              item_id: offer.slug,
+              item_name: offer.bankName,
+              item_list_name: "offers",
+              items: [{ item_id: offer.slug, item_name: offer.bankName, price: offer.reward, currency: "PLN" }],
+            });
+          }}
+        >
           <Button className="w-full group/btn gap-2" variant="default">
             Zobacz szczegóły
             <ArrowRight className="h-4 w-4 transition-transform group-hover/btn:translate-x-1" />

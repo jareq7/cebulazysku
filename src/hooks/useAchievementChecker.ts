@@ -6,6 +6,8 @@ import { useTracker } from "@/context/TrackerContext";
 import { useOffers } from "@/hooks/useOffers";
 import { toast } from "sonner";
 import { getAchievement } from "@/lib/achievements";
+import { trackEvent } from "@/lib/analytics";
+import { AnalyticsEvents } from "@/lib/analytics-events";
 
 interface UnlockedAchievement {
   achievement_type: string;
@@ -70,6 +72,11 @@ export function useAchievementChecker() {
           toast.success(`${achievement.icon} ${achievement.name}`, {
             description: achievement.description,
             duration: 5000,
+          });
+          trackEvent(AnalyticsEvents.ACHIEVEMENT_UNLOCK, {
+            achievement_id: type,
+            achievement_name: achievement.name,
+            category: achievement.category || "",
           });
         }
       }

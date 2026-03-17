@@ -3,7 +3,7 @@
 > **Domena:** cebulazysku.pl  
 > **Repozytorium:** https://github.com/jareq7/cebulazysku  
 > **Deploy:** Vercel (automatyczny z brancha `main`)  
-> **Ostatnia aktualizacja:** 15 marca 2026 r.
+> **Ostatnia aktualizacja:** 17 marca 2026 r.
 
 ---
 
@@ -52,6 +52,7 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 37 | [API Endpoints](./37-api-endpoints.md) | Pełna lista wszystkich 22 API routes z opisami |
 | 38 | [Admin Panel v2](./38-admin-panel-v2.md) | Edytor warunków, logi AI, konwersje, bulk actions, tracker preview, markdown preview |
 | 39 | [AI Verification Layer](./39-ai-verification.md) | Weryfikacja AI warunków parsowanych regexem |
+| 40 | [Analityka GTM i Consent](./40-analytics-gtm.md) | GTM, DataLayer, Consent Mode v2, Enhanced Conversions |
 
 ---
 

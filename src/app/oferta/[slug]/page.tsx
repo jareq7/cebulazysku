@@ -17,6 +17,7 @@ import { OfferTrackingActions } from "@/components/OfferTrackingActions";
 import { OfferCard } from "@/components/OfferCard";
 import { OfferVideoPlayer } from "@/components/OfferVideoPlayer";
 import { RenderMarkdown } from "@/components/RenderMarkdown";
+import { TrackViewItem } from "@/components/TrackViewItem";
 import {
   Clock,
   CheckCircle,
@@ -118,6 +119,12 @@ export default async function OfferDetailPage({
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
       {faqJsonLd && <JsonLd data={faqJsonLd} />}
       <JsonLd data={breadcrumbJsonLd} />
+      <TrackViewItem
+        itemId={offer.slug}
+        itemName={offer.bankName}
+        itemCategory={offer.difficulty}
+        price={offer.reward}
+      />
 
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6">
@@ -344,6 +351,7 @@ export default async function OfferDetailPage({
             <CardContent className="pt-6">
               <OfferTrackingActions
                 offerId={offer.id}
+                bankName={offer.bankName}
                 conditionIds={offer.conditions.map((c) => c.id)}
                 affiliateUrl={offer.affiliateUrl}
                 reward={offer.reward}

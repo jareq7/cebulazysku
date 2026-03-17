@@ -2,6 +2,9 @@
 
 [← Powrót do spisu treści](./README.md)
 
+> **UWAGA:** Ta dokumentacja dotyczy pierwszej, bazowej iteracji SEO i analityki. System śledzenia został zaktualizowany na oparty w 100% o GTM z Consent Mode v2. 
+> 👉 Zobacz aktualną dokumentację: [40. Analityka GTM, DataLayer i Consent](./40-analytics-gtm.md)
+
 ---
 
 ## 1. Wprowadzenie
@@ -116,6 +119,8 @@ Brak problemów w trakcie realizacji. Komponent był prosty — zamiana komentar
 ## 8. Status
 
 ✅ **Ukończone** — 7 marca 2026
+
+> **UWAGA:** Ta dokumentacja opisuje fazę 1 (infrastruktura). Pełna implementacja GTM, DataLayer, Consent Mode v2 i konwersji została opisana w [docs/40-analytics-gtm.md](./40-analytics-gtm.md).
 
 - Infrastruktura GA4, GSC, Meta Pixel gotowa
 - Aktywacja przez env vars w Vercel Dashboard

@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Bell, BellOff, Loader2 } from "lucide-react";
+import { trackEvent } from "@/lib/analytics";
+import { AnalyticsEvents } from "@/lib/analytics-events";
 
 export function PushNotificationToggle() {
   const { user } = useAuth();
@@ -53,6 +55,7 @@ export function PushNotificationToggle() {
       });
 
       setSubscribed(true);
+      trackEvent(AnalyticsEvents.PUSH_SUBSCRIBE);
     } catch (err) {
       console.error("Push subscribe failed:", err);
     } finally {

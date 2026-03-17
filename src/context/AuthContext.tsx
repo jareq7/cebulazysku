@@ -3,6 +3,8 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import type { User as SupabaseUser } from "@supabase/supabase-js";
+import { trackEvent, setUserData } from "@/lib/analytics";
+import { AnalyticsEvents } from "@/lib/analytics-events";
 
 export interface User {
   id: string;
@@ -61,6 +63,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         email,
         password,
       });
+      if (!error) {
+        trackEvent(AnalyticsEvents.LOGIN, { method: "email" });
+        setUserData(email);
+      }
       return !error;
     },
     [supabase.auth]
@@ -75,6 +81,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           data: { name },
         },
       });
+      if (!error) {
+        trackEvent(AnalyticsEvents.SIGN_UP, { method: "email" });
+        setUserData(email);
+      }
       return !error;
     },
     [supabase.auth]
