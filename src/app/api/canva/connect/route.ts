@@ -26,19 +26,18 @@ export async function GET(req: NextRequest) {
   const authUrl = getAuthUrl(redirectUri, state, codeChallenge);
 
   // Store state and code_verifier in cookies for callback verification
+  // Use domain=.cebulazysku.pl so cookies work across www/non-www
+  const cookieOpts = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 600,
+    sameSite: "lax" as const,
+    path: "/",
+    ...(process.env.NODE_ENV === "production" ? { domain: ".cebulazysku.pl" } : {}),
+  };
   const response = NextResponse.redirect(authUrl);
-  response.cookies.set("canva_oauth_state", state, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 600,
-    sameSite: "lax",
-  });
-  response.cookies.set("canva_code_verifier", codeVerifier, {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    maxAge: 600,
-    sameSite: "lax",
-  });
+  response.cookies.set("canva_oauth_state", state, cookieOpts);
+  response.cookies.set("canva_code_verifier", codeVerifier, cookieOpts);
 
   return response;
 }

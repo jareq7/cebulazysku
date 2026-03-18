@@ -20,6 +20,7 @@ import {
   ListChecks,
   Brain,
   BarChart3,
+  LogOut,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -136,6 +137,18 @@ export default function AdminLayout({
               </Link>
             );
           })}
+          <div className="pt-4 mt-4 border-t">
+            <button
+              onClick={() => {
+                sessionStorage.removeItem("admin_password");
+                setAuthenticated(false);
+              }}
+              className="flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground transition-colors w-full"
+            >
+              <LogOut className="h-4 w-4" />
+              Wyloguj
+            </button>
+          </div>
         </nav>
 
         {/* Content */}

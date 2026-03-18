@@ -1,6 +1,7 @@
 "use client";
 
 import { adminFetch } from "@/lib/admin-fetch";
+import { useSearchParams } from "next/navigation";
 
 import { useEffect, useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
@@ -63,6 +64,7 @@ export default function AdminBlogPage() {
   const [tagsInput, setTagsInput] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [canvaConnected, setCanvaConnected] = useState<boolean | null>(null);
+  const [canvaMessage, setCanvaMessage] = useState("");
   const [generatingCover, setGeneratingCover] = useState<string | null>(null);
   const [coverStyle, setCoverStyle] = useState<Record<string, string>>({});
 
@@ -111,6 +113,20 @@ export default function AdminBlogPage() {
   useEffect(() => {
     fetchPosts();
     checkCanvaStatus();
+
+    // Check for Canva OAuth result in URL
+    const params = new URLSearchParams(window.location.search);
+    const canvaResult = params.get("canva");
+    if (canvaResult === "connected") {
+      setCanvaMessage("Canva połączona pomyślnie!");
+      setCanvaConnected(true);
+      // Clean URL
+      window.history.replaceState({}, "", window.location.pathname);
+    } else if (canvaResult === "error") {
+      const reason = params.get("reason") || "unknown";
+      setCanvaMessage(`Błąd połączenia Canva: ${reason}`);
+      window.history.replaceState({}, "", window.location.pathname);
+    }
   }, []);
 
   const startCreate = () => {
@@ -264,6 +280,17 @@ export default function AdminBlogPage() {
           </Button>
         )}
       </div>
+
+      {canvaMessage && (
+        <div className={`rounded-lg p-3 text-sm border ${
+          canvaMessage.includes("pomyślnie")
+            ? "bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/40"
+            : "bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800/40"
+        }`}>
+          {canvaMessage}
+          <button className="ml-2 underline text-xs" onClick={() => setCanvaMessage("")}>zamknij</button>
+        </div>
+      )}
 
       {error && (
         <div className="rounded-lg bg-red-50 dark:bg-red-950/30 p-3 text-sm text-red-600 dark:text-red-400 border border-red-200 dark:border-red-800/40">
