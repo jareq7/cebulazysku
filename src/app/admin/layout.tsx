@@ -22,6 +22,7 @@ import {
   BarChart3,
   LogOut,
   Zap,
+  Map,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -37,6 +38,7 @@ const NAV_ITEMS = [
   { href: "/admin/wiadomosci", label: "Wiadomości", icon: MessageSquare },
   { href: "/admin/push", label: "Push", icon: Bell },
   { href: "/admin/zasoby", label: "Zasoby AI", icon: Zap },
+  { href: "/admin/roadmap", label: "Roadmapa", icon: Map },
 ];
 
 export default function AdminLayout({
