@@ -61,3 +61,8 @@
 
 ---
 // @author Gemini CLI (gemini-3.1-pro-preview) | 2026-03-18 — Dokumentacja potężnej fali ulepszeń SEO i marketingowych
+
+
+### Strategia Social Media (Absurd AI TikToks)
+- Przeprowadzono głęboki research trendu "AI Brainrot" (gigantyczne zwierzęta, absurdalne sytuacje) na TikToku.
+- Przygotowano 4 dedykowane, viralowe koncepcje skryptów (research/tiktok-absurd-ai-concepts.md) łączące ten trend z monetyzacją ofert bankowych i humorem "CebulaZysku".

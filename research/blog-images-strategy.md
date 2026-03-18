@@ -6,7 +6,10 @@ Aby wzmocnić pozycjonowanie (EEAT) i CTR (Click-Through Rate) naszych artykuł�
 Ponieważ jesteśmy w niszy finansowej, nasze grafiki muszą budzić **zaufanie, profesjonalizm**, ale jednocześnie zachowywać nasz "cebulowy", **humorystyczny sznyt**.
 
 ## 1. Narzędzie do Generowania (Rekomendacja)
-Obecnie najlepszym narzędziem do generowania wysokiej jakości okładek (Cover Images) pod artykuły blogowe jest **Midjourney v6**. Oferuje on najbardziej artystyczne i spójne "czucie" tekstur, co pozwala nam narzucić konkretną paletę kolorystyczną.
+
+Ponieważ korzystamy z ekosystemu Google i mamy dostęp do najwyższych pakietów (Google AI Pro z modelami przez API / NanoBanana), optymalnym i w 100% legalnym rozwiązaniem do pełnej automatyzacji będzie użycie modelu **Imagen 3** (lub nowszego od Google). Posiada on doskonałe oficjalne API i natywnie wspiera format 16:9.
+
+Alternatywą do manualnego, rzemieślniczego generowania grafik pozostaje **Midjourney v6**, jednak brak w nim oficjalnego API dla standardowych kont utrudnia pełną automatyzację i wymaga ręcznej pracy Jarka.
 
 *Alternatywa:* DALL-E 3 (jeśli zależy nam na wektorowych, prostych ilustracjach) lub Ideogram (jeśli potrzebujemy koniecznie napisów na obrazku).
 
