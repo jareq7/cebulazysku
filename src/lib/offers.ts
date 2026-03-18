@@ -67,6 +67,9 @@ function mapDbOffer(row: any): BankOffer {
     bannerUrl: row.banner_url || null,
     forYoung: row.for_young || false,
     isBusiness: row.is_business || false,
+    status: row.status || (row.is_active ? "active" : "expired"),
+    source: row.source || "leadstar",
+    hasUserReward: row.has_user_reward !== false,
   };
 }
 
@@ -92,18 +95,54 @@ async function supabaseGet(path: string): Promise<unknown[] | null> {
 
 export async function fetchOffersFromDB(): Promise<BankOffer[]> {
   const data = await supabaseGet(
-    "offers?is_active=eq.true&reward=gt.0&order=reward.desc&select=*"
+    "offers?status=eq.active&reward=gt.0&order=reward.desc&select=*"
   );
   if (!data || !Array.isArray(data) || data.length === 0) {
     console.warn("[offers] Supabase returned no data, falling back to static offers");
-    return staticOffers.filter((o) => o.reward > 0);
+    return staticOffers.filter((o) => o.status === "active" && o.reward > 0);
   }
   return data.map(mapDbOffer).filter((o) => o.conditions.length > 0);
 }
 
+export async function fetchExpiredOffersFromDB(): Promise<BankOffer[]> {
+  const data = await supabaseGet(
+    "offers?status=eq.expired&reward=gt.0&order=last_updated.desc&select=*"
+  );
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return [];
+  }
+  return data.map(mapDbOffer);
+}
+
+export async function fetchNoRewardOffers(): Promise<BankOffer[]> {
+  const data = await supabaseGet(
+    "offers?is_active=eq.true&has_user_reward=eq.false&order=bank_name.asc&select=*"
+  );
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    return [];
+  }
+  return data.map(mapDbOffer);
+}
+
+export interface AffiliateSources {
+  network: string;
+  affiliate_url: string | null;
+  is_preferred: boolean;
+  commission_amount: number | null;
+  commission_type: string | null;
+}
+
+export async function fetchAffiliateSourcesForOffer(offerId: string): Promise<AffiliateSources[]> {
+  const data = await supabaseGet(
+    `affiliate_sources?offer_id=eq.${encodeURIComponent(offerId)}&select=network,affiliate_url,is_preferred,commission_amount,commission_type`
+  );
+  if (!data || !Array.isArray(data)) return [];
+  return data as AffiliateSources[];
+}
+
 export async function fetchOfferBySlug(slug: string): Promise<BankOffer | null> {
   const data = await supabaseGet(
-    `offers?slug=eq.${encodeURIComponent(slug)}&is_active=eq.true&reward=gt.0&select=*`
+    `offers?slug=eq.${encodeURIComponent(slug)}&select=*`
   );
   if (!data || !Array.isArray(data) || data.length === 0) {
     return staticOffers.find((o) => o.slug === slug) || null;

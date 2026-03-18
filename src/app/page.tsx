@@ -3,7 +3,8 @@ import { Metadata } from "next";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { OfferFilters } from "@/components/OfferFilters";
-import { fetchOffersFromDB, getTotalPotentialEarnings } from "@/lib/offers";
+import { OfferCard } from "@/components/OfferCard";
+import { fetchOffersFromDB, fetchNoRewardOffers, getTotalPotentialEarnings } from "@/lib/offers";
 import {
   TrendingUp,
   Shield,
@@ -39,6 +40,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Home() {
   const totalEarnings = await getTotalPotentialEarnings();
   const bankOffers = await fetchOffersFromDB();
+  const noRewardOffers = await fetchNoRewardOffers();
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
@@ -165,6 +167,23 @@ export default async function Home() {
         </div>
         <OfferFilters offers={bankOffers} />
       </section>
+
+      {/* Other bank accounts (no reward) */}
+      {noRewardOffers.length > 0 && (
+        <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-muted-foreground">Inne konta bankowe</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Oferty bez premii dla użytkownika — otwórz konto przez nasz link
+            </p>
+          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {noRewardOffers.map((offer) => (
+              <OfferCard key={offer.id} offer={offer} />
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* Social proof */}
       <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">

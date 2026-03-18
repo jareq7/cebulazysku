@@ -1,16 +1,26 @@
 import { MetadataRoute } from "next";
-import { fetchOffersFromDB } from "@/lib/offers";
+import { fetchOffersFromDB, fetchNoRewardOffers } from "@/lib/offers";
 import { blogPosts } from "@/data/blog";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = "https://cebulazysku.pl";
-  const bankOffers = await fetchOffersFromDB();
+  const [bankOffers, noRewardOffers] = await Promise.all([
+    fetchOffersFromDB(),
+    fetchNoRewardOffers(),
+  ]);
 
   const offerPages = bankOffers.map((offer) => ({
     url: `${baseUrl}/oferta/${offer.slug}`,
     lastModified: offer.lastUpdated ? new Date(offer.lastUpdated) : new Date(),
     changeFrequency: "weekly" as const,
     priority: 0.8,
+  }));
+
+  const noRewardPages = noRewardOffers.map((offer) => ({
+    url: `${baseUrl}/oferta/${offer.slug}`,
+    lastModified: offer.lastUpdated ? new Date(offer.lastUpdated) : new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.5,
   }));
 
   const blogPages = blogPosts.map((post) => ({
@@ -76,6 +86,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     },
     ...offerPages,
+    ...noRewardPages,
     ...blogPages,
   ];
 }

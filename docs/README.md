@@ -54,6 +54,7 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 39 | [AI Verification Layer](./39-ai-verification.md) | Weryfikacja AI warunków parsowanych regexem |
 | 40 | [Analityka GTM i Consent](./40-analytics-gtm.md) | GTM, DataLayer, Consent Mode v2, Enhanced Conversions |
 | 41 | [Canva Integration](./41-canva-integration.md) | Canva Connect API, okładki bloga, OAuth, Autofill, Export |
+| 42 | [Multi-Source Affiliates](./42-multi-source-affiliates.md) | Conversand CPA, bank name matching, affiliate routing, admin panel |
 
 ---
 

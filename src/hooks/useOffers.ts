@@ -52,6 +52,8 @@ function mapDbOffer(row: any): BankOffer {
     forYoung: row.for_young || false,
     isBusiness: row.is_business || false,
     status: row.status || "active",
+    source: row.source || "leadstar",
+    hasUserReward: row.has_user_reward !== false,
   };
 }
 

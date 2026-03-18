@@ -13,6 +13,7 @@ Portal pomagający użytkownikom porównywać promocje bankowe, otwierać konta 
 - **TTS:** ElevenLabs (Polish voiceovers, Daniel voice)
 - **AI:** Gemini free tier → OpenRouter (dynamic cheapest model) fallback
 - **Design:** Canva Connect API (OAuth2, Autofill, Export — blog cover generation)
+- **Affiliate:** Conversand CPA (bank offers), LeadStar (primary feed)
 - **Email:** Resend.com
 - **Hosting:** Vercel (auto-deploy on push to `main`)
 
@@ -118,6 +119,8 @@ supabase/migrations/             # 18 SQL migration files
 | `sync_log` | History of LeadStar syncs |
 | `email_sends` | Email delivery deduplication |
 | `canva_tokens` | Canva OAuth tokens (access, refresh, expires_at) |
+| `affiliate_sources` | Per-offer, per-network affiliate links and commissions |
+| `conversand_stats` | Cached Conversand CPA statistics |
 
 ## Vercel Crons
 
@@ -127,6 +130,7 @@ supabase/migrations/             # 18 SQL migration files
 | AI descriptions | 02:00 | `/api/cron/generate-descriptions` |
 | Quality check | 03:00 | `/api/cron/quality-check` |
 | Email notifications | 08:00 | `/api/cron/email-notifications` |
+| Sync Conversand     | 01:30 | `/api/sync-conversand` |
 
 ## Dev Commands
 

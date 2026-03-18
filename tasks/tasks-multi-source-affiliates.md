@@ -55,42 +55,42 @@
 - [ ] 3.5 Fallback: Levenshtein distance or token overlap for unmatched names
 
 ### 4.0 Sync Conversand offers
-- [ ] 4.1 Create `/api/sync-conversand/route.ts` — POST handler with CRON_SECRET auth
-- [ ] 4.2 Fetch all Conversand offers (Financial PL)
-- [ ] 4.3 For each offer: match to existing DB offer via bank name matcher
-- [ ] 4.4 If matched: insert/update `affiliate_sources` row (network='conversand', commission from API)
-- [ ] 4.5 If not matched: create new offer with source='conversand', has_user_reward=false, reward=0, basic info (name, bank_logo fallback)
-- [ ] 4.6 Log sync results (matched, new, skipped)
-- [ ] 4.7 Add to vercel.json cron: 01:30 UTC daily
+- [x] 4.1 Create `/api/sync-conversand/route.ts` — POST handler with CRON_SECRET auth
+- [x] 4.2 Fetch all Conversand offers (Financial PL)
+- [x] 4.3 For each offer: match to existing DB offer via bank name matcher
+- [x] 4.4 If matched: insert/update `affiliate_sources` row (network='conversand', commission from API)
+- [x] 4.5 If not matched: create new offer with source='conversand', has_user_reward=false, reward=0, basic info (name, bank_logo fallback)
+- [x] 4.6 Log sync results (matched, new, skipped)
+- [x] 4.7 Add to vercel.json cron: 01:30 UTC daily
 
 ### 5.0 Frontend — offer types + filtering
-- [ ] 5.1 Update `BankOffer` type in banks.ts: add `source`, `has_user_reward`, `status`
-- [ ] 5.2 Update offer mapper in `offers.ts`: map source, has_user_reward from DB
-- [ ] 5.3 Update `useOffers.ts`: map new fields
-- [ ] 5.4 Update `OfferCard.tsx`: variant for has_user_reward=false — grey badge "Bez premii", simplified card (no tracker, no reward amount)
-- [ ] 5.5 Update `OfferFilters.tsx`: add toggle "Tylko z premią" / "Wszystkie oferty"
-- [ ] 5.6 Update landing page (`/page.tsx`): split into core section (has_user_reward=true) + "Inne konta bankowe" section below
-- [ ] 5.7 Update ranking page (`/ranking/page.tsx`): same split
-- [ ] 5.8 Update offer detail page (`/oferta/[slug]/page.tsx`): minimal page for no-reward offers — logo, name, info text, affiliate button, no tracker/conditions
+- [x] 5.1 Update `BankOffer` type in banks.ts: add `source`, `has_user_reward`
+- [x] 5.2 Update offer mapper in `offers.ts`: map source, has_user_reward from DB + fetchNoRewardOffers()
+- [x] 5.3 Update `useOffers.ts`: map new fields
+- [x] 5.4 Update `OfferCard.tsx`: variant for has_user_reward=false — grey badge "Bez premii", simplified card (no tracker, no reward amount)
+- [x] 5.5 Update `OfferFilters.tsx`: add toggle "Tylko z premią" / "Wszystkie oferty"
+- [x] 5.6 Update landing page (`/page.tsx`): "Inne konta bankowe" section below main offers
+- [ ] 5.7 Update ranking page (`/ranking/page.tsx`): skipped — ranking only shows reward offers
+- [x] 5.8 Update offer detail page (`/oferta/[slug]/page.tsx`): minimal page for no-reward offers — logo, name, info text, affiliate button, no tracker/conditions
 
 ### 6.0 Affiliate routing
-- [ ] 6.1 Update click tracking to check `affiliate_sources` for best link
-- [ ] 6.2 Logic: if is_preferred exists → use it; else prefer LeadStar; else use Conversand
-- [ ] 6.3 Log which network was used per click in affiliate_clicks table
+- [x] 6.1 Created `affiliate-routing.ts` with resolveAffiliateUrl() — checks affiliate_sources for best link
+- [x] 6.2 Logic: is_preferred → LeadStar → any source with URL → fallback
+- [x] 6.3 Added `network` column to affiliate_clicks (migration 026) + track-click logs network
 - [ ] 6.4 In admin offer view: show all available networks with their commission rates
 
 ### 7.0 Admin panel — Conversand
-- [ ] 7.1 Create `/admin/conversand/page.tsx`
-- [ ] 7.2 Create `/api/admin/conversand/route.ts` — proxies Conversand API with admin auth
-- [ ] 7.3 Balance card: current balance, payout threshold
-- [ ] 7.4 Statistics table: date range filter, clicks/leads/commission per program
-- [ ] 7.5 Offers list: all Conversand offers with match status, commission rates
-- [ ] 7.6 Add "Conversand" nav item to admin sidebar
+- [x] 7.1 Create `/admin/conversand/page.tsx`
+- [x] 7.2 Create `/api/admin/conversand/route.ts` — proxies Conversand API with admin auth
+- [x] 7.3 Balance card: current balance, payout threshold
+- [x] 7.4 Statistics table: clicks/leads/commission per program (last 30 days)
+- [x] 7.5 Offers list: all Conversand offers with match status, commission rates, link status
+- [x] 7.6 Add "Conversand" nav item to admin sidebar
 
 ### 8.0 SEO + documentation
-- [ ] 8.1 New offers in sitemap (no-reward offers included)
-- [ ] 8.2 Meta tags for no-reward offer pages (title: "{Bank} — Otwórz konto | CebulaZysku")
-- [ ] 8.3 Create `docs/42-multi-source-affiliates.md`
-- [ ] 8.4 Update `docs/README.md`
-- [ ] 8.5 Update `CLAUDE.md` — add Conversand to stack, new tables, new cron
+- [x] 8.1 New offers in sitemap (no-reward offers included, priority 0.5)
+- [x] 8.2 Meta tags for no-reward offer pages (title: "{Bank} — Otwórz konto | CebulaZysku")
+- [x] 8.3 Create `docs/42-multi-source-affiliates.md`
+- [x] 8.4 Update `docs/README.md`
+- [x] 8.5 Update `CLAUDE.md` — add Conversand to stack, new tables, new cron
 - [ ] 8.6 Build check, commit, merge to main, deploy

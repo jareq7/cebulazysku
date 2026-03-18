@@ -49,6 +49,7 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
   const [hideYoung, setHideYoung] = useState(false);
   const [accountType, setAccountType] = useState<AccountType>("personal");
   const [hideMyBanks, setHideMyBanks] = useState(false);
+  const [onlyWithReward, setOnlyWithReward] = useState(true);
   const { userBanks, isLoaded: banksLoaded } = useUserBanks();
   const { user } = useAuth();
 
@@ -137,6 +138,10 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
     }
     // "both" — bez filtrowania
 
+    if (onlyWithReward) {
+      result = result.filter((o) => o.hasUserReward);
+    }
+
     if (hideYoung) {
       result = result.filter((o) => !o.forYoung);
     }
@@ -167,7 +172,7 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
     }
 
     return result;
-  }, [offers, activeDifficulties, sort, hideYoung, hideMyBanks, userBanks, accountType]);
+  }, [offers, activeDifficulties, sort, hideYoung, hideMyBanks, userBanks, accountType, onlyWithReward]);
 
   return (
     <div>
@@ -191,6 +196,30 @@ export function OfferFilters({ offers }: { offers: BankOffer[] }) {
                 {accountTypeLabels[type]}
               </button>
             ))}
+          </div>
+
+          {/* Tylko z premią / Wszystkie */}
+          <div className="flex items-center rounded-lg border overflow-hidden">
+            <button
+              onClick={() => setOnlyWithReward(true)}
+              className={`px-3 py-1 text-xs font-medium transition-colors ${
+                onlyWithReward
+                  ? "bg-primary text-primary-foreground"
+                  : "hover:bg-muted/50 text-muted-foreground"
+              }`}
+            >
+              Tylko z premią
+            </button>
+            <button
+              onClick={() => setOnlyWithReward(false)}
+              className={`px-3 py-1 text-xs font-medium transition-colors ${
+                !onlyWithReward
+                  ? "bg-primary text-primary-foreground"
+                  : "hover:bg-muted/50 text-muted-foreground"
+              }`}
+            >
+              Wszystkie
+            </button>
           </div>
 
           {difficulties.map((d) => (

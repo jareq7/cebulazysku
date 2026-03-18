@@ -8,7 +8,8 @@ import {
   getDifficultyColor,
   conditionTypeLabels,
 } from "@/data/banks";
-import { fetchOffersFromDB, fetchOfferBySlug } from "@/lib/offers";
+import { fetchOffersFromDB, fetchNoRewardOffers, fetchOfferBySlug, fetchAffiliateSourcesForOffer } from "@/lib/offers";
+import { resolveAffiliateUrl } from "@/lib/affiliate-routing";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -18,6 +19,8 @@ import { OfferCard } from "@/components/OfferCard";
 import { OfferVideoPlayer } from "@/components/OfferVideoPlayer";
 import { RenderMarkdown } from "@/components/RenderMarkdown";
 import { TrackViewItem } from "@/components/TrackViewItem";
+import { ExpiredOfferBanner } from "@/components/ExpiredOfferBanner";
+import { Button } from "@/components/ui/button";
 import {
   Clock,
   CheckCircle,
@@ -27,8 +30,11 @@ import {
 } from "lucide-react";
 
 export async function generateStaticParams() {
-  const offers = await fetchOffersFromDB();
-  return offers.map((offer) => ({
+  const [offers, noRewardOffers] = await Promise.all([
+    fetchOffersFromDB(),
+    fetchNoRewardOffers(),
+  ]);
+  return [...offers, ...noRewardOffers].map((offer) => ({
     slug: offer.slug,
   }));
 }
@@ -42,8 +48,13 @@ export async function generateMetadata({
   const offer = await fetchOfferBySlug(slug);
   if (!offer) return {};
 
-  const title = `Promocja ${offer.bankName}: ${offer.reward} zł za ${offer.offerName} | CebulaZysku`;
-  const description = `${offer.shortDescription} Zobacz jak ołupić bank ${offer.bankName} i zgarnąć ${offer.reward} zł premii. Sprawdzone warunki, instrukcja krok po kroku i tracker postępów! 🧅`;
+  const title = offer.hasUserReward
+    ? `Promocja ${offer.bankName}: ${offer.reward} zł za ${offer.offerName} | CebulaZysku`
+    : `${offer.bankName} — Otwórz konto | CebulaZysku`;
+  const description = offer.hasUserReward
+    ? `${offer.shortDescription} Zobacz jak ołupić bank ${offer.bankName} i zgarnąć ${offer.reward} zł premii. Sprawdzone warunki, instrukcja krok po kroku i tracker postępów! 🧅`
+    : `Otwórz konto w ${offer.bankName}. ${offer.shortDescription}`;
+  const ogImageUrl = `https://cebulazysku.pl/api/og?type=offer&bank=${encodeURIComponent(offer.bankName)}&reward=${offer.reward}&title=${encodeURIComponent(offer.offerName)}`;
 
   return {
     title,
@@ -53,6 +64,14 @@ export async function generateMetadata({
       description,
       type: "article",
       locale: "pl_PL",
+      images: [
+        {
+          url: ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
     alternates: {
       canonical: `https://cebulazysku.pl/oferta/${offer.slug}`,
@@ -71,6 +90,13 @@ export default async function OfferDetailPage({
   if (!offer) {
     notFound();
   }
+
+  // Resolve best affiliate link via routing
+  const affiliateSources = await fetchAffiliateSourcesForOffer(offer.id);
+  const { url: bestAffiliateUrl, network: affiliateNetwork } = resolveAffiliateUrl(
+    offer.affiliateUrl,
+    affiliateSources
+  );
 
   const deadlineMs = offer.deadline ? new Date(offer.deadline).getTime() : NaN;
   const daysLeft = !isNaN(deadlineMs)
@@ -115,10 +141,56 @@ export default async function OfferDetailPage({
     ],
   };
 
+  const productJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Product",
+    "name": `${offer.bankName} - ${offer.offerName}`,
+    "image": offer.bankLogo && offer.bankLogo.startsWith('http') ? offer.bankLogo : "https://cebulazysku.pl/logo-wide.png",
+    "description": offer.shortDescription || `Otwórz konto w banku ${offer.bankName} i zgarnij gwarantowane ${offer.reward} zł premii. Sprawdź naszą instrukcję krok po kroku!`,
+    "brand": {
+      "@type": "Brand",
+      "name": offer.bankName
+    },
+    "offers": {
+      "@type": "Offer",
+      "url": `https://cebulazysku.pl/oferta/${offer.slug}`,
+      "priceCurrency": "PLN",
+      "price": offer.reward.toString(),
+      "itemCondition": "https://schema.org/NewCondition",
+      "availability": "https://schema.org/InStock",
+      "seller": {
+        "@type": "Organization",
+        "name": offer.bankName
+      },
+      ...(offer.deadline && { "priceValidUntil": new Date(offer.deadline).toISOString().split('T')[0] })
+    }
+  };
+
+  const howToJsonLd = offer.conditions.length > 0 ? {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    "name": `Jak zdobyć ${offer.reward} zł w banku ${offer.bankName}`,
+    "description": `Instrukcja krok po kroku, jak założyć ${offer.offerName} i spełnić warunki, aby otrzymać premię.`,
+    "totalTime": "P1M",
+    "step": offer.conditions.map((condition) => ({
+      "@type": "HowToStep",
+      "name": condition.label,
+      "text": condition.description + (condition.requiredCount > 1 ? ` (Wykonaj ${condition.requiredCount} razy)` : ""),
+      "url": `https://cebulazysku.pl/oferta/${offer.slug}#warunki`
+    }))
+  } : null;
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
       {faqJsonLd && <JsonLd data={faqJsonLd} />}
       <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={productJsonLd} />
+      {howToJsonLd && <JsonLd data={howToJsonLd} />}
+
+      {offer.status === "expired" && (
+        <ExpiredOfferBanner bankName={offer.bankName} expiredDate={offer.lastUpdated} />
+      )}
+
       <TrackViewItem
         itemId={offer.slug}
         itemName={offer.bankName}
@@ -165,10 +237,15 @@ export default async function OfferDetailPage({
             <Badge className={getDifficultyColor(offer.difficulty)}>
               {getDifficultyLabel(offer.difficulty)}
             </Badge>
-            {daysLeft !== null && (
+            {daysLeft !== null && offer.status === "active" && (
               <Badge variant="outline" className="gap-1">
                 <Clock className="h-3 w-3" />
                 Zostało {daysLeft} dni
+              </Badge>
+            )}
+            {offer.status === "expired" && (
+              <Badge variant="destructive" className="gap-1">
+                Wygasła
               </Badge>
             )}
             {offer.monthlyFee === 0 && (
@@ -179,10 +256,18 @@ export default async function OfferDetailPage({
           </div>
         </div>
         <div className="text-right">
-          <p className="text-sm text-muted-foreground">Premia</p>
-          <p className="text-4xl font-extrabold text-emerald-600">
-            {offer.reward} zł
-          </p>
+          {offer.hasUserReward ? (
+            <>
+              <p className="text-sm text-muted-foreground">Premia</p>
+              <p className="text-4xl font-extrabold text-emerald-600">
+                {offer.reward} zł
+              </p>
+            </>
+          ) : (
+            <Badge variant="secondary" className="bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+              Bez premii
+            </Badge>
+          )}
           {offer.lastUpdated && (
             <p className="text-xs text-muted-foreground mt-1">
               Zaktualizowano: {new Date(offer.lastUpdated).toLocaleDateString("pl-PL")}
@@ -211,7 +296,7 @@ export default async function OfferDetailPage({
           </Card>
 
           {/* Video */}
-          {offer.conditions.length > 0 && (
+          {offer.conditions.length > 0 && offer.status === "active" && (
             <Card>
               <CardHeader>
                 <CardTitle>Oferta w skrócie</CardTitle>
@@ -237,7 +322,7 @@ export default async function OfferDetailPage({
           )}
 
           {/* Banner */}
-          {offer.bannerUrl && (
+          {offer.bannerUrl && offer.status === "active" && (
             <a
               href={offer.affiliateUrl}
               target="_blank"
@@ -351,14 +436,44 @@ export default async function OfferDetailPage({
         <div className="space-y-4">
           <Card className="sticky top-20">
             <CardContent className="pt-6">
-              <OfferTrackingActions
-                offerId={offer.id}
-                bankName={offer.bankName}
-                conditionIds={offer.conditions.map((c) => c.id)}
-                affiliateUrl={offer.affiliateUrl}
-                reward={offer.reward}
-                deadline={offer.deadline}
-              />
+              {offer.status === "active" && offer.hasUserReward ? (
+                <OfferTrackingActions
+                  offerId={offer.id}
+                  bankName={offer.bankName}
+                  conditionIds={offer.conditions.map((c) => c.id)}
+                  affiliateUrl={bestAffiliateUrl}
+                  reward={offer.reward}
+                  deadline={offer.deadline}
+                />
+              ) : offer.status === "active" && !offer.hasUserReward ? (
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground text-center">
+                    Otwórz konto w {offer.bankName} przez nasz link
+                  </p>
+                  {bestAffiliateUrl && bestAffiliateUrl !== "#" ? (
+                    <a
+                      href={bestAffiliateUrl}
+                      target="_blank"
+                      rel="noopener noreferrer sponsored"
+                    >
+                      <Button className="w-full">Otwórz konto</Button>
+                    </a>
+                  ) : (
+                    <p className="text-xs text-muted-foreground text-center">
+                      Link afiliacyjny w przygotowaniu
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <div className="text-center py-4">
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Ta oferta nie jest już dostępna.
+                  </p>
+                  <Link href="/ranking">
+                    <Button className="w-full">Zobacz aktualne oferty</Button>
+                  </Link>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>

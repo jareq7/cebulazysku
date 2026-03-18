@@ -94,22 +94,30 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
       </CardHeader>
 
       <CardContent className="space-y-4 flex-1">
-        <div className="flex items-baseline gap-1">
-          <span className="text-3xl font-extrabold text-emerald-600">
-            {offer.reward}
-          </span>
-          <span className="text-lg font-semibold text-emerald-600">zł</span>
-          <span className="text-sm text-muted-foreground ml-1">premii</span>
-        </div>
+        {offer.hasUserReward ? (
+          <div className="flex items-baseline gap-1">
+            <span className="text-3xl font-extrabold text-emerald-600">
+              {offer.reward}
+            </span>
+            <span className="text-lg font-semibold text-emerald-600">zł</span>
+            <span className="text-sm text-muted-foreground ml-1">premii</span>
+          </div>
+        ) : (
+          <Badge variant="secondary" className="bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
+            Bez premii dla użytkownika
+          </Badge>
+        )}
 
         <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2">
           {offer.shortDescription}
         </p>
 
         <div className="flex flex-wrap gap-2">
-          <Badge variant="secondary" className={getDifficultyColor(offer.difficulty)}>
-            {getDifficultyLabel(offer.difficulty)}
-          </Badge>
+          {offer.hasUserReward && (
+            <Badge variant="secondary" className={getDifficultyColor(offer.difficulty)}>
+              {getDifficultyLabel(offer.difficulty)}
+            </Badge>
+          )}
           {daysLeft !== null && (
             <Badge variant="outline" className="gap-1">
               <Clock className="h-3 w-3" />
@@ -123,22 +131,24 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
           )}
         </div>
 
-        <div className="space-y-1.5">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
-            Warunki:
-          </p>
-          {offer.conditions.slice(0, 3).map((c) => (
-            <div key={c.id} className="flex items-center gap-2 text-sm">
-              <span className="text-muted-foreground">{iconMap[c.type]}</span>
-              <span className="truncate">{c.label}</span>
-            </div>
-          ))}
-          {offer.conditions.length > 3 && (
-            <p className="text-xs text-muted-foreground">
-              +{offer.conditions.length - 3} więcej warunków
+        {offer.hasUserReward && offer.conditions.length > 0 && (
+          <div className="space-y-1.5">
+            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+              Warunki:
             </p>
-          )}
-        </div>
+            {offer.conditions.slice(0, 3).map((c) => (
+              <div key={c.id} className="flex items-center gap-2 text-sm">
+                <span className="text-muted-foreground">{iconMap[c.type]}</span>
+                <span className="truncate">{c.label}</span>
+              </div>
+            ))}
+            {offer.conditions.length > 3 && (
+              <p className="text-xs text-muted-foreground">
+                +{offer.conditions.length - 3} więcej warunków
+              </p>
+            )}
+          </div>
+        )}
       </CardContent>
 
       {offer.lastUpdated && (

@@ -46,6 +46,9 @@ export interface BankOffer {
   bannerUrl: string | null;
   forYoung: boolean;
   isBusiness: boolean;
+  status: "active" | "expired" | "draft";
+  source: "leadstar" | "conversand" | "tradedoubler" | "manual";
+  hasUserReward: boolean;
 }
 
 export const conditionTypeLabels: Record<ConditionType, string> = {
@@ -158,6 +161,9 @@ export const bankOffers: BankOffer[] = [
     bannerUrl: null,
     forYoung: false,
     isBusiness: false,
+    status: "active",
+    source: "leadstar",
+    hasUserReward: true,
   },
   {
     id: "ing-konto-promo",
@@ -233,6 +239,9 @@ export const bankOffers: BankOffer[] = [
     bannerUrl: null,
     forYoung: false,
     isBusiness: false,
+    status: "active",
+    source: "leadstar",
+    hasUserReward: true,
   },
   {
     id: "santander-promo",
@@ -319,6 +328,9 @@ export const bankOffers: BankOffer[] = [
     bannerUrl: null,
     forYoung: false,
     isBusiness: false,
+    status: "active",
+    source: "leadstar",
+    hasUserReward: true,
   },
   {
     id: "pkobp-promo",
@@ -388,6 +400,9 @@ export const bankOffers: BankOffer[] = [
     bannerUrl: null,
     forYoung: false,
     isBusiness: false,
+    status: "active",
+    source: "leadstar",
+    hasUserReward: true,
   },
   {
     id: "millennium-promo",
@@ -481,6 +496,9 @@ export const bankOffers: BankOffer[] = [
     bannerUrl: null,
     forYoung: false,
     isBusiness: false,
+    status: "active",
+    source: "leadstar",
+    hasUserReward: true,
   },
   {
     id: "bnp-promo",
@@ -541,6 +559,9 @@ export const bankOffers: BankOffer[] = [
     bannerUrl: null,
     forYoung: false,
     isBusiness: false,
+    status: "active",
+    source: "leadstar",
+    hasUserReward: true,
   },
   {
     id: "citi-promo",
@@ -611,6 +632,9 @@ export const bankOffers: BankOffer[] = [
     bannerUrl: null,
     forYoung: false,
     isBusiness: false,
+    status: "active",
+    source: "leadstar",
+    hasUserReward: true,
   },
   {
     id: "credit-agricole-promo",
@@ -671,6 +695,9 @@ export const bankOffers: BankOffer[] = [
     bannerUrl: null,
     forYoung: false,
     isBusiness: false,
+    status: "active",
+    source: "leadstar",
+    hasUserReward: true,
   },
 ];
 

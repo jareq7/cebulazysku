@@ -52,6 +52,7 @@ export async function POST(request: NextRequest) {
       utm_medium: utm_medium || null,
       utm_campaign: utm_campaign || null,
       user_agent: request.headers.get("user-agent") || null,
+      network: body.network || null,
     });
 
     return NextResponse.json({ ok: true });

@@ -454,3 +454,98 @@ Szablony: `create-prd.md` i `generate-tasks.md` w rootcie projektu.
 **Rozwiązanie:** Zmieniono link na `onClick` handler, który czyta hasło z `sessionStorage.getItem("admin_password")` i dodaje jako `?key=` query param.
 
 **Jak unikać:** Endpointy wymagające auth, które otwierają się w nowej karcie (redirect flow, OAuth), nie mogą używać headerów — muszą akceptować auth w query paramie. Zawsze testuj flow z poziomu UI, nie tylko curl.
+
+---
+
+## 38. FK type mismatch — UUID vs TEXT w affiliate_sources
+
+**Problem:** Migracja `025_multi_source_affiliates.sql` definiowała `offer_id uuid` jako FK do tabeli `offers`. Ale kolumna `offers.id` to `text` (nie uuid) — LeadStar IDs to stringi typu `"leadstar-123-ing"`. Migracja failowała z `ERROR: foreign key constraint ... cannot be implemented`.
+
+**Rozwiązanie:** Zmieniono typ z `offer_id uuid` na `offer_id text NOT NULL REFERENCES offers(id)`.
+
+**Jak unikać:** Przed tworzeniem FK constraints ZAWSZE sprawdź typ kolumny w tabeli docelowej. W Supabase Dashboard: Table Editor → tabela → kolumna → typ. Nie zakładaj że `id` to UUID — wiele tabel używa `text` jako PK (zwłaszcza z zewnętrznymi identyfikatorami).
+
+---
+
+## 39. Numer migracji collision — dwóch workerów na jednym numerze
+
+**Problem:** Claude Code (roadmap) i Gemini (offer_status_enum) stworzyli migracje z tym samym numerem `023`. Supabase CLI nie akceptuje duplikatów — `supabase db push` failuje na zduplikowanym prefixie.
+
+**Rozwiązanie:** Ręczne przenumerowanie — Claude zmienił swoją migrację z 023 na 024. Zawsze sprawdzaj `ls supabase/migrations/` przed tworzeniem nowej.
+
+**Jak unikać:** W `AI-TASKS.md` zarezerwuj zakres numerów per worker. Np. Claude = parzyste, Gemini = nieparzyste. Lub: jeden worker (lead) odpowiada za nadawanie numerów.
+
+---
+
+## 40. Conversand API — brak linków afiliacyjnych w odpowiedzi
+
+**Problem:** Zakładaliśmy że Conversand API zwróci tracking linki w odpowiedzi `getOffers()`. API zwraca nazwy ofert, stawki prowizji, kategorię — ale NIE tracking URL. Linki trzeba pobrać ręcznie z panelu Conversand (web UI).
+
+**Rozwiązanie:** Pole `affiliate_url` w `affiliate_sources` jest nullable. Admin musi ręcznie wpisać linki (lub Gemini wyciągnie je z panelu). Endpoint sync tworzy rekordy bez URL, admin wypełnia potem.
+
+**Jak unikać:** Przed implementacją integracji z API — przetestuj KAŻDY endpoint ręcznie (curl/Postman). Nie ufaj dokumentacji. Sprawdź co faktycznie zwraca API, jakie pola, w jakim formacie.
+
+---
+
+## 41. Brak `hasUserReward` default w statycznych ofertach — type error
+
+**Problem:** Po dodaniu `source` i `hasUserReward` do typu `BankOffer`, 8 statycznych ofert w `banks.ts` nie miało tych pól. TypeScript nie raportował błędu (nie było strict mode na literałach), ale runtime mógłby zwrócić `undefined` zamiast expected value.
+
+**Rozwiązanie:** Dodano `source: "leadstar"` i `hasUserReward: true` do wszystkich 8 statycznych ofert za pomocą `replace_all`.
+
+**Jak unikać:** Po rozszerzeniu interfejsu o nowe pola, przeszukaj CAŁY projekt za implementacjami (statyczne dane, factory functions, seed data, mappers). TypeScript strict mode nie wyłapie brakujących pól w obiektach jeśli nie są `required` w runtime.
+
+---
+
+## 42. fetchOfferBySlug — filtr `reward=gt.0` blokował no-reward offers
+
+**Problem:** `fetchOfferBySlug()` miał query `offers?slug=eq.X&reward=gt.0`. Oferty z Conversand mają `reward=0` i `has_user_reward=false` — ten filtr je wykluczał. Strony `/oferta/[slug]` zwracały 404 dla no-reward ofert.
+
+**Rozwiązanie:** Usunięto filtr `reward=gt.0` z `fetchOfferBySlug()` — każda oferta powinna być dostępna po slug, niezależnie od reward. Filtrowanie po reward jest tylko na listach.
+
+**Jak unikać:** Kiedy dodajesz nowy typ danych (no-reward offers), przejrzyj WSZYSTKIE query do tabeli i sprawdź czy filtry nie blokują nowego typu. Typowe pułapki: `reward=gt.0`, `source=eq.leadstar`, `conditions` not empty.
+
+---
+
+## Ogólne wnioski — sesja Multi-Source Affiliates (Marzec 2026)
+
+| Zasada | Dlaczego |
+|--------|----------|
+| **Sprawdź typ FK przed migracją** | `offers.id` to text, nie uuid — FK type mismatch failuje migrację |
+| **Numeracja migracji — koordynacja** | Dwóch workerów + ten sam numer = collision. Rezerwuj zakresy |
+| **Testuj API ręcznie przed implementacją** | Conversand nie zwraca linków — dokumentacja kłamie lub jest niekompletna |
+| **replace_all po rozszerzeniu typu** | Statyczne dane + seed data muszą być zaktualizowane o nowe pola |
+| **Usuwaj zbędne filtry z single-fetch** | `fetchBySlug` nie powinien filtrować po reward — to blokuje nowe typy ofert |
+| **Nullable URL w affiliate_sources** | Nie wszystkie sieci dostarczają URL przez API — admin musi ręcznie |
+
+---
+
+## 43. canvas-confetti i błędy nawigacji client-side
+
+**Problem:** Próba dodania efektu konfetti do kalkulatora zysku mogła skutkować błędem 'document is not defined' lub brakiem działania.
+
+**Rozwiązanie:** Upewnienie się, że biblioteki manipulujące DOM (jak canvas-confetti) są wywoływane wyłącznie wewnątrz 'useEffect' lub w komponentach z dyrektywą 'use client'. W prototypie ProfitCalculator.tsx konfetti odpala się wewnątrz timera, który kończy bieg w useEffect.
+
+**Jak unikać:** Zawsze zakładaj, że Next.js próbuje wyrenderować komponent po stronie serwera. Jeśli używasz biblioteki 'browser-only', izoluj jej logikę.
+
+---
+
+## 44. Brak kodowania parametrów w URL dla OG Images
+
+**Problem:** Linki do dynamicznych obrazków Open Graph (np. /api/og?bank=mBank&reward=500) rwały się, gdy nazwa banku zawierała spacje lub znaki specjalne (np. 'Pekao S.A.').
+
+**Rozwiązanie:** Zastosowanie 'encodeURIComponent(param)' wewnątrz 'generateMetadata' przy budowaniu adresu URL dla grafiki.
+
+**Jak unikać:** Każdy parametr przekazywany w query string (URL), który pochodzi z bazy danych lub od użytkownika, musi być zakodowany.
+
+---
+
+## 45. Błędy 'Context Mismatch' w narzędziu replace
+
+**Problem:** Narzędzie 'replace' wielokrotnie zgłaszało '0 occurrences found', mimo że wklejany tekst 'old_string' wydawał się identyczny z plikiem.
+
+**Przyczyna:** Niewidoczne znaki nowej linii, różnice w wcięciach (tab vs spaces) lub komentarze dodane przez system atrybucji, które nie zostały uwzględnione w bloku tekstu.
+
+**Rozwiązanie:** Przed użyciem 'replace' na dużym bloku kodu, warto wykonać 'read_file' konkretnego zakresu linii, aby skopiować tekst DOKŁADNIE tak, jak widzi go system w danej sekundzie.
+
+**Jak unikać:** Preferuj mniejsze, bardziej precyzyjne zamiany lub używaj 'write_file' dla całych małych komponentów. Zawsze sprawdzaj plik 'cat | head' po operacji.

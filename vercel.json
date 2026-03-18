@@ -15,6 +15,10 @@
     {
       "path": "/api/cron/email-notifications",
       "schedule": "0 8 * * *"
+    },
+    {
+      "path": "/api/sync-conversand",
+      "schedule": "30 1 * * *"
     }
   ]
 }
