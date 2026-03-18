@@ -12,6 +12,7 @@ Portal pomagający użytkownikom porównywać promocje bankowe, otwierać konta 
 - **Video:** Remotion (programmatic 9:16 video ads with voiceover)
 - **TTS:** ElevenLabs (Polish voiceovers, Daniel voice)
 - **AI:** Gemini free tier → OpenRouter (dynamic cheapest model) fallback
+- **Design:** Canva Connect API (OAuth2, Autofill, Export — blog cover generation)
 - **Email:** Resend.com
 - **Hosting:** Vercel (auto-deploy on push to `main`)
 
@@ -116,6 +117,7 @@ supabase/migrations/             # 18 SQL migration files
 | `notification_preferences` | Email opt-in/out per type |
 | `sync_log` | History of LeadStar syncs |
 | `email_sends` | Email delivery deduplication |
+| `canva_tokens` | Canva OAuth tokens (access, refresh, expires_at) |
 
 ## Vercel Crons
 

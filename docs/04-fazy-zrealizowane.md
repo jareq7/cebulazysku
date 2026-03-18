@@ -568,3 +568,11 @@ Zostały zrealizowane w poprzednich sesjach. Kluczowe deliverables:
 - Wdrożono pełne tagi Open Graph na wszystkich głównych podstronach statycznych (Ranking, Blog, O nas, Jak to działa, Strona główna) w celu poprawy widoczności w social mediach.
 - Zaimplementowano tagi kanoniczne chroniące serwis przed powielaniem treści.
 - Wprowadzono dyrektywy no-index dla stron prawnych (Regulamin, Polityka Prywatności), oszczędzając crawl budget na kluczowe podstrony sprzedażowe.
+
+
+### Strategia Automatyzacji Wideo (Faceless Channels)
+- Opracowano obszerny raport badawczy () dotyczący automatyzacji produkcji wideo na TikToka/Reels. Zidentyfikowano kluczowy Tech Stack (Make.com, ElevenLabs, Remotion) i zaproponowano strukturę formatów wiralowych dla branży finansowej w celu drastycznego zwiększenia ruchu top-of-funnel.
+
+
+### Strategia Automatyzacji Wideo (Faceless Channels)
+- Opracowano obszerny raport badawczy dotyczacy automatyzacji produkcji wideo na TikToka/Reels. Zidentyfikowano kluczowy Tech Stack (Make.com, ElevenLabs, Remotion) i zaproponowano strukture formatow wiralowych dla branzy finansowej w celu drastycznego zwiekszenia ruchu top-of-funnel.

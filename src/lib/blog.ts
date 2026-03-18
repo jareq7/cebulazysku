@@ -13,6 +13,7 @@ export interface BlogPost {
   is_published: boolean;
   created_at: string;
   updated_at: string;
+  cover_image_url?: string;
 }
 
 function getSupabase() {

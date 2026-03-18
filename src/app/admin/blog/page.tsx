@@ -10,7 +10,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Loader2,
-  AlertTriangle,
   Plus,
   Edit2,
   Trash2,
@@ -19,6 +18,9 @@ import {
   Save,
   X,
   SplitSquareHorizontal,
+  Image,
+  Link2,
+  RefreshCw,
 } from "lucide-react";
 import { RenderMarkdown } from "@/components/RenderMarkdown";
 
@@ -35,6 +37,7 @@ interface BlogPost {
   is_published: boolean;
   created_at: string;
   updated_at: string;
+  cover_image_url?: string;
 }
 
 const emptyPost: Omit<BlogPost, "id" | "created_at" | "updated_at"> = {
@@ -59,6 +62,42 @@ export default function AdminBlogPage() {
   const [saving, setSaving] = useState(false);
   const [tagsInput, setTagsInput] = useState("");
   const [showPreview, setShowPreview] = useState(false);
+  const [canvaConnected, setCanvaConnected] = useState<boolean | null>(null);
+  const [generatingCover, setGeneratingCover] = useState<string | null>(null);
+  const [coverStyle, setCoverStyle] = useState<Record<string, string>>({});
+
+  const checkCanvaStatus = () => {
+    adminFetch("/api/admin/blog/generate-cover")
+      .then((r) => r.json())
+      .then((d) => setCanvaConnected(d.connected ?? false))
+      .catch(() => setCanvaConnected(false));
+  };
+
+  const generateCover = async (postId: string) => {
+    setGeneratingCover(postId);
+    setError("");
+    try {
+      const style = coverStyle[postId] || "A";
+      const res = await adminFetch("/api/admin/blog/generate-cover", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ postId, templateStyle: style }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setPosts((prev) =>
+        prev.map((p) =>
+          p.id === postId ? { ...p, cover_image_url: data.coverUrl } : p
+        )
+      );
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : "Błąd generowania okładki"
+      );
+    } finally {
+      setGeneratingCover(null);
+    }
+  };
 
   const fetchPosts = () => {
     setLoading(true);
@@ -71,6 +110,7 @@ export default function AdminBlogPage() {
 
   useEffect(() => {
     fetchPosts();
+    checkCanvaStatus();
   }, []);
 
   const startCreate = () => {
@@ -192,7 +232,24 @@ export default function AdminBlogPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Blog ({posts.length})</h1>
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl font-bold">Blog ({posts.length})</h1>
+          {canvaConnected !== null && (
+            canvaConnected ? (
+              <Badge className="text-xs bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400 gap-1">
+                <Link2 className="h-3 w-3" />
+                Canva
+              </Badge>
+            ) : (
+              <a href="/api/canva/connect" target="_blank" rel="noopener noreferrer">
+                <Badge variant="outline" className="text-xs gap-1 cursor-pointer hover:bg-muted">
+                  <Image className="h-3 w-3" />
+                  Połącz Canva
+                </Badge>
+              </a>
+            )
+          )}
+        </div>
         {!isEditorOpen && (
           <Button onClick={startCreate} className="gap-2" size="sm">
             <Plus className="h-4 w-4" />
@@ -362,6 +419,18 @@ export default function AdminBlogPage() {
           <Card key={post.id} className="hover:shadow-sm transition-shadow">
             <CardContent className="py-4">
               <div className="flex items-center gap-4">
+                {/* Cover thumbnail */}
+                <div className="shrink-0 w-16 h-10 rounded overflow-hidden bg-muted flex items-center justify-center">
+                  {post.cover_image_url ? (
+                    <img
+                      src={post.cover_image_url}
+                      alt=""
+                      className="w-full h-full object-cover"
+                    />
+                  ) : (
+                    <Image className="h-4 w-4 text-muted-foreground/40" />
+                  )}
+                </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <p className="font-medium text-sm truncate">
@@ -394,6 +463,41 @@ export default function AdminBlogPage() {
                   </div>
                 </div>
                 <div className="flex items-center gap-1 shrink-0">
+                  {/* Cover generation */}
+                  {canvaConnected && (
+                    <div className="flex items-center gap-1">
+                      <select
+                        className="h-8 text-xs rounded-md border border-input bg-background px-1.5"
+                        value={coverStyle[post.id] || "A"}
+                        onChange={(e) =>
+                          setCoverStyle((s) => ({
+                            ...s,
+                            [post.id]: e.target.value,
+                          }))
+                        }
+                        aria-label="Styl okładki"
+                      >
+                        <option value="A">Styl A</option>
+                        <option value="B">Styl B</option>
+                      </select>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => generateCover(post.id)}
+                        disabled={generatingCover === post.id}
+                        aria-label={post.cover_image_url ? "Regeneruj okładkę" : "Generuj okładkę"}
+                      >
+                        {generatingCover === post.id ? (
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                        ) : post.cover_image_url ? (
+                          <RefreshCw className="h-4 w-4" />
+                        ) : (
+                          <Image className="h-4 w-4" />
+                        )}
+                      </Button>
+                    </div>
+                  )}
                   <Button
                     variant="ghost"
                     size="icon"

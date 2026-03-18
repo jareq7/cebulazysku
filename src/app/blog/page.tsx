@@ -37,6 +37,7 @@ export default async function BlogPage() {
         publishedAt: p.published_at,
         readingTime: p.reading_time,
         tags: p.tags,
+        coverImageUrl: p.cover_image_url,
       }))
     : staticPosts.map((p) => ({
         slug: p.slug,
@@ -45,6 +46,7 @@ export default async function BlogPage() {
         publishedAt: p.publishedAt,
         readingTime: p.readingTime,
         tags: p.tags,
+        coverImageUrl: undefined as string | undefined,
       }));
 
   return (
@@ -69,7 +71,19 @@ export default async function BlogPage() {
       ) : (
         <div className="space-y-6">
           {posts.map((post) => (
-            <Card key={post.slug} className="group hover:shadow-md transition-shadow">
+            <Card key={post.slug} className="group hover:shadow-md transition-shadow overflow-hidden">
+              {post.coverImageUrl && (
+                <Link href={`/blog/${post.slug}`}>
+                  <img
+                    src={post.coverImageUrl}
+                    alt={post.title}
+                    width={800}
+                    height={450}
+                    loading="lazy"
+                    className="w-full h-48 sm:h-56 object-cover group-hover:scale-[1.02] transition-transform duration-300"
+                  />
+                </Link>
+              )}
               <CardHeader className="pb-2">
                 <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
                   <time dateTime={post.publishedAt}>

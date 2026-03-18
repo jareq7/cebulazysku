@@ -53,6 +53,7 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 38 | [Admin Panel v2](./38-admin-panel-v2.md) | Edytor warunków, logi AI, konwersje, bulk actions, tracker preview, markdown preview |
 | 39 | [AI Verification Layer](./39-ai-verification.md) | Weryfikacja AI warunków parsowanych regexem |
 | 40 | [Analityka GTM i Consent](./40-analytics-gtm.md) | GTM, DataLayer, Consent Mode v2, Enhanced Conversions |
+| 41 | [Canva Integration](./41-canva-integration.md) | Canva Connect API, okładki bloga, OAuth, Autofill, Export |
 
 ---
 
@@ -86,6 +87,8 @@ Wyniki analiz przeprowadzonych przez Gemini CLI w obszarze optymalizacji i rozwo
 | Video Ads | [prd-video-ads.md](../tasks/prd-video-ads.md) | [tasks-video-ads.md](../tasks/tasks-video-ads.md) | ⚠️ 90% |
 | Admin Panel v2 | [prd-admin-panel-v2.md](../tasks/prd-admin-panel-v2.md) | [tasks-admin-panel-v2.md](../tasks/tasks-admin-panel-v2.md) | ✅ Done |
 | Analytics | [prd-analytics.md](../tasks/prd-analytics.md) | [tasks-analytics.md](../tasks/tasks-analytics.md) | ✅ Done |
+| Canva Integration | [prd-canva-integration.md](../tasks/prd-canva-integration.md) | [tasks-canva-integration.md](../tasks/tasks-canva-integration.md) | 🔄 In Progress |
+| Multi-source Affiliates | [prd-multi-source-affiliates.md](../tasks/prd-multi-source-affiliates.md) | — | 📋 PRD Ready |
 
 ---
 

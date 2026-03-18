@@ -44,17 +44,7 @@ Ten plik to **tablica koordynacyjna** między workerami — NIE zastępuje flow 
 
 ## Backlog — Gemini (priorytet od góry)
 
-- [ ] **🔴 Canva Connect API — deep research** — Jarek ma Canva Pro. Zbadaj Canva Connect API (https://www.canva.dev/docs/connect/). Konkretnie:
-  1. Jak programmatycznie tworzyć designy z szablonów (Autofill API)?
-  2. Czy można podmienić tekst/obrazki w template i wyeksportować do PNG/JPG?
-  3. Jak wygląda auth flow (OAuth2)?
-  4. Jakie są limity (rate limits, quota)?
-  5. Czy jest API do publikacji na social media (Content Publishing)?
-  6. Przykłady zastosowań: blog covers, social media posty per oferta, bannery reklamowe
-  7. Porównanie z alternatywami: @vercel/og, Midjourney, Satori
-  Output: `research/canva-connect-api-research.md` — OBSZERNY (min. 1500 słów)
 - [ ] **🟡 Conversand — manual affiliate links** — zaloguj się do panelu Conversand (conversand.com), wygeneruj tracking linki dla kluczowych ofert bankowych PL (BNP Paribas, Pekao, Millennium, VeloBank, mBank, Citi). Zapisz linki do `research/conversand-tracking-links.md` z formatem: nazwa oferty, stawka CPS, tracking URL
-- [ ] **🟡 TradeDoubler docs scrape** — dokumentacja API jest SPA, WebFetch nie działa. Zaloguj się do panelu TradeDoubler, zrób screenshoty/opis: jak wygląda lista programów, jak generować tracking linki, jakie dane są dostępne. Output: `research/tradedoubler-panel-overview.md`
 
 ## Backlog — Claude Code (priorytet od góry)
 
@@ -74,6 +64,8 @@ Ten plik to **tablica koordynacyjna** między workerami — NIE zastępuje flow 
 
 | Data | Zadanie | Worker | Commit |
 |------|---------|--------|--------|
+| 2026-03-18 | TradeDoubler panel overview & API research | Gemini | — |
+| 2026-03-18 | Canva Connect API — rozszerzony research (Enterprise vs Pro, polling, asset limits) | Gemini | — |
 | 2026-03-17 | TikTok Viral Video Automation — deep research (2000+ słów) | Gemini | — |
 | 2026-03-17 | Blog cover images strategy — Midjourney formula | Gemini | — |
 | 2026-03-17 | Blog — 6 artykułów zaimportowanych do Supabase (direct REST API) | Claude Code | `63a3f10` |

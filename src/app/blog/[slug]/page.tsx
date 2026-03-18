@@ -32,6 +32,8 @@ export async function generateMetadata({
 
   const publishedAt = dbPost ? dbPost.published_at : (staticPost?.publishedAt || "");
 
+  const coverImage = dbPost?.cover_image_url;
+
   return {
     title: post.title,
     description: post.excerpt,
@@ -41,6 +43,7 @@ export async function generateMetadata({
       type: "article",
       locale: "pl_PL",
       publishedTime: publishedAt,
+      ...(coverImage ? { images: [{ url: coverImage, width: 1200, height: 675 }] } : {}),
     },
     alternates: {
       canonical: `https://cebulazysku.pl/blog/${post.slug}`,
@@ -69,6 +72,7 @@ export default async function BlogPostPage({
         publishedAt: dbPost.published_at,
         readingTime: dbPost.reading_time,
         tags: dbPost.tags,
+        coverImageUrl: dbPost.cover_image_url,
       }
     : staticPost
     ? {
@@ -80,6 +84,7 @@ export default async function BlogPostPage({
         publishedAt: staticPost.publishedAt,
         readingTime: staticPost.readingTime,
         tags: staticPost.tags,
+        coverImageUrl: undefined as string | undefined,
       }
     : null;
 
@@ -148,6 +153,18 @@ export default async function BlogPostPage({
       </nav>
 
       <article>
+        {post.coverImageUrl && (
+          <div className="mb-8 -mx-4 sm:-mx-6 lg:-mx-8">
+            <img
+              src={post.coverImageUrl}
+              alt={post.title}
+              width={1200}
+              height={675}
+              className="w-full rounded-lg object-cover max-h-80"
+            />
+          </div>
+        )}
+
         <header className="mb-8">
           <div className="flex flex-wrap gap-1.5 mb-4">
             {post.tags.map((tag) => (
