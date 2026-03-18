@@ -1,5 +1,5 @@
 // @author Claude Code (claude-opus-4-6) | 2026-03-18
-// Canva OAuth callback — exchanges code for tokens, saves to Supabase
+// Canva OAuth callback — exchanges code for tokens (with PKCE), saves to Supabase
 
 import { NextRequest, NextResponse } from "next/server";
 import { exchangeCode, saveTokens } from "@/lib/canva";
@@ -30,10 +30,18 @@ export async function GET(req: NextRequest) {
     );
   }
 
+  // Get PKCE code_verifier
+  const codeVerifier = req.cookies.get("canva_code_verifier")?.value;
+  if (!codeVerifier) {
+    return NextResponse.redirect(
+      new URL("/admin/blog?canva=error&reason=missing_code_verifier", req.nextUrl.origin)
+    );
+  }
+
   try {
-    // Exchange code for tokens
+    // Exchange code for tokens (with PKCE verifier)
     const redirectUri = `${req.nextUrl.origin}/api/canva/callback`;
-    const tokens = await exchangeCode(code, redirectUri);
+    const tokens = await exchangeCode(code, redirectUri, codeVerifier);
 
     // Save tokens to Supabase
     await saveTokens(tokens);
@@ -43,8 +51,9 @@ export async function GET(req: NextRequest) {
       new URL("/admin/blog?canva=connected", req.nextUrl.origin)
     );
 
-    // Clear state cookie
+    // Clear cookies
     response.cookies.delete("canva_oauth_state");
+    response.cookies.delete("canva_code_verifier");
 
     return response;
   } catch (err) {

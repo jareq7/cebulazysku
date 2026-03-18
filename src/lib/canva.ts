@@ -70,20 +70,47 @@ const SCOPES = [
   "profile:read",
 ].join(" ");
 
-export function getAuthUrl(redirectUri: string, state: string): string {
+/**
+ * Generate PKCE code_verifier and code_challenge (S256).
+ */
+export function generatePKCE(): {
+  codeVerifier: string;
+  codeChallenge: string;
+} {
+  const { randomBytes, createHash } = require("crypto") as typeof import("crypto");
+  const codeVerifier = randomBytes(32)
+    .toString("base64url")
+    .replace(/[^a-zA-Z0-9\-._~]/g, "")
+    .slice(0, 128);
+
+  const codeChallenge = createHash("sha256")
+    .update(codeVerifier)
+    .digest("base64url");
+
+  return { codeVerifier, codeChallenge };
+}
+
+export function getAuthUrl(
+  redirectUri: string,
+  state: string,
+  codeChallenge: string
+): string {
   const params = new URLSearchParams({
     response_type: "code",
     client_id: CANVA_CLIENT_ID,
     scope: SCOPES,
     redirect_uri: redirectUri,
     state,
+    code_challenge_method: "s256",
+    code_challenge: codeChallenge,
   });
   return `${CANVA_AUTH_BASE}/authorize?${params.toString()}`;
 }
 
 export async function exchangeCode(
   code: string,
-  redirectUri: string
+  redirectUri: string,
+  codeVerifier: string
 ): Promise<TokenResponse> {
   const basicAuth = Buffer.from(
     `${CANVA_CLIENT_ID}:${CANVA_CLIENT_SECRET}`
@@ -99,6 +126,7 @@ export async function exchangeCode(
       grant_type: "authorization_code",
       code,
       redirect_uri: redirectUri,
+      code_verifier: codeVerifier,
     }),
   });
 
