@@ -70,9 +70,24 @@ export default async function RankingPage() {
     ],
   };
 
+  const itemListJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "Ranking najlepszych promocji bankowych 2026",
+    "description": "Zestawienie aktualnych ofert kont osobistych z premią pieniężną.",
+    "numberOfItems": sorted.length,
+    "itemListElement": sorted.map((offer, index) => ({
+      "@type": "ListItem",
+      "position": index + 1,
+      "url": `https://cebulazysku.pl/oferta/${offer.slug}`,
+      "name": `${offer.bankName} - ${offer.reward} zł premii`
+    }))
+  };
+
   return (
     <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
       <JsonLd data={breadcrumbJsonLd} />
+      <JsonLd data={itemListJsonLd} />
 
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6">

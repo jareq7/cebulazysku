@@ -31,8 +31,8 @@ export async function generateMetadata({
   if (!post) return {};
 
   const publishedAt = dbPost ? dbPost.published_at : (staticPost?.publishedAt || "");
-
   const coverImage = dbPost?.cover_image_url;
+  const ogImageUrl = `https://cebulazysku.pl/api/og?type=blog&title=${encodeURIComponent(post.title)}&category=${encodeURIComponent(post.tags[0] || 'Poradnik')}`;
 
   return {
     title: post.title,
@@ -43,7 +43,14 @@ export async function generateMetadata({
       type: "article",
       locale: "pl_PL",
       publishedTime: publishedAt,
-      ...(coverImage ? { images: [{ url: coverImage, width: 1200, height: 675 }] } : {}),
+      images: [
+        {
+          url: coverImage || ogImageUrl,
+          width: 1200,
+          height: 630,
+          alt: post.title,
+        },
+      ],
     },
     alternates: {
       canonical: `https://cebulazysku.pl/blog/${post.slug}`,

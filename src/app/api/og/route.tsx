@@ -37,6 +37,30 @@ export async function GET(request: NextRequest) {
     // Kolory i style bazowe (zgodne z brandem emerald)
     const bgGradient = 'linear-gradient(135deg, #064e3b 0%, #047857 50%, #10b981 100%)';
     const darkGradient = 'linear-gradient(135deg, #0f172a 0%, #064e3b 100%)';
+
+    // Próba załadowania fontu (opcjonalnie, fallback do systemowych)
+    let fontData;
+    try {
+      fontData = await loadGoogleFont('Inter', title || 'CebulaZysku');
+    } catch (e) {
+      console.warn('Failed to load Google Font, falling back to system fonts');
+    }
+    
+    const imageOptions: any = {
+      width: 1200,
+      height: 630,
+    };
+
+    if (fontData) {
+      imageOptions.fonts = [
+        {
+          name: 'Inter',
+          data: fontData,
+          style: 'normal',
+          weight: 700,
+        },
+      ];
+    }
     
     // --------------------------------------------------------
     // Szablon A: Oferta Bankowa (Offer)
@@ -55,7 +79,7 @@ export async function GET(request: NextRequest) {
               justifyContent: 'center',
               alignItems: 'center',
               color: 'white',
-              fontFamily: 'sans-serif',
+              fontFamily: fontData ? 'Inter' : 'sans-serif',
               textAlign: 'center',
             }}
           >
@@ -101,7 +125,7 @@ export async function GET(request: NextRequest) {
             </div>
           </div>
         ),
-        { width: 1200, height: 630 }
+        imageOptions
       );
     }
 
@@ -121,7 +145,7 @@ export async function GET(request: NextRequest) {
               padding: '80px',
               justifyContent: 'space-between',
               color: 'white',
-              fontFamily: 'sans-serif',
+              fontFamily: fontData ? 'Inter' : 'sans-serif',
             }}
           >
             <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -176,7 +200,7 @@ export async function GET(request: NextRequest) {
             </div>
           </div>
         ),
-        { width: 1200, height: 630 }
+        imageOptions
       );
     }
 
@@ -196,7 +220,7 @@ export async function GET(request: NextRequest) {
             justifyContent: 'center',
             alignItems: 'center',
             color: 'white',
-            fontFamily: 'sans-serif',
+            fontFamily: fontData ? 'Inter' : 'sans-serif',
             textAlign: 'center',
           }}
         >
@@ -216,7 +240,7 @@ export async function GET(request: NextRequest) {
           </div>
         </div>
       ),
-      { width: 1200, height: 630 }
+      imageOptions
     );
   } catch (e: any) {
     console.error(e);
