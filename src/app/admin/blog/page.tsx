@@ -241,7 +241,14 @@ export default function AdminBlogPage() {
                 Canva
               </Badge>
             ) : (
-              <a href="/api/canva/connect" target="_blank" rel="noopener noreferrer">
+              <a
+                href="#"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const key = sessionStorage.getItem("admin_password") || "";
+                  window.open(`/api/canva/connect?key=${encodeURIComponent(key)}`, "_blank");
+                }}
+              >
                 <Badge variant="outline" className="text-xs gap-1 cursor-pointer hover:bg-muted">
                   <Image className="h-3 w-3" />
                   Połącz Canva
