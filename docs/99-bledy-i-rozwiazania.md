@@ -424,3 +424,33 @@ Szablony: `create-prd.md` i `generate-tasks.md` w rootcie projektu.
 **Rozwiązanie:** Unpublish artykułu (is_published=false) do czasu aż funkcjonalność kart kredytowych zostanie dodana.
 
 **Jak unikać:** Przed publikacją bloga weryfikuj: czy strona FAKTYCZNIE obsługuje to co opisuje artykuł? Nie pisz o przyszłych feature'ach jak o istniejących.
+
+---
+
+## 35. Canva OAuth wymaga PKCE (code_challenge)
+
+**Problem:** Pierwsza implementacja Canva OAuth nie zawierała PKCE (Proof Key for Code Exchange). Canva wymaga `code_challenge_method=s256` i `code_challenge` w authorization URL oraz `code_verifier` przy wymianie kodu na tokeny. Bez tego autoryzacja nie mogła się zakończyć.
+
+**Rozwiązanie:** Dodano `generatePKCE()` w `canva.ts` (SHA-256 hash, base64url), `code_challenge` do authorization URL, `code_verifier` zapisywany w httpOnly cookie i przekazywany do `exchangeCode()`.
+
+**Jak unikać:** Sprawdzaj w dokumentacji OAuth providera czy wymaga PKCE. Większość nowoczesnych API (Canva, Google, GitHub) coraz częściej wymaga S256 PKCE nawet dla server-side flows.
+
+---
+
+## 36. Supabase migracje — `supabase db push` kontra stare migracje
+
+**Problem:** `supabase db push` chciał zaaplikować wszystkie lokalne migracje (001-022), ale 001-021 już istniały w produkcyjnej bazie. Starsze migracje zawierały CREATE TABLE + CREATE POLICY, a polisy już istniały → błąd `policy already exists`.
+
+**Rozwiązanie:** Użyto `supabase migration repair <version> --status applied` na wszystkich starych migracjach (001-021), potem `supabase db push` zaaplikował tylko nową 022.
+
+**Jak unikać:** Przy pierwszym podłączeniu Supabase CLI do istniejącego projektu — od razu `migration repair` wszystkich istniejących migracji jako `applied`. Lub trzymaj migration history zsynchronizowaną od początku.
+
+---
+
+## 37. Admin panel — przycisk OAuth bez auth credentials
+
+**Problem:** Przycisk "Połącz Canva" w admin panelu był prostym `<a href="/api/canva/connect">` — nie przekazywał hasła admina. Endpoint zwracał 401 Unauthorized bo nie widział `x-admin-password` headera ani `?key=` parametru.
+
+**Rozwiązanie:** Zmieniono link na `onClick` handler, który czyta hasło z `sessionStorage.getItem("admin_password")` i dodaje jako `?key=` query param.
+
+**Jak unikać:** Endpointy wymagające auth, które otwierają się w nowej karcie (redirect flow, OAuth), nie mogą używać headerów — muszą akceptować auth w query paramie. Zawsze testuj flow z poziomu UI, nie tylko curl.

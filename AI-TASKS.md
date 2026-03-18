@@ -64,6 +64,8 @@ Ten plik to **tablica koordynacyjna** między workerami — NIE zastępuje flow 
 
 | Data | Zadanie | Worker | Commit |
 |------|---------|--------|--------|
+| 2026-03-18 | Canva Connect API — pełna integracja (OAuth+PKCE, Autofill, Export, Storage, admin UI, blog covers) | Claude Code | `315f78b`→`2ad3da8` |
+| 2026-03-18 | Supabase migration 022 (canva_tokens + cover_image_url) + blog-covers bucket | Claude Code | — (infra) |
 | 2026-03-18 | TradeDoubler panel overview & API research | Gemini | — |
 | 2026-03-18 | Canva Connect API — rozszerzony research (Enterprise vs Pro, polling, asset limits) | Gemini | — |
 | 2026-03-17 | TikTok Viral Video Automation — deep research (2000+ słów) | Gemini | — |
