@@ -7,6 +7,8 @@ import { Footer } from "@/components/Footer";
 import { TrackingPixels, GTMNoScript } from "@/components/TrackingPixels";
 import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { InstallPrompt } from "@/components/InstallPrompt";
+import { Toaster } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -75,11 +77,14 @@ export default function RootLayout({
         <ServiceWorkerRegister />
         <InstallPrompt />
         <Providers>
-          <div className="flex min-h-screen flex-col">
-            <Navbar />
-            <main id="main-content" className="flex-1">{children}</main>
-            <Footer />
-          </div>
+          <TooltipProvider>
+            <div className="flex min-h-screen flex-col">
+              <Navbar />
+              <main id="main-content" className="flex-1">{children}</main>
+              <Footer />
+            </div>
+            <Toaster richColors position="bottom-right" />
+          </TooltipProvider>
         </Providers>
       </body>
     </html>

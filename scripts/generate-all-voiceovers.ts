@@ -102,61 +102,65 @@ async function generateTTS(text: string) {
   return Buffer.from(arrayBuffer);
 }
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
-const { data: offers, error } = await supabase
-  .from('offers')
-  .select('slug, bank_name, reward, conditions, pros')
-  .eq('is_active', true)
-  .gt('reward', 0);
+async function main() {
+  const supabase = createClient(SUPABASE_URL!, SUPABASE_KEY!);
+  const { data: offers, error } = await supabase
+    .from('offers')
+    .select('slug, bank_name, reward, conditions, pros')
+    .eq('is_active', true)
+    .gt('reward', 0);
 
-if (error) {
-  console.error('Supabase error:', error);
-  process.exit(1);
-}
-
-const eligible = offers.filter(o => Array.isArray(o.conditions) && o.conditions.length > 0);
-console.log('Found ' + eligible.length + ' eligible offers (with conditions + reward > 0)');
-if (force) console.log('Force mode enabled — will regenerate ALL voiceovers\n');
-
-let generated = 0;
-let skipped = 0;
-let totalChars = 0;
-
-for (const offer of eligible) {
-  const outPath = join(outDir, offer.slug + '.mp3');
-
-  if (!force && existsSync(outPath)) {
-    console.log('⏭ ' + offer.slug + ' — already exists, skipping');
-    skipped++;
-    continue;
+  if (error) {
+    console.error('Supabase error:', error);
+    process.exit(1);
   }
 
-  const script = generateScript(
-    offer.bank_name,
-    offer.reward,
-    offer.conditions,
-    offer.pros || []
-  );
+  const eligible = offers.filter(o => Array.isArray(o.conditions) && o.conditions.length > 0);
+  console.log('Found ' + eligible.length + ' eligible offers (with conditions + reward > 0)');
+  if (force) console.log('Force mode enabled — will regenerate ALL voiceovers\n');
 
-  console.log('\n🎙 ' + offer.slug + ' (' + offer.reward + ' zł)');
-  console.log('  Script: ' + script.length + ' chars');
-  totalChars += script.length;
+  let generated = 0;
+  let skipped = 0;
+  let totalChars = 0;
 
-  try {
-    const buffer = await generateTTS(script);
-    writeFileSync(outPath, buffer);
-    console.log('  ✓ Saved (' + (buffer.length / 1024).toFixed(1) + ' KB)');
-    generated++;
+  for (const offer of eligible) {
+    const outPath = join(outDir, offer.slug + '.mp3');
 
-    if (generated < eligible.length) {
-      await new Promise(r => setTimeout(r, 2000));
+    if (!force && existsSync(outPath)) {
+      console.log('⏭ ' + offer.slug + ' — already exists, skipping');
+      skipped++;
+      continue;
     }
-  } catch (err) {
-    console.error('  ✗ Error: ' + err.message);
-    console.log('  Stopping to avoid burning quota.');
-    break;
+
+    const script = generateScript(
+      offer.bank_name,
+      offer.reward,
+      offer.conditions,
+      offer.pros || []
+    );
+
+    console.log('\n🎙 ' + offer.slug + ' (' + offer.reward + ' zł)');
+    console.log('  Script: ' + script.length + ' chars');
+    totalChars += script.length;
+
+    try {
+      const buffer = await generateTTS(script);
+      writeFileSync(outPath, buffer);
+      console.log('  ✓ Saved (' + (buffer.length / 1024).toFixed(1) + ' KB)');
+      generated++;
+
+      if (generated < eligible.length) {
+        await new Promise(r => setTimeout(r, 2000));
+      }
+    } catch (err: any) {
+      console.error('  ✗ Error: ' + err.message);
+      console.log('  Stopping to avoid burning quota.');
+      break;
+    }
   }
+
+  console.log('\n--- Done ---');
+  console.log('Generated: ' + generated + ', Skipped: ' + skipped + ', Total chars used: ' + totalChars);
 }
 
-console.log('\n--- Done ---');
-console.log('Generated: ' + generated + ', Skipped: ' + skipped + ', Total chars used: ' + totalChars);
+main();

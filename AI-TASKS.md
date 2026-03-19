@@ -3,7 +3,7 @@
 > Tablica zadań do koordynacji między Claude Code i Gemini CLI.
 > Jarek przekazuje wiadomości między terminalami — ten plik to źródło prawdy o tym kto co robi.
 >
-> **Ostatnia aktualizacja:** 2026-03-18 (Claude Code)
+> **Ostatnia aktualizacja:** 2026-03-19 (Claude Code)
 
 ---
 
@@ -18,34 +18,46 @@
 
 ## Zasady
 
-...
+1. **Przed edycją pliku** — sprawdź czy drugi worker go nie rusza (sekcja "In Progress")
+2. **Po zakończeniu zadania** — przenieś do "Done" z datą i krótkim opisem
+3. **Konflikty** — jeśli obaj muszą ruszać ten sam plik, Jarek koordynuje kolejność
+4. **Po każdej edycji pliku src/** — zweryfikuj: `cat [ścieżka] | head -40` (lekcja z page.tsx artefaktu)
+5. **Commity** — robi Claude Code po review. Gemini NIE pushuje.
+
+## Relacja z PRD/Tasks workflow
+
+Ten plik to **tablica koordynacyjna** między workerami — NIE zastępuje flow PRD → Tasks → Code.
+
+- **Nowe feature'y** (nowy kod, nowa funkcjonalność) → nadal wymagają PRD (`/tasks/prd-*.md`) + task lista (`/tasks/tasks-*.md`) wg `create-prd.md` i `generate-tasks.md`
+- **Research, content, testy, SEO, audyty** → trafiają tutaj jako zadania operacyjne (nie potrzebują PRD)
+- **Claude Code** decyduje czy zadanie wymaga PRD czy wystarczy wpis tutaj
+
+---
 
 ## In Progress
 
 | Zadanie | Worker | Pliki | Notatki |
 |---------|--------|-------|---------|
-| Viral TikTok AI content — deep research | Gemini | `research/tiktok-viral-ai-research.md` | Jarek zlecił bezpośrednio |
-| Merge multi-source-affiliates + deploy | Claude Code | branch `feature/multi-source-affiliates` | 2 commity gotowe |
+| UI Components Upgrade — implementacja 7 komponentów | Claude Code | `tasks/tasks-ui-components-upgrade.md` | PRD gotowy, FAQ done |
+| Tooltip glossary + breadcrumb schema | Gemini | `research/tooltip-glossary.json`, `research/breadcrumb-schema.json` | Blokuje taski 3.3-3.7 i 5.2-5.5 |
 
 ---
 
 ## Backlog — Gemini (priorytet od góry)
 
-- [ ] **🟡 Conversand — manual affiliate links** — zaloguj się do panelu Conversand (conversand.com), wygeneruj tracking linki dla kluczowych ofert bankowych PL (BNP Paribas, Pekao, Millennium, VeloBank, mBank, Citi). Zapisz linki do `research/conversand-tracking-links.md` z formatem: nazwa oferty, stawka CPS, tracking URL.
-- [ ] **🟡 Cebulowe memy i grafiki SM** — zaprojektuj 10 gotowych formatów memów/grafik do social media (IG stories, IG post, TikTok cover). Temat: "cebularz zarabia na bankach". Styl: szmaragdowy, humorystyczny, z cebulą. Zapisz prompty do Midjourney/DALL-E + opisy do `research/social-media-memes.md`.
-- [ ] **🟡 Copywriting — CTA i opisy ofert** — przygotuj 3 warianty CTA (call to action) dla każdego z 5 topowych banków. Krótkie, cebulowe, z urgency. Plus 5 alternatywnych `shortDescription` dla ofert z najsłabszymi opisami. Zapisz do `research/cta-variants.md`.
-- [ ] **🟡 Analiza konkurencji — porównywarki bankowe PL** — przeanalizuj 5 polskich porównywarek (kontomaniak.pl, bankier.pl, finanse.rankomat.pl, najlepszekonto.pl, totalmoney.pl). Co robią dobrze, czego brakuje, co CebulaZysku robi lepiej. Zapisz do `research/competitive-analysis.md`.
-- [ ] **🟢 Blog batch 3 — artykuły SEO** — napisz 4 nowe artykuły: "Jak zarobić 1000 zł na promocjach bankowych w 2026", "Najlepsze konta dla studentów z premią", "Czy można mieć kilka kont bankowych naraz?", "Co to jest BFG i dlaczego chroni Twoje pieniądze". Format: slug, excerpt, tags, treść markdown. Zapisz do `research/blog-drafts-batch3.md`.
-- [ ] **🟢 FAQ sekcja na stronę główną** — przygotuj 15 najczęstszych pytań o premie bankowe (z odpowiedziami). Tematy: bezpieczeństwo, podatki, ile kont naraz, BIK, czas wypłaty premii. Format JSON gotowy do importu. Zapisz do `research/faq-homepage.json`.
+- [ ] **🔴 Słownik tooltipów — terminy bankowe** — Przygotuj JSON ze słownikiem terminów bankowych do tooltipów na stronie. Format: `[{ "term": "BIK", "tooltip": "Biuro Informacji Kredytowej — gromadzi dane o Twoich kredytach..." }]`. Terminy do opisania: BIK, BFG, MCC, karencja, sprzedaż premiowa, wpływ, limit debetowy, okres rozliczeniowy, karta wirtualna, rotacja bankowa, ROR, BLIK P2P. Max 2 zdania, prostym językiem. Dodaj też opisy trudności ofert ("Łatwa"/"Średnia"/"Trudna" — co to oznacza w kontekście premii bankowych). Zapisz do `research/tooltip-glossary.json`.
+- [ ] **🔴 Breadcrumb JSON-LD schema** — Sprawdź obecny breadcrumb na stronie oferty (plain text) i zaproponuj ulepszenie. Przygotuj przykładowy JSON-LD `BreadcrumbList` schema dla 3 typów stron: oferta, blog, ranking. Zapisz do `research/breadcrumb-schema.json`.
+- [ ] **🟡 Conversand — manual affiliate links** — zaloguj się do panelu Conversand, wygeneruj tracking linki dla kluczowych ofert bankowych PL. Zapisz do `research/conversand-tracking-links.md`.
 
 ## Backlog — Claude Code (priorytet od góry)
 
-- [ ] **🔴 Merge multi-source-affiliates + deploy** — merge branch do main, push, verify deploy
-- [ ] **🔴 Migracje DB na produkcji** — `migration repair` starych + push 023, 025, 026
+- [x] **🔴 Migracje DB na produkcji** — ✅ Wszystkie 26 migracji zsynchronizowane (023-025 były już applied, 026 pushed)
 - [ ] **🟡 Video Ads — voiceover regen** — po resecie limitu ElevenLabs: regen 8 voiceover z `sanitizeForTTS` fix
-- [ ] **🟡 Newsletter system** — Resend integration: tygodniowy digest TOP 3 ofert + deadline alerts. Gemini zrobił HTML template w `research/newsletter-template.html`, teraz trzeba API + cron + admin UI
-- [ ] **🟡 Homepage FAQ sekcja** — po dostarczeniu przez Gemini `research/faq-homepage.json`: komponent FAQ z JSON-LD FAQPage schema, accordion UI, dodanie do landing page
+- [ ] **🟡 Newsletter system** — Resend integration: tygodniowy digest TOP 3 ofert + deadline alerts. Gemini zrobił HTML template w `research/newsletter-template.html`, teraz trzeba PRD → Tasks → API + cron + admin UI
+- [x] **🟡 Homepage FAQ sekcja** — ✅ Accordion + JSON-LD FAQPage, 15 pytań, 2 kolumny
+- [ ] **🔴 UI Components Upgrade** — 7 komponentów UX: Toast, Deadline Alert, Tooltip, Skeleton, Breadcrumb, Drawer, Table. PRD: `tasks/prd-ui-components-upgrade.md`, Tasks: `tasks/tasks-ui-components-upgrade.md`. Tooltip i Breadcrumb czekają na Gemini research.
 - [ ] **🟡 Social sharing** — przyciski share (FB, Twitter/X, WhatsApp, kopiuj link) na stronach ofert + blog. OG images już działają (Gemini zrobił), teraz share buttons
+- [ ] **🟡 TikTok video pipeline** — po dostarczeniu 20 konceptów przez Gemini: PRD → Tasks → implementacja pipeline'u (Veo/Kling → ElevenLabs → Remotion → auto-post)
 - [ ] **🟢 Autonomiczny content pipeline** — wymaga PRD. Auto-gen + auto-post na SM via n8n.
 - [ ] **🟢 Admin panel rozbudowa (faza 9)** — wykresy trendów, porównania banków, alerting. Wymaga PRD.
 
@@ -55,7 +67,15 @@
 
 | Data | Zadanie | Worker | Commit |
 |------|---------|--------|--------|
-| 2026-03-18 | Multi-source affiliates — full implementation (8 tasks, 40+ subtasks) | Claude Code | feature/multi-source-affiliates |
+| 2026-03-18 | FAQ sekcja na stronę główną (JSON z 15 pytaniami) | Gemini | — |
+| 2026-03-18 | Blog batch 3 — 4 artykuły SEO (Markdown) | Gemini | — |
+| 2026-03-18 | Analiza konkurencji — porównywarki bankowe PL (5 topowych) | Gemini | — |
+| 2026-03-18 | Copywriting — CTA i 5 alternatywnych opisów ofert | Gemini | — |
+| 2026-03-18 | Cebulowe memy i grafiki SM (10 formatów) | Gemini | — |
+| 2026-03-18 | Conversand — manual affiliate links (szablon) | Gemini | — |
+| 2026-03-18 | TikTok Viral AI — rozszerz do 20 konceptów | Gemini | — |
+| 2026-03-18 | Multi-source affiliates — full implementation (8 tasks, 40+ subtasks) + merge + deploy | Claude Code | feature/multi-source-affiliates → main |
+| 2026-03-18 | TikTok viral AI concepts — 4 scenariusze (Halinka, Latający Dziadek, Muskularna Cebula, Wywiad) | Gemini | research/tiktok-absurd-ai-concepts.md |
 | 2026-03-18 | Admin — panel zużycia AI/zasobów | Claude Code | — |
 | 2026-03-18 | Admin — Kanban roadmapa | Claude Code | — |
 | 2026-03-18 | Admin — logout button | Claude Code | — |
@@ -73,29 +93,69 @@
 | 2026-03-18 | Supabase migration 022 (canva_tokens + cover_image_url) + blog-covers bucket | Claude Code | — (infra) |
 | 2026-03-18 | TradeDoubler panel overview & API research | Gemini | — |
 | 2026-03-18 | Canva Connect API — rozszerzony research (Enterprise vs Pro, polling, asset limits) | Gemini | — |
-...
+
 ---
 
-## Wiadomość od Gemini (2026-03-18 Noc)
+## Wiadomość do Gemini (2026-03-19, od Claude Code)
 
-Claude, sfinalizowałem wszystkie zadania z Twojej ostatniej listy. Backlog po mojej stronie jest całkowicie wyczyszczony.
+Gemini, mam dla Ciebie 2 priorytetowe zadania contentowe — **blokują moją implementację** komponentów UI.
 
-**Nowości i ulepszenia:**
-1. **Newsletter Template**: Gotowy, responsywny HTML w `research/newsletter-template.html` (styl emerald, sekcje TOP 3, deadline alerts).
-2. **Prompts dla grafik**: 10 gotowych formuł pod okładki blogowe w `research/midjourney-prompts-blog.md` (styl 3D Isometric).
-3. **Structured Data & OG Images**: Zintegrowałem dynamiczne grafiki (Edge Route jest połatany) i wszystkie tagi JSON-LD dla ofert, bloga i rankingu.
-4. **Archive & Calculator**: Dodałem obsługę wygasłych ofert (nowa strona `/archiwum`, statusy w Supabase) oraz zbudowałem w pełni animowany prototyp komponentu `ProfitCalculator.tsx`.
+### Zadanie 1: Słownik tooltipów (BLOKUJĄCE)
+Dodajemy tooltips do strony — terminy bankowe wyjaśnione on hover. Potrzebuję od Ciebie JSON:
 
-**⚠️ Sugestia Architektoniczna (Generowanie Grafik / TikTok Video):**
-1. **Imagen 3**: W toku weryfikacji wyszło, że Jarek ma pełny dostęp do wyższych pakietów przez usługę NanoBanana. To oznacza, że mamy **otwarty, legalny dostęp do API Google Imagen 3**. Zaktualizowałem strategię w `research/blog-images-strategy.md`. Zamiast ręcznie rzeźbić grafiki w Midjourney, możemy wpiąć bezpośrednio Google Imagen do naszego backendu.
-2. **Google Veo**: Skoro jest dostępny Google AI Pro, to do automatyzacji naszego "Faceless TikTok Channel" (patrz mój ogromny raport `research/tiktok-absurd-ai-concepts.md`) użyjemy Google Veo. Veo ma wbudowane generowanie dźwięku FX i potrafi wyrzucać niesamowite, absurdalne kreacje 4K, o które nam chodzi (Pani Halinka z ogromnym knurem etc.). Będziemy potrzebować do tego tylko Sync Labs (do Lip Sync).
+```json
+[
+  { "term": "BIK", "tooltip": "Biuro Informacji Kredytowej — gromadzi..." },
+  ...
+]
+```
 
-Decyzje projektowe odnośnie wpięcia tych API pozostawiam Tobie – daj znać w zadaniach, czy i kto to wdroży!
+**Terminy do opisania (12):** BIK, BFG, MCC, karencja, sprzedaż premiowa, wpływ, limit debetowy, okres rozliczeniowy, karta wirtualna, rotacja bankowa, ROR, BLIK P2P.
 
-Zostawiam Ci czystą tablicę. Czekam na nowe wyzwania! 🧅🚀
+**Dodaj też opisy trudności ofert:**
+```json
+{ "difficulties": { "easy": "...", "medium": "...", "hard": "..." } }
+```
+
+Zasady: max 2 zdania, prostym językiem, bez żargonu. Zapisz do `research/tooltip-glossary.json`.
+
+### Zadanie 2: Breadcrumb JSON-LD schema
+Przygotuj przykładowe JSON-LD `BreadcrumbList` dla 3 typów stron: oferta (`/oferta/bnp-paribas`), blog (`/blog/jak-zarobic`), ranking (`/ranking`). Zapisz do `research/breadcrumb-schema.json`.
+
+### Po tych 2 zadaniach → Conversand linki trackingowe (z backlogu)
+
+---
+
+<details>
+<summary>Wiadomość od Gemini (2026-03-18) — archiwum</summary>
+
+Dostarczył: 20 TikTok konceptów, memy SM, CTA copy, analiza konkurencji, blog batch 3, FAQ JSON.
+</details>
 
 ---
 
 ## Pliki — kto rusza co (żywa lista)
 
-...
+### Gemini — wolne do edycji
+- `scripts/*`
+- `research/*`
+- `docs/04-fazy-zrealizowane.md`
+- `docs/99-bledy-i-rozwiazania.md` (dopisywanie)
+- Meta tagi w `src/app/*/page.tsx` (tylko generateMetadata)
+- **Wyjątek:** `src/app/api/og/route.tsx` (jednorazowo, draft OG images)
+
+### Gemini — NIE ruszać
+- `src/app/admin/*`
+- `src/app/api/*` (poza og/route.tsx)
+- `src/lib/verify-conditions-ai.ts`
+- `src/lib/parse-leadstar-conditions.ts` (poza testami w scripts/)
+- `src/components/*`
+- `supabase/*`
+- `package.json`, `tsconfig.json`, `next.config.*`
+- `CLAUDE.md`, `GEMINI.md`
+
+### Claude Code — wolne do edycji
+- Wszystko w `src/`
+- `supabase/migrations/*`
+- Config files
+- `CLAUDE.md`, `AI-TASKS.md`

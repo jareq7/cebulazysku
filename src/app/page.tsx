@@ -15,6 +15,8 @@ import {
 } from "lucide-react";
 import { DisclaimerBanner } from "@/components/DisclaimerBanner";
 import { JsonLd } from "@/components/JsonLd";
+import { HomepageFaq } from "@/components/HomepageFaq";
+import { homepageFaq } from "@/data/faq";
 
 export async function generateMetadata(): Promise<Metadata> {
   const totalEarnings = await getTotalPotentialEarnings();
@@ -50,9 +52,23 @@ export default async function Home() {
     inLanguage: "pl-PL",
   };
 
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: homepageFaq.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <>
       <JsonLd data={websiteJsonLd} />
+      <JsonLd data={faqJsonLd} />
 
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-green-50 to-lime-50 dark:from-background dark:via-background dark:to-background">
@@ -238,6 +254,9 @@ export default async function Home() {
           </div>
         </div>
       </section>
+
+      {/* FAQ */}
+      <HomepageFaq />
 
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8 text-center">

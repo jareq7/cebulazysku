@@ -29,6 +29,7 @@ import {
 import { useUserBanks } from "@/context/UserBanksContext";
 import { trackEvent } from "@/lib/analytics";
 import { AnalyticsEvents } from "@/lib/analytics-events";
+import { DeadlineBadge } from "@/components/DeadlineAlert";
 
 const iconMap: Record<ConditionType, React.ReactNode> = {
   transfer: <ArrowRightLeft className="h-3.5 w-3.5" />,
@@ -118,12 +119,13 @@ export function OfferCard({ offer }: { offer: BankOffer }) {
               {getDifficultyLabel(offer.difficulty)}
             </Badge>
           )}
-          {daysLeft !== null && (
+          {daysLeft !== null && daysLeft > 7 && (
             <Badge variant="outline" className="gap-1">
               <Clock className="h-3 w-3" />
               {daysLeft} dni
             </Badge>
           )}
+          {offer.deadline && <DeadlineBadge deadline={offer.deadline} />}
           {offer.monthlyFee === 0 && (
             <Badge variant="outline" className="text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-700">
               Darmowe konto

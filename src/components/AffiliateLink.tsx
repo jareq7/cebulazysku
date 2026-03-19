@@ -5,6 +5,7 @@ import { useCallback } from "react";
 import { trackEvent, getUTM } from "@/lib/analytics";
 import { AnalyticsEvents } from "@/lib/analytics-events";
 import { useAuth } from "@/context/AuthContext";
+import { toast } from "sonner";
 
 interface AffiliateLinkProps {
   href: string;
@@ -68,6 +69,11 @@ export function AffiliateLink({
         keepalive: true,
       });
     }
+
+    toast.success(`Otwieramy stronę ${bankName}`, {
+      description: "Link otwarty w nowej karcie",
+      duration: 3000,
+    });
   }, [offerId, bankName, reward, sourcePage, user]);
 
   return (

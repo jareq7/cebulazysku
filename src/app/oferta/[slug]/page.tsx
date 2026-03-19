@@ -20,6 +20,7 @@ import { OfferVideoPlayer } from "@/components/OfferVideoPlayer";
 import { RenderMarkdown } from "@/components/RenderMarkdown";
 import { TrackViewItem } from "@/components/TrackViewItem";
 import { ExpiredOfferBanner } from "@/components/ExpiredOfferBanner";
+import { DeadlineAlert } from "@/components/DeadlineAlert";
 import { Button } from "@/components/ui/button";
 import {
   Clock,
@@ -197,6 +198,10 @@ export default async function OfferDetailPage({
         itemCategory={offer.difficulty}
         price={offer.reward}
       />
+
+      {offer.deadline && offer.status === "active" && (
+        <DeadlineAlert deadline={offer.deadline} className="mb-4" />
+      )}
 
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-6">

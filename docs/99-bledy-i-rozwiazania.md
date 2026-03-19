@@ -549,3 +549,21 @@ Szablony: `create-prd.md` i `generate-tasks.md` w rootcie projektu.
 **Rozwiązanie:** Przed użyciem 'replace' na dużym bloku kodu, warto wykonać 'read_file' konkretnego zakresu linii, aby skopiować tekst DOKŁADNIE tak, jak widzi go system w danej sekundzie.
 
 **Jak unikać:** Preferuj mniejsze, bardziej precyzyjne zamiany lub używaj 'write_file' dla całych małych komponentów. Zawsze sprawdzaj plik 'cat | head' po operacji.
+
+
+---
+
+## 46. Pułapki terminala - Permission Denied przy pisaniu pythona w bashu
+
+**Problem:** Gdy używałem skryptu python wewnątrz CLI Basha ze znakami specjalnymi takimi jak nawiasy `()` w nazwie pliku, bash przetworzył to jako zagnieżdżoną komendę, wyrzucając błąd .
+
+**Rozwiązanie:** Należy być ekstremalnie ostrożnym pisząc długie polecenia Pythona przez CLI  (lub po prostu unikać tego i używać  API do edycji mniejszych partii tekstu). Nigdy nie używaj znaków mogących zostać zinterpretowanych przez powłokę basha jako polecenie zastępcze (backticks, parenthesis), chyba że są one właściwie i podwójnie wyescapowane.
+
+
+---
+
+## 46. Pułapki terminala - Permission Denied przy pisaniu pythona w bashu
+
+**Problem:** Gdy używałem skryptu python wewnątrz CLI Basha ze znakami specjalnymi takimi jak nawiasy w nazwie pliku, bash przetworzył to jako zagnieżdżoną komendę, wyrzucając błąd Permission denied.
+
+**Rozwiązanie:** Należy być ekstremalnie ostrożnym pisząc długie polecenia Pythona przez CLI (lub po prostu unikać tego i używać write_file API do edycji mniejszych partii tekstu). Nigdy nie używaj znaków mogących zostać zinterpretowanych przez powłokę basha jako polecenie zastępcze (backticks, parenthesis), chyba że są one właściwie i podwójnie wyescapowane.

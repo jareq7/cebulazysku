@@ -1,0 +1,68 @@
+{
+  "offer": {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Strona główna",
+        "item": "https://cebulazysku.pl"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Ranking promocji",
+        "item": "https://cebulazysku.pl/ranking"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "BNP Paribas: Konto Otwarte na Ciebie",
+        "item": "https://cebulazysku.pl/oferta/bnp-paribas"
+      }
+    ]
+  },
+  "blog": {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Strona główna",
+        "item": "https://cebulazysku.pl"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Blog i Poradniki",
+        "item": "https://cebulazysku.pl/blog"
+      },
+      {
+        "@type": "ListItem",
+        "position": 3,
+        "name": "Jak zarobić na bankach w 2026",
+        "item": "https://cebulazysku.pl/blog/jak-zarobic"
+      }
+    ]
+  },
+  "ranking": {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Strona główna",
+        "item": "https://cebulazysku.pl"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Ranking promocji",
+        "item": "https://cebulazysku.pl/ranking"
+      }
+    ]
+  }
+}

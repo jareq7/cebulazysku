@@ -1,0 +1,69 @@
+// @author Claude Code (claude-opus-4-6) | 2026-03-19
+
+export interface FaqItem {
+  question: string;
+  answer: string;
+}
+
+export const homepageFaq: FaqItem[] = [
+  {
+    question: "Czy to jest bezpieczne? Czy banki naprawdę dają pieniądze za darmo?",
+    answer: "Tak, to całkowicie bezpieczne. Banki nie dają pieniędzy \u201eza darmo\u201d \u2013 traktują to jako koszt pozyskania nowego klienta (marketing). Zamiast kupować drogie reklamy w telewizji, wolą zapłacić bezpośrednio Tobie za przetestowanie ich usług. Twoje pieniądze są w 100% bezpieczne i chronione przez Bankowy Fundusz Gwarancyjny (BFG) do kwoty 100 000 euro.",
+  },
+  {
+    question: "Czy muszę płacić podatek od otrzymanej premii?",
+    answer: "W zdecydowanej większości przypadków nie musisz nic robić. Premie za otwarcie konta osobistego (tzw. sprzedaż premiowa do 2000 zł) są ustawowo zwolnione z podatku PIT. Jeśli nagroda przekracza ten próg lub ma inną formę, bank sam odprowadza zryczałtowany podatek (10%), a Ty dostajesz kwotę netto. Nie musisz wpisywać tego do rocznego zeznania podatkowego.",
+  },
+  {
+    question: "Czy mogę mieć kilka kont bankowych jednocześnie?",
+    answer: "Tak, polskie prawo nie nakłada żadnych limitów na liczbę posiadanych kont osobistych. Możesz posiadać 5, 10 lub 20 kont w różnych bankach. Pamiętaj jednak, aby pilnować warunków zwalniających z opłat za prowadzenie konta (np. 3 płatności kartą w miesiącu), w czym bardzo pomaga nasz Tracker.",
+  },
+  {
+    question: "Czy zamykanie konta psuje mi historię w BIK?",
+    answer: "Nie. Konta osobiste (debetowe) w ogóle nie są raportowane do Biura Informacji Kredytowej (BIK), chyba że posiadasz na nich uruchomiony limit debetowy (kredyt w koncie). Samo otwieranie i zamykanie zwykłych rachunków bieżących nie ma żadnego wpływu na Twoją zdolność kredytową.",
+  },
+  {
+    question: "Co to jest okres karencji?",
+    answer: "Okres karencji to czas, przez jaki nie mogłeś posiadać konta w danym banku, aby wziąć udział w nowej promocji jako \u201enowy klient\u201d. Zazwyczaj wynosi on od 12 do 24 miesięcy. Po upływie tego czasu bank \u201ezapomina\u201d o Tobie i możesz ponownie zgarnąć nagrodę powitalną (tzw. rotacja bankowa).",
+  },
+  {
+    question: "Kiedy otrzymam swoją premię?",
+    answer: "Czas wypłaty zależy od konkretnego banku i regulaminu. Większość banków dzieli premię na kilka rat (np. po 100 zł miesięcznie za aktywność) i wypłaca je do 15. lub do końca kolejnego miesiąca następującego po miesiącu, w którym spełniłeś warunki. Dokładny harmonogram znajdziesz zawsze w opisie oferty na naszej stronie.",
+  },
+  {
+    question: "Czy przelew z własnego konta w innym banku liczy się jako \u201ewpływ\u201d?",
+    answer: "Zazwyczaj tak! Jeśli regulamin wymaga \u201ewpływu 1000 zł\u201d, najczęściej możesz po prostu przelać sobie te pieniądze ze swojego konta w innym banku. Co więcej, możesz te pieniądze odesłać z powrotem już następnego dnia. Zawsze jednak sprawdzaj szczegóły oferty, bo niektóre banki wymagają wyraźnie \u201ewpływu z tytułu wynagrodzenia\u201d.",
+  },
+  {
+    question: "Zapomniałem zrobić wymaganych płatności kartą w jednym miesiącu. Czy tracę całą premię?",
+    answer: "To zależy od regulaminu, ale najczęściej tracisz tylko \u201epaczkę\u201d premii przypisaną do tego konkretnego miesiąca (np. przepadnie Ci 50 zł z puli 400 zł). W kolejnych miesiącach nadal możesz zbierać nagrody. By uniknąć takich pomyłek, zalecamy dodawanie ofert do naszego darmowego Trackera.",
+  },
+  {
+    question: "Czy płatność BLIKiem liczy się jako płatność kartą?",
+    answer: "Uwaga na haczyk! Dla systemów bankowych płatność BLIK (np. w internecie) a płatność kartą (np. zbliżeniowo) to dwie różne rzeczy. Jeśli bank wymaga 5 płatności kartą, BLIK tego nie zaliczy. Zawsze czytaj uważnie nasze zestawienia warunków, gdzie jasno to rozróżniamy.",
+  },
+  {
+    question: "Dlaczego CebulaZysku.pl pomaga mi za darmo?",
+    answer: "Działamy w modelu afiliacyjnym. Oznacza to, że jeśli założysz konto, klikając w specjalny link na naszej stronie, bank wypłaci nam drobną prowizję za polecenie klienta. Ciebie to nic nie kosztuje, Ty dostajesz pełną nagrodę, a my dzięki temu możemy utrzymywać portal i rozwijać narzędzia takie jak Tracker.",
+  },
+  {
+    question: "Czy założenie konta online jest trudne?",
+    answer: "Nie, to bardzo proste. Obecnie ponad 90% kont otworzysz bez wychodzenia z domu w 15 minut. Banki weryfikują tożsamość najczęściej za pomocą tzw. metody \u201ena selfie\u201d w aplikacji mobilnej lub poprzez aplikację mObywatel.",
+  },
+  {
+    question: "Czy muszę wyrabiać fizyczną kartę płatniczą?",
+    answer: "Większość promocji wymaga posiadania karty (fizycznej lub wirtualnej) do spełnienia warunku płatności. W wielu bankach karta wirtualna (dodana do Google Pay / Apple Pay) jest dostępna od razu po założeniu konta i wystarcza do realizacji wymagań, dzięki czemu nie musisz czekać na plastik.",
+  },
+  {
+    question: "Co to jest przelew BLIK na telefon i czy liczy się do promocji?",
+    answer: "Przelew BLIK na numer telefonu to szybki transfer gotówki między znajomymi (P2P). Niemal wszystkie banki wykluczają tego typu przelewy z warunków promocyjnych. Aby spełnić warunek płatności, musisz zapłacić BLIKiem za towar lub usługę (np. na Allegro, w sklepie stacjonarnym).",
+  },
+  {
+    question: "Czy mogę zamknąć konto od razu po odebraniu premii?",
+    answer: "Teoretycznie tak, możesz zamknąć konto następnego dnia po wpłynięciu całej premii, chyba że regulamin (bardzo rzadko) zobowiązuje do utrzymania konta przez określony czas. Najlepiej złożyć wypowiedzenie w aplikacji banku. Obowiązuje jednak zazwyczaj 30-dniowy okres wypowiedzenia.",
+  },
+  {
+    question: "Gdzie szukać ukrytych haczyków?",
+    answer: "Nie musisz ich szukać. Na CebulaZysku.pl mamy prostą zasadę: wyciągamy wszystkie haczyki, wykluczenia (np. kody MCC bukmacherów) oraz kary za brak aktywności na samą górę tabeli. Dzięki temu wiesz dokładnie, na co się piszesz.",
+  },
+];

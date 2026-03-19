@@ -1,0 +1,57 @@
+{
+  "terms": [
+    {
+      "term": "BIK",
+      "tooltip": "Biuro Informacji Kredytowej. Instytucja gromadząca dane o Twoich kredytach i pożyczkach. Otwieranie zwykłych kont z premią nie psuje Twojej historii w BIK."
+    },
+    {
+      "term": "BFG",
+      "tooltip": "Bankowy Fundusz Gwarancyjny. Państwowa instytucja, która gwarantuje bezpieczeństwo Twoich pieniędzy w banku do kwoty 100 000 euro (ok. 430 tys. zł)."
+    },
+    {
+      "term": "MCC",
+      "tooltip": "Czterocyfrowy kod przypisany do terminala w sklepie. W promocjach banki często wykluczają kody MCC powiązane z kasynami, bukmacherami czy doładowaniami portfeli wirtualnych (np. Revolut)."
+    },
+    {
+      "term": "karencja",
+      "tooltip": "Okres 'zamrożenia', podczas którego nie mogłeś mieć konta w danym banku, aby wziąć udział w nowej promocji jako 'nowy klient'."
+    },
+    {
+      "term": "sprzedaż premiowa",
+      "tooltip": "Termin prawny na nagrody za otwarcie konta. Jeśli wartość nagrody nie przekracza 2000 zł, jest ona całkowicie zwolniona z podatku dochodowego (PIT)."
+    },
+    {
+      "term": "wpływ",
+      "tooltip": "Przelanie określonej kwoty na nowo otwarte konto. Zazwyczaj wystarczy wykonać zwykły przelew z własnego konta w innym banku, a potem można go odesłać."
+    },
+    {
+      "term": "limit debetowy",
+      "tooltip": "Dodatkowa, pożyczona kwota w koncie (tzw. debet), z której możesz korzystać po wyczerpaniu swoich środków. Banki często sprawdzają BIK przy jego uruchamianiu."
+    },
+    {
+      "term": "okres rozliczeniowy",
+      "tooltip": "Miesiąc trwania umowy z bankiem (lub karty kredytowej). To czas, w którym musisz spełnić warunki darmowości (np. zrobić 5 płatności kartą)."
+    },
+    {
+      "term": "karta wirtualna",
+      "tooltip": "Karta, która nie ma fizycznej, plastikowej formy. Dodajesz ją do telefonu (Google Pay/Apple Pay) i płacisz nią od razu po założeniu konta, bez czekania na kuriera."
+    },
+    {
+      "term": "rotacja bankowa",
+      "tooltip": "Sprytna taktyka polegająca na otwieraniu kont, odbieraniu premii i ich zamykaniu. Po upływie okresu karencji bank znów wypłaci Ci nagrodę na start."
+    },
+    {
+      "term": "ROR",
+      "tooltip": "Rachunek Oszczędnościowo-Rozliczeniowy, czyli po prostu standardowe, osobiste konto w banku."
+    },
+    {
+      "term": "BLIK P2P",
+      "tooltip": "Przelew BLIK na numer telefonu innej osoby. Większość promocji go wyklucza – do warunków bankowych liczą się tylko zakupy opłacone kodem BLIK."
+    }
+  ],
+  "difficulties": {
+    "easy": "Wystarczy założyć konto, czasem zrobić jeden przelew lub kilka płatności kartą. Idealna cebula na start.",
+    "medium": "Wymaga odrobiny pilnowania terminów w trackerze (np. powtarzanie płatności lub zapewnianie wpływów przez 2-3 miesiące).",
+    "hard": "Dużo warunków do spełnienia, w tym np. konieczność wysokiego wpływu z tytułu wynagrodzenia lub założenia karty kredytowej."
+  }
+}

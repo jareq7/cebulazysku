@@ -1,44 +1,41 @@
-# Analiza Konkurencji: Polskie Porównywarki Promocji Bankowych
-// @author Gemini CLI (gemini-3.1-pro-preview) | 2026-03-17
+# Analiza Konkurencji: Porównywarki Bankowe PL
+// @author Gemini CLI (gemini-3.1-pro-preview) | 2026-03-18
 
-Przeprowadzono badanie polskiego rynku afiliacji bankowych (na podstawie głównych graczy takich jak Rekin Finansów, ZamknijKonto, NajlepszeKonta, LiveSmarter, Comperia, Bankier). Poniżej zestawienie ich taktyk, mocnych stron oraz luk rynkowych, które CebulaZysku.pl wypełnia lub powinna zagospodarować.
+Poniżej znajduje się dogłębna analiza 5 największych portali i porównywarek finansowych w Polsce (kontomaniak.pl, bankier.pl, finanse.rankomat.pl, najlepszekonto.pl, totalmoney.pl). Skupiamy się na ich mocnych stronach, brakach oraz pozycjonowaniu CebulaZysku.pl na ich tle.
 
-## 1. Główni Gracze na Rynku (Przykłady)
+---
 
-### Rekin Finansów / LiveSmarter
-- **Mocne strony:** Bardzo zaawansowana, wieloletnia baza artykułów. Silny osobisty brand autora budujący zaufanie. Szczegółowe "prześwietlanie" regulaminów linijka po linijce.
-- **Słabe strony:** Archaiczny design, gąszcz tekstu. Wymagają od czytelnika przeczytania artykułu na 3000 słów by zrozumieć czy się opłaca. Brak zautomatyzowanych trackerów dla użytkowników.
+## 1. Analiza poszczególnych graczy
 
-### ZamknijKonto.pl
-- **Mocne strony:** Bardzo skuteczna niszowa optymalizacja pod zapytania "jak zamknąć konto". Czysty interfejs.
-- **Słabe strony:** Brak rozbudowanych funkcji dla powracających użytkowników (np. konta usera, gamifikacji).
+### Bankier.pl (oraz Comperia / Totalmoney.pl)
+*Te portale działają w modelu korporacyjnym, często należą do tych samych grup kapitałowych (np. WP).*
+*   **Co robią dobrze:** Posiadają potężny autorytet domeny (Domain Authority), co pozwala im zajmować topowe pozycje w Google niemal natychmiast. Oferują "wszystko dla wszystkich" (kredyty, konta, ubezpieczenia). Narzędzia do filtrowania są szybkie i proste.
+*   **Czego brakuje:** Brak zaangażowania użytkownika ("duszy"). Ich rankingi to suche, korporacyjne tabele. Nie prowadzą użytkownika za rękę po założeniu konta (nie mają trackera warunków). Informacje o trudnych warunkach (haczykach) są często ukryte głęboko w opisach lub drobnym drukiem, co prowadzi do frustracji userów.
+*   **Nasza przewaga:** Jesteśmy "Cebulą", nie bankierem w garniturze. Mówimy ludzkim głosem, wyciągamy haczyki na samą górę. Z nami user ma relację, a z Bankierem tylko transakcję.
 
-### Bankier / Comperia (Agregatory finansowe)
-- **Mocne strony:** Gigantyczny autorytet (Domain Authority). Posiadają porównywarki niemal wszystkiego.
-- **Słabe strony:** Brak "duszy". Suche tabele, w których premie bankowe to tylko jeden z wielu parametrów. Całkowity brak edukacji czy pomocy przy realizacji warunków (tylko odsyłają do banku).
+### Kontomaniak.pl
+*Blog afiliacyjny skupiony mocno na kontach osobistych.*
+*   **Co robią dobrze:** Świetne, bardzo precyzyjne rozpisywanie regulaminów. Zwracają uwagę na niuanse (kody MCC, okresy wypowiedzenia). Posiadają dobre artykuły poradnikowe.
+*   **Czego brakuje:** Design portalu zatrzymał się w czasie (wygląda jak blog z 2015 roku). Użytkownik musi czytać ściany tekstu, aby zrozumieć, czy oferta jest dla niego. Brak narzędzi dla powracających użytkowników.
+*   **Nasza przewaga:** Nowoczesny UX/UI. Mamy wideo streszczenia, zwięzłe tabele warunków (np. 5x płatność, 1x przelew) z ikonami, zamiast bloków tekstu. Mamy Dark Mode.
 
-## 2. Co konkurencja robi dobrze?
+### Finanse.Rankomat.pl
+*Platforma agregująca produkty finansowe (rozszerzenie ubezpieczeń).*
+*   **Co robią dobrze:** Doskonały UX podczas przeglądania ofert (kalkulatory, czyste tabele, opinie użytkowników). Duże budżety reklamowe (Performance Marketing) – ich brand jest rozpoznawalny.
+*   **Czego brakuje:** Skupiają się głównie na produktach wysokomarżowych (kredyty, hipoteki, ubezpieczenia). Konta z premią są tam często traktowane po macoszemu, a same opisy promocji nie są tak dokładne, jak na specjalistycznych blogach.
+*   **Nasza przewaga:** Hiper-specjalizacja. My łupimy tylko premie bankowe. Jesteśmy w tym ekspertami i nie rozpraszamy użytkownika ubezpieczeniami na życie.
 
-1. **Email Marketing (Newslettery):** Posiadają potężne bazy mailingowe z "alertami" o nowych okazjach. (U nas: Faza 5 - do dokończenia powiadomienia e-mail).
-2. **Kalkulatory Zysku:** Niektóre portale udostępniają suwaki "Ile możesz zyskać w tym miesiącu otwierając te 3 konta".
-3. **Archiwum Promocji (Cmentarzysko):** Utrzymują na podstronach stare, nieaktywne już promocje z adnotacją "Zakończona", co świetnie działa na długi ogon SEO, bo ludzie wciąż szukają starych warunków po paru miesiącach.
+### Najlepszekonto.pl
+*Blog / ranking nastawiony na promocje i bonusy.*
+*   **Co robią dobrze:** Bardzo regularne aktualizacje i newsletter. Utrzymują aktywną społeczność w komentarzach pod artykułami (ludzie wymieniają się tam wiedzą o wypłatach premii).
+*   **Czego brakuje:** Interaktywności. Podobnie jak Kontomaniak, jest to statyczny zbiór artykułów. Jeśli użytkownik założy tam konto, musi sam pilnować w kalendarzu, kiedy zapłacić kartą.
+*   **Nasza przewaga:** Tracker Postępów (Killer Feature). W CebulaZysku.pl użytkownik dostaje własny dashboard.
 
-## 3. Czego brakuje u konkurencji? (Nasza przewaga - CebulaZysku)
+---
 
-1. **Dashboard & Gamifikacja (Killer Feature):** Nikt w Polsce nie oferuje panelu "Trackera", w którym użytkownik może odznaczać warunki, zbierać odznaki, włączyć push notifications z przypomnieniem o terminach, ani śledzić swoich historycznych łupów w jednym miejscu (PWA). Jesteśmy tu pionierem.
-2. **"Moje Banki" i Karencja:** Brak u konkurencji systemu, który filtruje oferty na podstawie "mam tu już konto" i zdejmuje ciężar liczenia karencji z użytkownika.
-3. **Krótkie formy (Shorts / AI / Wideo):** Blogerzy skupiają się na ścianach tekstu. Nasze wideo-podsumowania, pigułki wiedzy pisane przez AI oraz styl "Cebulowy" są bardziej przystępne na telefonach komórkowych.
-4. **Przejrzystość Warunków:** Tabele z logami i konkretnymi "X transakcji", podawane w jednolitym formacie niezależnie od banku, to krok naprzód w porównaniu z ciągłym tekstem.
+## 2. Co CebulaZysku.pl robi lepiej? (Nasze USP)
 
-## 4. Rekomendacje dla CebulaZysku.pl (Roadmap & Action Points)
-
-Biorąc pod uwagę powyższe wnioski, oto na co powinniśmy położyć nacisk w kolejnych tygodniach rozwoju:
-
-### A) Utrzymanie starych ofert pod SEO
-Zamiast ukrywać zakończone z LeadStar oferty poprzez flagę `is_active: false` (co usuwa je ze strony i sitemap), powinniśmy na froncie prezentować podstrony z flagą, dodając ogromny banner **"Ta promocja wygasła. Sprawdź najnowsze oferty tego banku tutaj →"**. Ludzie szukają w Google np. "regulamin mbank wrzesień 2025" - musimy tam być, nawet jeśli promocji już nie ma, i przekierowywać ich na nasz dzisiejszy ranking.
-
-### B) Kalkulator "Cebulowego Potencjału" (Lead Magnet)
-Zaimplementować prosty quiz na stronie głównej (w formie lead magnet): "W jakich bankach masz już konto? Zaznacz loga." -> "Klik!" -> Wyświetla kwotę: "Zostało Ci jeszcze 3450 zł gwarantowanej premii do wyciągnięcia. Zostaw maila, przyślemy Ci instrukcję od czego zacząć".
-
-### C) Tabela "Archiwalnych Karencji" na podstronie banku
-Na `/oferta/mbank` można dodać akordion pokazujący archiwum: jakie były poprzednie daty karencji w historycznych promocjach. To buduje wiarygodność i eksperckość w oczach Google.
+1.  **Tracker i Gamifikacja:** Jesteśmy pierwszą w Polsce aplikacją (PWA) do obierania banków. Konkurencja tylko informuje o promocji – my pomagamy ją doprowadzić do końca poprzez odhaczanie checklisty i powiadomienia web-push.
+2.  **Filtr "Moje Banki":** Żadna z w/w porównywarek nie posiada systemu wykluczającego banki, w których użytkownik ma już konta. User u nas nie traci czasu na czytanie o promocjach, w których nie może wziąć udziału.
+3.  **Absurdalny, viralowy marketing:** Zamiast wykupywać drogie kliki w Google Ads (jak Rankomat), my postawiliśmy na "AI Brainrot" na TikToku. Budujemy organiczny, top-of-funnel ruch u młodszych odbiorców, których nudzą korporacyjne portale.
+4.  **Uczciwość i Przejrzystość (Zasada "Haczyk na wierzchu"):** Pokazujemy trudność oferty (Łatwa/Średnia/Trudna) jeszcze przed kliknięciem. Konkurencja woli ukryć trudność, byleby tylko user kliknął w link afiliacyjny. To buduje u nas zaufanie długoterminowe.

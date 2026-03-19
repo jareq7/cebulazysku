@@ -29,6 +29,7 @@ import {
   Check,
 } from "lucide-react";
 import { ConditionTracker } from "@/components/ConditionTracker";
+import { Skeleton } from "@/components/ui/skeleton";
 import { StreakBadge } from "@/components/StreakBadge";
 import { AchievementsList } from "@/components/AchievementsList";
 import { PushNotificationToggle } from "@/components/PushNotificationToggle";
@@ -63,8 +64,30 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="flex min-h-[60vh] items-center justify-center">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
+        <Skeleton className="h-8 w-48 mb-8" />
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4 mb-8">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Card key={i}><CardContent className="p-6 space-y-3">
+              <Skeleton className="h-4 w-20" />
+              <Skeleton className="h-8 w-24" />
+            </CardContent></Card>
+          ))}
+        </div>
+        <div className="space-y-4">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <Card key={i}><CardContent className="p-6 space-y-3">
+              <div className="flex items-center gap-3">
+                <Skeleton className="h-12 w-12 rounded-xl" />
+                <div className="space-y-2 flex-1">
+                  <Skeleton className="h-4 w-32" />
+                  <Skeleton className="h-3 w-24" />
+                </div>
+              </div>
+              <Skeleton className="h-2.5 w-full rounded-full" />
+            </CardContent></Card>
+          ))}
+        </div>
       </div>
     );
   }
