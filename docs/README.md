@@ -3,7 +3,7 @@
 > **Domena:** cebulazysku.pl  
 > **Repozytorium:** https://github.com/jareq7/cebulazysku  
 > **Deploy:** Vercel (automatyczny z brancha `main`)  
-> **Ostatnia aktualizacja:** 17 marca 2026 r.
+> **Ostatnia aktualizacja:** 19 marca 2026 r.
 
 ---
 
@@ -55,6 +55,8 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 40 | [Analityka GTM i Consent](./40-analytics-gtm.md) | GTM, DataLayer, Consent Mode v2, Enhanced Conversions |
 | 41 | [Canva Integration](./41-canva-integration.md) | Canva Connect API, okładki bloga, OAuth, Autofill, Export |
 | 42 | [Multi-Source Affiliates](./42-multi-source-affiliates.md) | Conversand CPA, bank name matching, affiliate routing, admin panel |
+| 43 | [Homepage FAQ](./43-homepage-faq.md) | 15 pytań accordion + FAQPage JSON-LD schema |
+| 44 | [UI Components Upgrade](./44-ui-components-upgrade.md) | Toast, DeadlineAlert, Skeleton, Sheet navbar, 7 shadcn komponentów |
 
 ---
 
@@ -89,7 +91,9 @@ Wyniki analiz przeprowadzonych przez Gemini CLI w obszarze optymalizacji i rozwo
 | Admin Panel v2 | [prd-admin-panel-v2.md](../tasks/prd-admin-panel-v2.md) | [tasks-admin-panel-v2.md](../tasks/tasks-admin-panel-v2.md) | ✅ Done |
 | Analytics | [prd-analytics.md](../tasks/prd-analytics.md) | [tasks-analytics.md](../tasks/tasks-analytics.md) | ✅ Done |
 | Canva Integration | [prd-canva-integration.md](../tasks/prd-canva-integration.md) | [tasks-canva-integration.md](../tasks/tasks-canva-integration.md) | 🔄 In Progress |
-| Multi-source Affiliates | [prd-multi-source-affiliates.md](../tasks/prd-multi-source-affiliates.md) | — | 📋 PRD Ready |
+| Multi-source Affiliates | [prd-multi-source-affiliates.md](../tasks/prd-multi-source-affiliates.md) | [tasks-multi-source-affiliates.md](../tasks/tasks-multi-source-affiliates.md) | ✅ Done |
+| Homepage FAQ | [prd-homepage-faq.md](../tasks/prd-homepage-faq.md) | [tasks-homepage-faq.md](../tasks/tasks-homepage-faq.md) | ✅ Done |
+| UI Components Upgrade | [prd-ui-components-upgrade.md](../tasks/prd-ui-components-upgrade.md) | [tasks-ui-components-upgrade.md](../tasks/tasks-ui-components-upgrade.md) | 🔄 In Progress |
 
 ---
 
