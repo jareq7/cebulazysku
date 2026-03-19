@@ -1,9 +1,10 @@
-// @author Claude Code (claude-opus-4-6) | 2026-03-18
-// Admin API: Roadmap Kanban CRUD
+// @author Claude Code (claude-opus-4-6) | 2026-03-19
+// Admin API: Roadmap — auto-synced from AI-TASKS.md + manual DB items
 
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { verifyAdmin } from "@/lib/admin-auth";
+import { parseAiTasks } from "@/lib/parse-ai-tasks";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -13,20 +14,48 @@ export async function GET(request: NextRequest) {
   if (authError) return authError;
 
   try {
+    // Parse AI-TASKS.md for auto items
+    const aiTasks = parseAiTasks();
+
+    // Also load manual items from DB
     const supabase = createAdminClient();
-    const { data, error } = await supabase
+    const { data: dbItems } = await supabase
       .from("roadmap_items")
       .select("*")
       .order("priority", { ascending: true })
       .order("created_at", { ascending: false });
 
-    if (error) throw error;
-    return NextResponse.json({ items: data || [] });
+    // Merge: AI tasks first (by status), then DB manual items
+    const items = [
+      ...aiTasks.map((t) => ({
+        id: t.id,
+        title: t.title,
+        description: t.description,
+        status: t.status,
+        priority: t.priority === "high" ? 0 : t.priority === "medium" ? 1 : 2,
+        category: t.category,
+        worker: t.worker,
+        date: t.date,
+        source: "ai-tasks" as const,
+        created_at: t.date || new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+        completed_at: t.status === "done" ? (t.date || new Date().toISOString()) : null,
+      })),
+      ...(dbItems || []).map((item) => ({
+        ...item,
+        source: "manual" as const,
+        worker: null,
+      })),
+    ];
+
+    return NextResponse.json({ items });
   } catch (err) {
     console.error("Roadmap GET error:", err);
     return NextResponse.json({ error: "Failed to load roadmap" }, { status: 500 });
   }
 }
+
+// POST, PATCH, DELETE — for manual DB items only (unchanged)
 
 export async function POST(request: NextRequest) {
   const authError = verifyAdmin(request);
@@ -52,7 +81,7 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (error) throw error;
-    return NextResponse.json({ item: data });
+    return NextResponse.json({ item: { ...data, source: "manual" } });
   } catch (err) {
     console.error("Roadmap POST error:", err);
     return NextResponse.json({ error: "Failed to create item" }, { status: 500 });
@@ -69,13 +98,18 @@ export async function PATCH(request: NextRequest) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
     }
 
-    updates.updated_at = new Date().toISOString();
+    // Can't edit AI-TASKS items from admin
+    if (typeof id === "string" && id.startsWith("ai-")) {
+      return NextResponse.json(
+        { error: "AI Tasks items are read-only. Edit AI-TASKS.md instead." },
+        { status: 400 }
+      );
+    }
 
-    // If moving to done, set completed_at
+    updates.updated_at = new Date().toISOString();
     if (updates.status === "done" && !updates.completed_at) {
       updates.completed_at = new Date().toISOString();
     }
-    // If moving out of done, clear completed_at
     if (updates.status && updates.status !== "done") {
       updates.completed_at = null;
     }
@@ -104,6 +138,13 @@ export async function DELETE(request: NextRequest) {
     const { id } = await request.json();
     if (!id) {
       return NextResponse.json({ error: "ID is required" }, { status: 400 });
+    }
+
+    if (typeof id === "string" && id.startsWith("ai-")) {
+      return NextResponse.json(
+        { error: "AI Tasks items are read-only. Edit AI-TASKS.md instead." },
+        { status: 400 }
+      );
     }
 
     const supabase = createAdminClient();
