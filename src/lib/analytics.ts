@@ -5,6 +5,7 @@ import type { AnalyticsEvent } from "./analytics-events";
 declare global {
   interface Window {
     dataLayer: Record<string, unknown>[];
+    gtag: (...args: unknown[]) => void;
   }
 }
 
@@ -95,18 +96,15 @@ const CONSENT_KEY = "cz_consent";
 export function setConsentDefault() {
   if (typeof window === "undefined") return;
   window.dataLayer = window.dataLayer || [];
-  // gtag-compatible consent default
-  window.dataLayer.push({
-    "0": "consent",
-    "1": "default",
-    "2": {
+  if (typeof window.gtag === "function") {
+    window.gtag("consent", "default", {
       analytics_storage: "denied",
       ad_storage: "denied",
       ad_personalization: "denied",
       ad_user_data: "denied",
       wait_for_update: 500,
-    },
-  });
+    });
+  }
 }
 
 /**
@@ -115,11 +113,9 @@ export function setConsentDefault() {
 export function updateConsent(settings: ConsentSettings) {
   if (typeof window === "undefined") return;
   window.dataLayer = window.dataLayer || [];
-  window.dataLayer.push({
-    "0": "consent",
-    "1": "update",
-    "2": settings,
-  });
+  if (typeof window.gtag === "function") {
+    window.gtag("consent", "update", settings);
+  }
 
   // Persist to localStorage + cookie (for SSR)
   localStorage.setItem(CONSENT_KEY, JSON.stringify(settings));

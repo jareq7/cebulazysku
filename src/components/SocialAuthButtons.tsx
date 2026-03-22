@@ -1,3 +1,4 @@
+// @author Claude Code (claude-opus-4-6) | 2026-03-22
 "use client";
 
 import { useState } from "react";
@@ -34,10 +35,17 @@ function FacebookIcon() {
 
 type Provider = "google" | "apple" | "facebook";
 
-const providers: { id: Provider; label: string; icon: React.ReactNode }[] = [
-  { id: "google", label: "Google", icon: <GoogleIcon /> },
-  { id: "apple", label: "Apple", icon: <AppleIcon /> },
-  { id: "facebook", label: "Facebook", icon: <FacebookIcon /> },
+interface ProviderConfig {
+  id: Provider;
+  label: string;
+  icon: React.ReactNode;
+  enabled: boolean;
+}
+
+const providers: ProviderConfig[] = [
+  { id: "google", label: "Google", icon: <GoogleIcon />, enabled: true },
+  { id: "apple", label: "Apple", icon: <AppleIcon />, enabled: false },
+  { id: "facebook", label: "Facebook", icon: <FacebookIcon />, enabled: false },
 ];
 
 export function SocialAuthButtons() {
@@ -47,7 +55,6 @@ export function SocialAuthButtons() {
   const handleClick = async (provider: Provider) => {
     setLoading(provider);
     await loginWithProvider(provider);
-    // loginWithProvider redirects — loading state will persist until navigation
   };
 
   return (
@@ -61,21 +68,26 @@ export function SocialAuthButtons() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-2">
-        {providers.map(({ id, label, icon }) => (
+      <div className="grid gap-2">
+        {providers.map(({ id, label, icon, enabled }) => (
           <Button
             key={id}
             variant="outline"
-            className="gap-2"
-            disabled={loading !== null}
-            onClick={() => handleClick(id)}
+            className="gap-2 w-full relative"
+            disabled={!enabled || loading !== null}
+            onClick={() => enabled && handleClick(id)}
           >
             {loading === id ? (
               <Loader2 className="h-4 w-4 animate-spin" />
             ) : (
               icon
             )}
-            <span className="hidden sm:inline">{label}</span>
+            {label}
+            {!enabled && (
+              <span className="ml-auto text-[10px] font-normal text-muted-foreground">
+                wkrótce
+              </span>
+            )}
           </Button>
         ))}
       </div>
