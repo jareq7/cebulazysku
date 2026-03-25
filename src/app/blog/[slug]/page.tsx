@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { JsonLd } from "@/components/JsonLd";
 import { ArrowLeft, Clock, User } from "lucide-react";
 import { TrackBlogRead } from "@/components/TrackBlogRead";
+import { ShareButtons } from "@/components/ShareButtons";
 
 export const revalidate = 300;
 
@@ -233,7 +234,17 @@ export default async function BlogPostPage({
         </div>
       </article>
 
-      <div className="mt-12 pt-8 border-t">
+      <div className="mt-12 pt-8 border-t space-y-6">
+        <div>
+          <h3 className="text-sm font-medium text-muted-foreground mb-2">Udostępnij artykuł</h3>
+          <ShareButtons
+            url={`/blog/${post.slug}`}
+            title={post.title}
+            text={post.excerpt}
+            contentType="blog"
+            itemId={post.slug}
+          />
+        </div>
         <Link href="/blog">
           <Button variant="outline" className="gap-2">
             <ArrowLeft className="h-4 w-4" />

@@ -21,6 +21,7 @@ import { RenderMarkdown } from "@/components/RenderMarkdown";
 import { TrackViewItem } from "@/components/TrackViewItem";
 import { ExpiredOfferBanner } from "@/components/ExpiredOfferBanner";
 import { DeadlineAlert } from "@/components/DeadlineAlert";
+import { ShareButtons } from "@/components/ShareButtons";
 import { Button } from "@/components/ui/button";
 import {
   Clock,
@@ -435,6 +436,17 @@ export default async function OfferDetailPage({
               </CardContent>
             </Card>
           )}
+          {/* Share */}
+          <div>
+            <h3 className="text-sm font-medium text-muted-foreground mb-2">Udostępnij ofertę</h3>
+            <ShareButtons
+              url={`/oferta/${offer.slug}`}
+              title={`${offer.bankName}: ${offer.reward} zł premii — ${offer.offerName}`}
+              text={`Premia ${offer.reward} zł w ${offer.bankName}! Sprawdź warunki na CebulaZysku`}
+              contentType="offer"
+              itemId={offer.slug}
+            />
+          </div>
         </div>
 
         {/* Sidebar */}
