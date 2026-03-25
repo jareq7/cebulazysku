@@ -3,7 +3,7 @@
 > **Domena:** cebulazysku.pl  
 > **Repozytorium:** https://github.com/jareq7/cebulazysku  
 > **Deploy:** Vercel (automatyczny z brancha `main`)  
-> **Ostatnia aktualizacja:** 19 marca 2026 r.
+> **Ostatnia aktualizacja:** 25 marca 2026 r.
 
 ---
 
@@ -94,6 +94,8 @@ Wyniki analiz przeprowadzonych przez Gemini CLI w obszarze optymalizacji i rozwo
 | Multi-source Affiliates | [prd-multi-source-affiliates.md](../tasks/prd-multi-source-affiliates.md) | [tasks-multi-source-affiliates.md](../tasks/tasks-multi-source-affiliates.md) | ✅ Done |
 | Homepage FAQ | [prd-homepage-faq.md](../tasks/prd-homepage-faq.md) | [tasks-homepage-faq.md](../tasks/tasks-homepage-faq.md) | ✅ Done |
 | UI Components Upgrade | [prd-ui-components-upgrade.md](../tasks/prd-ui-components-upgrade.md) | [tasks-ui-components-upgrade.md](../tasks/tasks-ui-components-upgrade.md) | 🔄 In Progress |
+| TikTok Video Pipeline | [prd-tiktok-pipeline.md](../tasks/prd-tiktok-pipeline.md) | — | 📋 PRD Ready |
+| Marketing Strategy | [strategia-marketingowa.md](./strategia-marketingowa.md) | [tasks-marketing-strategy-detailed.md](../tasks/tasks-marketing-strategy-detailed.md) | 📋 Planned |
 
 ---
 

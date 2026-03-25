@@ -177,7 +177,7 @@ AffiliateLink onClick → navigator.sendBeacon('/api/track-click', { offerId, so
 
 ## 11. Status
 
-✅ **Ukończone** — 17 marca 2026
+✅ **Ukończone** — 17 marca 2026 (uzupełnione 24 marca)
 
 - GTM provider z Consent Mode v2
 - 21 eventów DataLayer (10 recommended + 11 custom)
@@ -189,3 +189,14 @@ AffiliateLink onClick → navigator.sendBeacon('/api/track-click', { offerId, so
 - Polityka prywatności zaktualizowana
 - PRD: `tasks/prd-analytics.md`
 - Tasks: `tasks/tasks-analytics.md`
+
+### Uzupełnienia z 24 marca 2026
+
+- **GTM ID produkcyjny:** `GTM-KF6V7KF2`
+- **GA4 Measurement ID:** `G-45PF2JGXJL`
+- **Env var:** `NEXT_PUBLIC_GTM_ID=GTM-KF6V7KF2` (Vercel — all environments + `.env.local`)
+- **GTM container:** `config/gtm-container-cebulazysku.json` — 21 tags (1 googtag + 20 gaawe), 21 triggers, 29 variables. Gotowy do importu.
+- **Fix consent mode:** `window.gtag("consent", "update", settings)` zamiast `dataLayer.push()` (plain push nie działa jako consent command). `window.gtag` musi być globalnie dostępna (`window.gtag = gtag;` w `TrackingPixels.tsx`).
+- **Fix GTM format:** Uppercase enums (`TEMPLATE`, `BOOLEAN`, `MAP`, `LIST`), `measurementIdOverride` (nie `measurementId`) dla tagów `gaawe`.
+- **Social auth:** Apple/Facebook login wyłączone z label "wkrótce" — wymagają konfiguracji w Supabase.
+- **Pending:** 👤 Jarek — import container JSON do GTM i publish, weryfikacja GA4 Realtime.
