@@ -35,6 +35,14 @@ export async function generateMetadata(): Promise<Metadata> {
       type: "website",
       locale: "pl_PL",
       url: "https://cebulazysku.pl",
+      images: [
+        {
+          url: "https://cebulazysku.pl/api/og?type=default",
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
     },
   };
 }

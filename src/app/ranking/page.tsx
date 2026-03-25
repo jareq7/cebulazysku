@@ -31,6 +31,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pl_PL",
     url: "https://cebulazysku.pl/ranking",
+    images: [
+      {
+        url: "https://cebulazysku.pl/api/og?type=default",
+        width: 1200,
+        height: 630,
+        alt: "Ranking kont bankowych z premią | CebulaZysku",
+      },
+    ],
   },
 };
 

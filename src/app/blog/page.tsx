@@ -20,6 +20,14 @@ export const metadata: Metadata = {
     type: "website",
     locale: "pl_PL",
     url: "https://cebulazysku.pl/blog",
+    images: [
+      {
+        url: "https://cebulazysku.pl/api/og?type=blog&title=Blog%20i%20Poradniki&category=CebulaZysku",
+        width: 1200,
+        height: 630,
+        alt: "Blog i Poradniki – CebulaZysku",
+      },
+    ],
   },
 };
 

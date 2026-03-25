@@ -18,6 +18,14 @@ export const metadata: Metadata = {
     description:
       "Najlepsze aktualne premie bankowe w jednym miejscu. Kliknij i zacznij zarabiać na bankach!",
     url: "https://cebulazysku.pl/link",
+    images: [
+      {
+        url: "https://cebulazysku.pl/api/og?type=default",
+        width: 1200,
+        height: 630,
+        alt: "TOP Premie Bankowe | CebulaZysku",
+      },
+    ],
   },
 };
 
