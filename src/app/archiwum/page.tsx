@@ -1,10 +1,11 @@
+// @author Claude Code (claude-opus-4-6) | 2026-03-18 — initial version
+// @author Windsurf (claude-sonnet-4-20250514) | 2026-03-26 — added ArchiveFilters with search, bank filter, reward range, stats
 import { Metadata } from "next";
 import Link from "next/link";
 import { fetchExpiredOffersFromDB } from "@/lib/offers";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { JsonLd } from "@/components/JsonLd";
+import { ArchiveFilters } from "@/components/ArchiveFilters";
 import {
   ArrowRight,
   History,
@@ -91,49 +92,7 @@ export default async function ArchivePage() {
           <p className="text-muted-foreground">Archiwum jest obecnie puste.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-4">
-          {expiredOffers.map((offer) => (
-            <Card key={offer.id} className="opacity-75 grayscale hover:opacity-100 hover:grayscale-0 transition-all">
-              <CardContent className="py-4">
-                <div className="flex items-center gap-4">
-                  {offer.bankLogo && offer.bankLogo.startsWith("http") ? (
-                    <img
-                      src={offer.bankLogo}
-                      alt={`${offer.bankName} logo`}
-                      className="h-10 w-10 rounded-xl object-contain bg-white p-1 shrink-0 opacity-50"
-                    />
-                  ) : (
-                    <div
-                      className="flex h-10 w-10 items-center justify-center rounded-xl text-white font-bold shrink-0 opacity-50"
-                      style={{ backgroundColor: offer.bankColor }}
-                    >
-                      {offer.bankName.charAt(0)}
-                    </div>
-                  )}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-semibold text-sm">
-                      {offer.bankName}
-                    </p>
-                    <p className="text-xs text-muted-foreground truncate">
-                      {offer.offerName}
-                    </p>
-                  </div>
-                  <div className="text-right shrink-0">
-                    <p className="text-lg font-bold text-muted-foreground">
-                      {offer.reward} zł
-                    </p>
-                    <p className="text-[10px] text-muted-foreground">było do zdobycia</p>
-                  </div>
-                  <Link href={`/oferta/${offer.slug}`}>
-                    <Button size="sm" variant="ghost" className="gap-1">
-                      Szczegóły <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <ArchiveFilters offers={expiredOffers} />
       )}
 
       <div className="mt-16 text-center">
