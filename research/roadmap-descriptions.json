@@ -1,0 +1,42 @@
+[
+  {
+    "taskTitle": "UI Components Upgrade",
+    "businessDescription": "Modernizacja 7 kluczowych komponentów wizualnych serwisu (m.in. powiadomień, tooltipów i szkieletów ładowania). Dzięki temu aplikacja będzie wydawać się szybsza i bardziej intuicyjna, co bezpośrednio przełoży się na dłuższy czas spędzony na stronie przez użytkowników i wyższy wskaźnik konwersji."
+  },
+  {
+    "taskTitle": "Newsletter system",
+    "businessDescription": "Wdrożenie zautomatyzowanego systemu mailowego we współpracy z Resend, który będzie co tydzień przypominał 'cebularzom' o najnowszych ofertach i kończących się terminach. To nasze najważniejsze narzędzie do budowania retencji i regularnego zawracania użytkowników na stronę bez płacenia za reklamy."
+  },
+  {
+    "taskTitle": "Social sharing",
+    "businessDescription": "Integracja przycisków szybkiego udostępniania artykułów i ofert na Facebooka, X (Twitter) czy WhatsAppa. Minimalnym kosztem technologicznym otwieramy sobie drzwi do darmowego, viralowego ruchu napędzanego poleceniami samych użytkowników."
+  },
+  {
+    "taskTitle": "TikTok video pipeline",
+    "businessDescription": "Budowa w pełni zautomatyzowanej, opartej na AI (Google Veo, ElevenLabs) fabryki kontentu wideo na platformy TikTok i Reels. Pozwoli nam to docierać do setek tysięcy nowych, młodych odbiorców całkowicie organicznie, zdejmując z zespołu ciężar ręcznego montowania reklam."
+  },
+  {
+    "taskTitle": "Video Ads voiceover regen",
+    "businessDescription": "Wygenerowanie na nowo poprawionych technicznie ścieżek dźwiękowych do naszych kampanii wideo z użyciem lektora AI. Gwarantuje to profesjonalny odbiór reklam przez potencjalnych klientów i chroni nas przed błędami w czytaniu skomplikowanych regulaminów bankowych."
+  },
+  {
+    "taskTitle": "Autonomiczny content pipeline",
+    "businessDescription": "Zaawansowana integracja (np. przez n8n) zdejmująca z nas konieczność ręcznego publikowania treści we wszystkich mediach społecznościowych. System sam napisze i opublikuje posty o nowościach, uwalniając dziesiątki godzin pracy zespołu miesięcznie na rzecz strategii."
+  },
+  {
+    "taskTitle": "Admin panel rozbudowa",
+    "businessDescription": "Wzbogacenie wewnętrznego centrum dowodzenia o wykresy trendów, system alertów i monitorowania zasobów chmurowych. Jako administratorzy zyskamy natychmiastowy, wizualny pogląd na to, co działa w biznesie i czy nie przepalamy budżetów na API zewnętrzne."
+  },
+  {
+    "taskTitle": "Słownik tooltipów",
+    "businessDescription": "Baza wiedzy z definicjami branżowego żargonu (np. BIK, BFG), która będzie wyświetlać się użytkownikom w "chmurkach" po najechaniu myszką na trudne słowo. Znacznie ułatwi to nowicjuszom zrozumienie ofert bankowych, zmniejszając obawy i zachęcając ich do założenia pierwszego konta."
+  },
+  {
+    "taskTitle": "Breadcrumb schema",
+    "businessDescription": "Wdrożenie zaawansowanych tagów strukturalnych (JSON-LD) dla nawigacji okruszkowej. To czysto techniczny zabieg SEO, dzięki któremu Google lepiej zrozumie hierarchię naszej strony, co zaowocuje większymi i atrakcyjniejszymi wizualnie linkami w wynikach wyszukiwania."
+  },
+  {
+    "taskTitle": "Conversand affiliate links",
+    "businessDescription": "Ręczne pozyskanie i wgranie unikalnych linków śledzących z platformy Conversand dla głównych banków w Polsce. To fundamentalny krok zapewniający, że każde kliknięcie w naszym rankingu zostanie poprawnie przypisane do naszego konta afiliacyjnego, gwarantując wypłatę prowizji."
+  }
+]

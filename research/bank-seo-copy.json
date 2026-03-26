@@ -1,0 +1,49 @@
+{
+  "banks": [
+    {
+      "id": "bnp-paribas",
+      "name": "BNP Paribas",
+      "seo_title": "Promocje BNP Paribas - Zgarnij premię za konto",
+      "seo_description": "Sprawdź najnowsze i najbardziej dochodowe promocje BNP Paribas. Dowiedz się, jak założyć Konto Otwarte na Ciebie i odebrać gwarantowaną gotówkę.",
+      "usp": "Jedne z najwyższych i najczęstszych premii gotówkowych na rynku z bardzo prostymi warunkami (brak wymogu wysokiego wpływu).",
+      "history_context": "BNP Paribas od lat znany jest w Polsce z regularnych, comiesięcznych kampanii promocyjnych, często realizowanych we współpracy z zewnętrznymi agencjami. Typowa premia w tym banku wynosi od 300 zł do nawet 500 zł i jest dzielona na 2-3 mniejsze, łatwe do zdobycia paczki wypłacane za aktywność.",
+      "description": "BNP Paribas to bank z francuskim rodowodem, który mocno stawia na cyfryzację i aplikację GOmobile. Z punktu widzenia łowców promocji (cebularzy), to absolutny filar domowego budżetu. Bank ten regularnie wypuszcza oferty konta osobistego, których warunki polegają na wykonaniu zaledwie kilku przelewów i zapłaceniu kartą za codzienne zakupy. \n\nKonto Otwarte na Ciebie (flagowy produkt banku) jest z reguły bezwarunkowo darmowe w utrzymaniu, a unikanie opłaty za podstawową Kartę Otwartą wymaga jedynie spełnienia prostego wymogu transakcyjnego. Jeśli szukasz szybkiej, pewnej i regularnej gotówki – BNP to bank, od którego powinieneś zacząć."
+    },
+    {
+      "id": "mbank",
+      "name": "mBank",
+      "seo_title": "mBank Promocje - Aktualne oferty eKonta z premią",
+      "seo_description": "Zobacz najnowsze promocje mBanku. Załóż eKonto osobiste, korzystaj z super aplikacji i zgarniaj rekordowe zwroty za płatności oraz bonusy za polecenie.",
+      "usp": "Najlepsza w Polsce aplikacja mobilna i potężne programy poleceń, z łatwością przyciągające młodych odbiorców.",
+      "history_context": "mBank to pionier polskiej bankowości internetowej. Ich promocje często skupiają się na młodych klientach (Konto Możliwości) i zazwyczaj oferują bonus za szybki wpływ na konto (tzw. szybki strzał) oraz comiesięczne premie lojalnościowe, co wiąże użytkownika z bankiem na dłużej.",
+      "description": "mBank to instytucja, która zmieniła sposób, w jaki Polacy korzystają z banków. Ikona mobilności. Ich promocje to prawdziwy klasyk – zazwyczaj musisz zapewnić konkretny wpływ w pierwszym tygodniu oraz płacić BLIKiem lub telefonem przez kilka kolejnych miesięcy. \n\nDla młodszych (do 24. roku życia) konto jest w pełni darmowe, co czyni mBank ulubieńcem studentów. Dla starszych eKonto do usług może wymagać określonej liczby transakcji, by znieść opłatę za kartę. Zaletą promocji mBanku jest genialny program 'Polecam mBank', który pozwala mnożyć zyski, jeśli zaprosisz do banku znajomych z własnego linku."
+    },
+    {
+      "id": "ing-bank-slaski",
+      "name": "ING Bank Śląski",
+      "seo_title": "ING Promocje - Odbierz bonus za Konto z Lwem",
+      "seo_description": "Załóż darmowe Konto z Lwem Mobi lub Direct w ING Banku Śląskim. Odkryj aktualne warunki promocji, dzięki którym bank zapłaci Ci za aktywność.",
+      "usp": "Konto bezwarunkowo darmowe dla młodych oraz bardzo proste warunki zwalniające z opłat dla starszych. Świetne cele oszczędnościowe.",
+      "history_context": "Promocje w ING Banku Śląskim mają bardzo ustrukturyzowany, powtarzalny schemat. Z reguły pojawiają się co kwartał i celują w nagradzanie regularności (np. zrobienie 10 płatności bezgotówkowych i założenie Smart Savera) z okresem wypłaty przesuniętym o kilka miesięcy w przód.",
+      "description": "ING Bank Śląski to solidna i niezawodna instytucja z logo rudego lwa. Ich Konto Mobi to absolutny hit dla osób poniżej 26. roku życia, ponieważ nie pobiera żadnych opłat, nawet jeśli w ogóle go nie używasz. Starszym oferują konto Direct, które łatwo udomowić robiąc zakupy kartą. \n\nZ perspektywy 'cebulowej' ING jest specyficzne – w przeciwieństwie do banków płacących w transzach, ING zazwyczaj wypłaca jedną, dużą kwotę (np. 300 zł) na sam koniec trwania edycji promocji, pod warunkiem, że spełnisz proste cele oszczędnościowe w ich aplikacji. To genialny wybór na dłuższą relację z bankiem."
+    },
+    {
+      "id": "santander-bank-polska",
+      "name": "Santander Bank Polska",
+      "seo_title": "Santander Promocje - Premie za założenie Konta Santander",
+      "seo_description": "Dołącz do Santander Bank Polska i odbieraj potężne premie gotówkowe. Sprawdź, jak łatwo obniżyć opłaty za Konto Santander i zyskać darmową gotówkę.",
+      "usp": "Ogromne, łączone (kumulowane) nagrody gotówkowe oraz w formie bonów do Biedronki/Allegro. Szybka weryfikacja wniosków.",
+      "history_context": "Santander słynie z tego, że pozwala 'stackować' promocje. Oznacza to, że biorąc udział w głównej kampanii konta, możesz połączyć to z nagrodami z programu poleceń oraz kantoru internetowego, wyciągając z jednego banku nie 300, a ponad 600 zł.",
+      "description": "Santander to gracz wagi ciężkiej, jeśli chodzi o polski rynek afiliacyjny. Oferuje Konto Santander, które potrafi sypnąć prawdziwym deszczem pieniędzy na start. Dlaczego to jedna z najlepszych opcji? Ponieważ bank pozwala na tak zwane 'kumulowanie ofert' – załóż konto z polecenia, użyj kantoru walutowego i zapłać kartą, a łączny bonus ze wszystkich źródeł nierzadko przekroczy pół tysiąca złotych. \n\nAby Konto Santander było darmowe, wystarczy z reguły wykonać jeden drobny trik, np. miesięczny obrót kartą i BLIKiem na określoną sumę. To świetna propozycja dla osób zorganizowanych, korzystających z naszego Trackera Zysku."
+    },
+    {
+      "id": "pko-bp",
+      "name": "PKO Bank Polski",
+      "seo_title": "PKO BP Promocje - Konto za Zero z nagrodą",
+      "seo_description": "Promocje w największym polskim banku. Załóż Konto za Zero w PKO BP i zgarnij darmowe pieniądze. Poznaj warunki najnowszej oferty.",
+      "usp": "Niesamowita dostępność placówek, zaufanie oraz aplikacja IKO uważana za jedną z najlepszych w Europie.",
+      "history_context": "PKO BP, jako lider polskiego rynku, przez długi czas nie musiał płacić za pozyskiwanie klientów. Jednak w ostatnich latach zmienił taktykę i rzucił się w wir agresywnych promocji, często oferując jednorazowe, duże bonusy za przeniesienie konta z innego banku lub otwarcie dla młodzieży.",
+      "description": "Największy i najpopularniejszy polski bank wcale nie pozostaje w tyle, jeśli chodzi o innowacje i przyciąganie łowców okazji. Konto za Zero to sztandarowy produkt PKO BP. Jeśli spełnisz banalny warunek (zazwyczaj to kilka płatności kartą lub IKO w miesiącu), nie zapłacisz ani grosza za jego prowadzenie. \n\nPromocje w PKO BP są proste w obsłudze. Bank docenia nowoczesnych klientów – bardzo często wymaga posiadania aplikacji IKO (bezkonkurencyjnej w Polsce) i wyrażenia zgód marketingowych. Pieniądze zazwyczaj trafiają na konto szybciej, niż się spodziewasz, a szeroka sieć wpłatomatów czyni ten rachunek bardzo wygodnym kontem technicznym do dalszych działań finansowych."
+    }
+  ]
+}
