@@ -567,3 +567,80 @@ Szablony: `create-prd.md` i `generate-tasks.md` w rootcie projektu.
 **Problem:** Gdy używałem skryptu python wewnątrz CLI Basha ze znakami specjalnymi takimi jak nawiasy w nazwie pliku, bash przetworzył to jako zagnieżdżoną komendę, wyrzucając błąd Permission denied.
 
 **Rozwiązanie:** Należy być ekstremalnie ostrożnym pisząc długie polecenia Pythona przez CLI (lub po prostu unikać tego i używać write_file API do edycji mniejszych partii tekstu). Nigdy nie używaj znaków mogących zostać zinterpretowanych przez powłokę basha jako polecenie zastępcze (backticks, parenthesis), chyba że są one właściwie i podwójnie wyescapowane.
+
+---
+
+## 47. "use client" + export Metadata = build error w Next.js
+
+**Problem:** W `newsletter/wypisano/page.tsx` użyłem `"use client"` (bo `useSearchParams`) i jednocześnie `export const metadata: Metadata` — server-only API. Build nie wyrzucił explicite błędu, ale metadata nie zadziałałaby w runtime.
+
+**Rozwiązanie:** Split na dwa pliki: `page.tsx` (server component z metadata) + `UnsubscribeContent.tsx` (client component z `useSearchParams`, owinięty w `<Suspense>`).
+
+**Jak unikać:** `export const metadata` i `export function generateMetadata` działają TYLKO w Server Components. Jeśli strona potrzebuje client-side hooks → wydziel je do osobnego client component, a page.tsx zostaw jako server component.
+
+---
+
+## 48. Referencja do nieistniejącego pola typu — `createdAt` w BankOffer
+
+**Problem:** W cronie `email-notifications` napisałem `offers.filter(o => o.createdAt && ...)` — ale `BankOffer` nie ma pola `createdAt`. TypeScript by to wyłapał przy buildzie, ale lepiej nie popełniać.
+
+**Rozwiązanie:** Zamieniono na bezpośredni query do DB: `supabase.from("offers").select("id", { count: "exact", head: true }).gte("created_at", weekAgo.toISOString())`. DB ma `created_at`, typ TypeScript nie.
+
+**Jak unikać:** Przed użyciem pola z obiektu — sprawdź definicję interfejsu (`interface BankOffer`). Jeśli potrzebujesz pola które jest w DB ale nie w typie frontendu, odpytaj DB bezpośrednio zamiast polegać na mapperze.
+
+---
+
+## 49. Windsurf stackował feature branches zamiast branchować z main
+
+**Problem:** Windsurf tworzył branchy jeden na drugim: `main → hub-pages → glossary → comparisons → calculator → noob-landing`. Przez to `feature/noob-landing` zawierał 5 commitów (wszystkie feature'y), a prosty `git merge feature/hub-pages` do main pokazywał "usunięcia" plików które dodaliśmy na main po rozgałęzieniu (newsletter, share buttons, bio link).
+
+**Przyczyna:** Windsurf branchował z aktualnego HEAD zamiast z `main`. Po stworzeniu `feature/hub-pages` kolejne branchy były tworzone z niego, nie z main.
+
+**Rozwiązanie:** Cherry-pick poszczególnych commitów na main: `git cherry-pick 4d050c5` (hub-pages), `2e23403` (glossary), `2d29c20` (comparisons), `e49db56` (calculator), `245b65f` (noob-landing). Jeden konflikt (bank/[slug]/page.tsx — wcześniej przypadkowo scommitowane na main) rozwiązany przez `--theirs`.
+
+**Jak unikać:** W instrukcjach dla Windsufa (`WINDSURF.md`) dodać explicite: "Każdy nowy branch twórz z main: `git checkout main && git checkout -b feature/xyz`". Nigdy nie branchuj z innego feature brancha.
+
+---
+
+## 50. AI-TASKS.md zepsute przez Gemini — zduplikowane wiersze tabeli
+
+**Problem:** Gemini edytował `AI-TASKS.md` po każdym zakończonym tasku, ale zamiast aktualizować istniejące wiersze, duplikował sekcję "In Progress" — w efekcie plik miał 20+ zduplikowanych bloków z tabelą i separatorami.
+
+**Rozwiązanie:** Ręczne przepisanie całego pliku — wyczyściłem sekcje, usunąłem duplikaty, zaktualizowałem statusy, dodałem czytelną sekcję "Done" z datami.
+
+**Jak unikać:** Gemini nie powinien bezpośrednio edytować współdzielonych plików koordynacyjnych (AI-TASKS.md). Lepiej: Gemini raportuje co zrobił (w swoim outputcie), a Claude Code (lead dev) aktualizuje AI-TASKS.md na podstawie raportu.
+
+---
+
+## Ogólne wnioski — sesja Newsletter + Merge (26 marca 2026)
+
+| Zasada | Dlaczego |
+|--------|----------|
+| **Metadata = server component only** | `export const metadata` nie działa w `"use client"` — split na server page + client wrapper |
+| **Sprawdź interfejs przed użyciem pola** | `BankOffer.createdAt` nie istnieje — DB ma `created_at` ale mapper go nie eksponuje |
+| **Cherry-pick > merge przy stackowanych branchach** | Windsurf stackował branchy — merge ciągnąłby niepotrzebne delecje |
+| **Każdy feature branch z main** | Windsurf branchował z HEAD feature brancha → łańcuch zależności |
+| **Lead dev aktualizuje shared files** | Gemini zduplikował AI-TASKS.md 20x — shared coordination files = jedna osoba |
+| **newsletterLayout ≠ layout** | Newsletter ma link wypisania w stopce, user emails mają link do dashboardu — osobne layouty |
+| **Fire-and-forget fetch po rejestracji** | Newsletter subscribe z registration page nie blokuje UX — `.catch(() => {})` |
+
+
+---
+
+## 51. Pułapki Narzędzi - replace i regexy bashowe w AI-TASKS (Gemini)
+
+**Problem:** Podczas masowej pracy nad tablicą koordynacyjną `AI-TASKS.md`, narzędzie `replace` regularnie zawodziło (Error 0 occurrences found), gdy w tym samym czasie pracował w nim (lub zmieniał go) Claude, powodując m.in. błędy z usunięciem czy zmianą zawartości. 
+
+Dodatkowo, próba ominięcia `replace` poprzez używanie polecenia `python3 -c "..."` w bashu wywoływała permanentne błędy systemowe (`SyntaxError`, `Permission denied`, wykonywanie nieistniejących komend), jeśli w modyfikowanym tekście znajdowały się **backticki** (`), apostrofy wewnątrz apostrofów (`'`), czy nazwy folderów zakończone slashem (`folder/`), które bash traktował jako próbę wykonania nowej komendy z pod-procesu (command substitution).
+
+**Rozwiązanie:**
+1. **Zamiast replace na wielkich plikach**, o wiele skuteczniejsze i bezpieczniejsze jest używanie pythonowego skryptu aktualizującego przez `re.sub()`. 
+2. **Ucieczka (escape) w Bashu:** W pisaniu poleceń in-line (np. `python3 -c "..."`), BEZWZGLĘDNIE należy rezygnować z umieszczania w stringach tekstowych znaków backtick. Należy zastępować je bezpiecznymi wariantami (np. zwykłymi apostrofami po stronie stringu) lub używać czystych regexów, unikając wstawiania zmiennych zawierających znaki systemowe (np. nazwy folderów jako ścieżki). Najlepiej całkowicie oddelegować to zadanie do API `write_file`, kiedy to tylko możliwe.
+
+---
+
+## 52. Kolizja z Git Pull po stronie innego agenta (Gemini)
+
+**Problem:** Zadania wracały z sekcji "Done" do "Backlogu". Działo się tak z powodu ukrytych konfliktów narzędzi przy edycji pliku – ja i Claude modyfikowaliśmy tablicę w tym samym czasie, a po wykonaniu polecenia `git pull` przez jednego z nas, niezacommitowane zmiany były nadpisywane przez stan na serwerze (co odtwarzało starą tablicę i generowało bałagan).
+
+**Rozwiązanie:** W środowisku wielu workerów (np. 3 agentów AI naraz), narzędziem, na którym należy polegać i sprawdzać stan, JEST `git pull`. W przypadku konfliktów w plikach z listą zadań (np. powrót zrobionych zadań na nowo do backlogu po stronie mojego agenta), nigdy nie należy duplikować pracy na nowo – zawsze należy najpierw sprawdzić, czy pliki fizycznie istnieją na dysku w `research/`. Jeśli tak – błąd jest tylko w logach git i należy to po prostu uprzątnąć bez ponownej generacji kontentu.

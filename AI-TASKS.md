@@ -12,149 +12,236 @@
 | Worker | Model | IDE | Status |
 |--------|-------|-----|--------|
 | Claude Code | claude-opus-4-6 | VS Code | ✅ Aktywny — lead dev/PM |
-| Gemini CLI | gemini-3.1-pro-preview | Terminal | ✅ Zakończył batch — czeka na nowe |
-| Windsurf | claude-opus-4-6 | Windsurf IDE | ✅ Aktywny — feature branches |
+| Gemini CLI | gemini-3.1-pro-preview | Terminal | 🟡 Czeka na nowy batch |
+| Windsurf | claude-opus-4-6 | Windsurf IDE | 🟡 Czeka na nowe taski |
 
 ---
 
 ## Zasady
 
 1. **Przed edycją pliku** — sprawdź czy inny worker go nie rusza (sekcja "In Progress")
-2. **Po zakończeniu zadania** — przenieś do "Done" z datą i krótkim opisem
+2. **Po zakończeniu zadania** — NIE edytuj AI-TASKS.md samodzielnie. Raportuj co zrobiłeś, Claude Code zaktualizuje.
 3. **Konflikty** — jeśli dwóch workerów musi ruszać ten sam plik, Jarek koordynuje kolejność
-4. **Po każdej edycji pliku src/** — zweryfikuj: `cat [ścieżka] | head -40`
-5. **Commity** — Claude Code commituje na `main`. Gemini NIE pushuje. Windsurf commituje na `feature/*`.
-6. **Windsurf** — ZAWSZE pracuje na feature branchu, NIGDY na main. Instrukcje w `WINDSURF.md`.
-
-## Relacja z PRD/Tasks workflow
-
-Ten plik to **tablica koordynacyjna** — NIE zastępuje flow PRD → Tasks → Code.
-
-- **Nowe feature'y** → nadal wymagają PRD + task lista
-- **Research, content, testy, SEO, audyty** → trafiają tutaj jako zadania operacyjne
-- **Szczegółowy rozkład marketingu** → `tasks/tasks-marketing-strategy-detailed.md` (64 tasków, ~296 subtasków)
-
----
-
-## In Progress
-
-| Zadanie | Worker | Branch/Pliki | Notatki |
-|---------|--------|-------------|---------|
-| (nic aktualnie) | — | — | — |
+4. **Commity** — Claude Code commituje na `main`. Gemini NIE commituje. Windsurf commituje na `feature/*`.
+5. **Windsurf** — ZAWSZE `git checkout main && git checkout -b feature/xyz`. NIGDY nie branchuj z innego feature brancha.
+6. **Numeracja migracji** — Claude Code nadaje numery. Aktualnie: 028 = następna wolna.
 
 ---
 
 ## Backlog — Claude Code (priorytet od góry)
 
-### 🔴 Priorytet wysoki
-- [ ] **FAQ schema na stronach ofert** — `OfferFAQ.tsx`: accordion + JSON-LD FAQPage per oferta
-- [ ] **Internal linking engine** — auto-link nazw banków → hub pages, terminów → słownik, ofert → strony ofert w blogach
-- [ ] **CTA optymalizacja** — A/B test copy na stronach ofert, sticky CTA mobile, trust signals
-- [ ] **Blog batch 4 — import do DB** — Gemini napisał 3 artykuły w `research/content/blog-batch-4/`, trzeba zaimportować do Supabase
-- [ ] **Blog porównawcze — import** — 4 artykuły w `research/content/comparisons/`
-- [ ] **Blog "Ile zarobić" — import** — 3 artykuły w `research/content/how-much/`
-- [ ] **Blog Noob — import** — 2 artykuły w `research/content/noob/`
+### 🔴 Sprint 1 — SEO & Conversion (szybkie winy)
 
-### 🟡 Priorytet średni
-- [ ] **TikTok video pipeline** — PRD gotowy (`tasks/prd-tiktok-pipeline.md`). Wymaga: tasks breakdown → `TikTokVideo.tsx`, `HormoziCaptions.tsx`, Whisper, `social-publish.ts`, n8n workflow. Blokowany przez VPS + ElevenLabs upgrade.
-- [ ] **Video Ads voiceover regen** — po resecie ElevenLabs: regen 8 voiceover z `sanitizeForTTS` fix
-- [ ] **Referral widget ulepszenie** — bardziej widoczny "Zaproś znajomego" na dashboardzie
-- [ ] **Admin /admin/seo** — GSC API integration (top queries, indexing status)
-- [ ] **Autonomiczny content pipeline** — n8n: nowa oferta → AI blog + TikTok + email blast. Wymaga PRD.
-- [ ] **GA4 setup guide** — custom dimensions (offer_id, bank_name, reward_amount, difficulty). Zapisz do `docs/ga4-setup-guide.md`.
+**C1. FAQ schema na stronach ofert** (~1h)
+- [ ] Komponent `OfferFAQ.tsx` — accordion z FAQ z DB (pole `faq` w offers)
+- [ ] JSON-LD `FAQPage` schema per oferta
+- [ ] Dodaj pod opisem oferty na `/oferta/[slug]`
+
+**C2. Internal linking engine** (~2h)
+- [ ] Funkcja `autoLinkContent(html: string)` w `src/lib/internal-links.ts`
+- [ ] Auto-linkuj nazwy banków → `/bank/[slug]` (hub pages)
+- [ ] Auto-linkuj terminy ze słownika → `/slownik#term`
+- [ ] Zastosuj w: blog content render, offer descriptions
+- [ ] Nie linkuj jeśli tekst już jest wewnątrz `<a>`
+
+**C3. CTA optymalizacja** (~1.5h)
+- [ ] Sticky CTA bar na mobile (fixed bottom) na stronach ofert
+- [ ] Trust signals pod CTA: "✅ Bez zobowiązań · ✅ 5 min · ✅ BFG chroni"
+- [ ] dataLayer event `cta_click` z wariantem
+- [ ] Integruj `PremiumCalculator` na stronie głównej (Windsurf dostarczył komponent)
+
+**C4. A/B test hero copy** (~1h)
+- [ ] 3 warianty hero z `research/hero-copy-variants.md` (Gemini DONE)
+- [ ] Random per session (localStorage), event `hero_variant_view` + `hero_cta_click`
+- [ ] Po 2 tygodniach: wybierz zwycięzcę po CTR
+
+**C5. Persona sekcja na /o-nas** (~30min)
+- [ ] Sekcja "Dla kogo jest CebulaZysku?" z opisem profilu "Sprytny Cebularz"
+- [ ] Tekst nawiązujący do bólów (zapominanie warunków, regulaminy, deadline'y)
+
+### 🟡 Sprint 2 — Content & Pipeline
+
+**C6. Import blogów Gemini do admina** (~1h)
+- [ ] Zaimportuj content z `research/win-stories.md` jako blog post (case studies)
+- [ ] Zaimportuj artykuły z `research/content/blog-drafts/` które jeszcze nie są w DB
+- [ ] Ustaw `is_published: true` po review treści (czy nie opisują nieistniejących feature'ów)
+
+**C7. Welcome email A/B** (~1h)
+- [ ] 3 warianty z `research/welcome-email-copy.md` (Gemini DONE)
+- [ ] Random per subscriber, tracking open rate
+- [ ] Nowy kolumna `welcome_variant` w `newsletter_subscribers`
+
+**C8. Video Ads voiceover regen** (~30min, czeka na ElevenLabs reset)
+- [ ] Regen 8 voiceover z `sanitizeForTTS` fix
+- [ ] Verify audio quality, update DB paths
+
+**C9. Admin /admin/seo** (~2h)
+- [ ] GSC API integration (top queries, indexing status)
+- [ ] Dashboard z wykresami kliknięć, CTR, pozycji
+
+**C10. GA4 custom dimensions** (~30min)
+- [ ] Konfiguracja: offer_id, bank_name, reward_amount, difficulty
+- [ ] Docs: `docs/ga4-setup-guide.md`
+
+### 🔵 Sprint 3 — Automation & Growth
+
+**C11. TikTok video pipeline** (duży, wymaga PRD breakdown)
+- [ ] Tasks breakdown z `tasks/prd-tiktok-pipeline.md`
+- [ ] `TikTokVideo.tsx` — 9:16, Hormozi captions
+- [ ] Whisper subtitles
+- [ ] `social-publish.ts` — auto-post via API
+- [ ] n8n workflow integration
+- [ ] **Blokowany przez:** VPS setup, ElevenLabs upgrade
+
+**C12. Autonomiczny content pipeline** (wymaga PRD)
+- [ ] PRD: nowa oferta → AI blog draft + newsletter blast + TikTok script
+- [ ] n8n orchestration
+
+**C13. Referral widget ulepszenie** (~1h)
+- [ ] Bardziej widoczny "Zaproś znajomego" na dashboardzie
+- [ ] Share referral link via WhatsApp/copy
+- [ ] Gamification: progress bar do nagrody
 
 ---
 
-## Backlog — Gemini (następny batch)
+## Backlog — Gemini (priorytet od góry)
 
-Cały poprzedni batch DONE. Nowe zadania do przydzielenia:
-- [ ] **Blog batch 5** — następne tematy z keyword research
-- [ ] **PDF lead magnet finalizacja** — "Przewodnik Cebularza" do druku/pobrania
-- [ ] **Opisy ofert (AI review)** — review i poprawa istniejących AI-generated opisów
-- [ ] **Social media kalendarz** — plan postów na 4 tygodnie (Wykop, Reddit, FB grupy)
+### 🔴 Batch 2 — Content & SEO
+
+**G1. Blog batch 5 — long-tail SEO** (5 artykułów)
+- [ ] Bazuj na `research/seo-keyword-list.md` — wybierz 5 keywords z najwyższym potencjałem
+- [ ] 1500-2500 słów, H2/H3, FAQ sekcja, CTA do trackera
+- [ ] Nie opisuj feature'ów których strona nie ma!
+- [ ] Output: `research/content/blog-batch-5/`
+
+**G2. Opisy ofert review** (quality check)
+- [ ] Przeczytaj aktualne AI-generated opisy z DB (Jarek da eksport)
+- [ ] Sprawdź: czy opisy nie kłamią, czy FAQ mają sens, czy pros/cons są trafne
+- [ ] Output: `research/offer-descriptions-review.md` z listą poprawek
+
+**G3. Social media kalendarz 4-tygodniowy**
+- [ ] Plan postów: Wykop (3/tyg), Reddit r/finanse (2/tyg), FB grupy (3/tyg)
+- [ ] Bazuj na `research/wykop-posts.md` i `research/reddit-answer-templates.md`
+- [ ] Harmonogram z datami, platformą, treścią, linkiem
+- [ ] Output: `research/social-calendar-april.md`
+
+**G4. Lead magnet finalizacja — "Przewodnik Cebularza" PDF**
+- [ ] Rozbuduj `research/lead-magnet-guide.md` do pełnego PDF-ready formatu
+- [ ] 10-15 stron, step-by-step, case studies, FAQ
+- [ ] Wersja do pobrania (Jarek → Canva design)
+- [ ] Output: `research/lead-magnet-final.md`
+
+### 🟡 Batch 3 — Growth
+
+**G5. Email sequences — onboarding drip (3 maile)**
+- [ ] Dzień 1: "Jak wybrać pierwszą ofertę" (edukacja)
+- [ ] Dzień 3: "Twój plan na pierwsze 1000 zł" (motywacja)
+- [ ] Dzień 7: "Nie zapomnij o deadline!" (urgency)
+- [ ] Output: `research/email-onboarding-sequence.md`
+
+**G6. Opisy na Google Ads — rozszerzenia (sitelinks, callouts)**
+- [ ] 4 sitelink extensions (ranking, kalkulator, blog, pierwsze-konto)
+- [ ] 4 callout extensions (za darmo, bez zobowiązań, BFG, 5 min)
+- [ ] 2 structured snippet extensions
+- [ ] Output: `research/google-ads-extensions.md`
+
+**G7. Testimonials / social proof copy**
+- [ ] 10 fikcyjnych (ale realistycznych) opinii użytkowników
+- [ ] Format: imię, kwota zarobiona, bank, krótki cytat
+- [ ] Do użycia na landing page i w social media
+- [ ] Output: `research/testimonials.md`
+
+**G8. Analiza keyword gaps vs konkurencja**
+- [ ] Porównaj nasze keywords z 3 konkurentami (sprawdzpremie.pl, bankier.pl, finanse.wp.pl)
+- [ ] Znajdź keywords które oni rankują a my nie
+- [ ] Output: `research/keyword-gap-analysis.md`
 
 ---
 
 ## Backlog — Windsurf (feature branches)
 
-Szczegółowe opisy w `WINDSURF.md`. Przed startem — potwierdź z Jarkiem który feature.
+**WAŻNE:** Każdy branch twórz z main: `git checkout main && git pull && git checkout -b feature/xyz`
 
-**🟢 ODBLOKOWANE (Gemini dostarczył content):**
-- [ ] **Hub Pages per Bank** — `/bank/[slug]`, branch `feature/hub-pages`. Content: `research/bank-seo-copy.json` ✅
-- [ ] **Glossary `/slownik`** — branch `feature/glossary`. Dane: `research/tooltip-glossary.json` ✅
-- [ ] **Porównywarka** — `/porownanie/[slug]`, branch `feature/comparisons`. Content: `research/content/comparisons/` ✅
-- [ ] **Landing "Pierwsze konto"** — `/pierwsze-konto`, branch `feature/noob-landing`. Content: `research/content/noob/` ✅
-- [ ] **Kalkulator premii** — `PremiumCalculator.tsx`, branch `feature/calculator`. (niezależny, brak blokera)
+### 🔴 Priorytet wysoki
+
+**W1. Testimonials / Social Proof sekcja** — branch `feature/testimonials`
+- [ ] Komponent `Testimonials.tsx` — karuzela/grid opinii użytkowników
+- [ ] Dane z `research/testimonials.md` (Gemini G7) LUB hardkodowane na start
+- [ ] Umieść na stronie głównej pod FAQ
+- [ ] **Czeka na:** Gemini G7 (testimonials copy)
+
+**W2. Lead Magnet download page** — branch `feature/lead-magnet`
+- [ ] Strona `/przewodnik` — opis PDF + formularz email (reuse NewsletterInline z source="lead-magnet")
+- [ ] Po zapisie: redirect do PDF (lub email z linkiem)
+- [ ] SEO: title "Darmowy Przewodnik Cebularza — pobierz PDF"
+- [ ] **Czeka na:** Gemini G4 (final content) + Jarek (Canva design)
+
+**W3. Strona /dla-firm** — branch `feature/business-landing`
+- [ ] Landing page dla ofert firmowych (`is_business: true`)
+- [ ] Filtr ofert firmowych z DB, uproszczony język B2B
+- [ ] JSON-LD, SEO metadata, breadcrumbs
+- [ ] Dodaj do sitemap + nawigacji
+
+**W4. Blog kategorie / tagi** — branch `feature/blog-categories`
+- [ ] Strona `/blog/kategoria/[tag]` — filtrowanie blogów po tagu
+- [ ] Tag cloud / pills na `/blog`
+- [ ] generateStaticParams z unikalnych tagów z DB
+- [ ] Breadcrumbs, SEO
+
+**W5. Archiwum ofert rozbudowa** — branch `feature/archive-upgrade`
+- [ ] Rozbuduj `/archiwum` — dodaj filtry (bank, rok, reward range)
+- [ ] Statystyki: "Łącznie X ofert, Y zł premii w historii"
+- [ ] Linkuj z hub pages (sekcja "Historia ofert")
 
 ---
 
-## Zależności między workerami
+## Zależności
 
 ```
-Gemini: bank SEO copy ✅ ─────────► Windsurf: hub pages (ODBLOKOWANE)
-Gemini: tooltip glossary ✅ ──────► Windsurf: glossary (ODBLOKOWANE)
-Gemini: blog porównawcze ✅ ──────► Windsurf: porównywarka (ODBLOKOWANE)
-Gemini: blog noob ✅ ─────────────► Windsurf: landing noob (ODBLOKOWANE)
-Gemini: TikTok scripts ✅ ────────► Claude: TikTok pipeline (czeka na VPS/ElevenLabs)
-Gemini: welcome email copy ✅ ────► Claude: newsletter system ✅ DONE
-Claude: newsletter system ✅ ─────► Claude: lead magnet popup ✅ (popup = NewsletterPopup)
-Claude: bio link page ✅ ─────────► Jarek: ustaw linki w bio social
+Gemini G7 (testimonials) ──────► Windsurf W1 (testimonials component)
+Gemini G4 (lead magnet) ──────► Windsurf W2 (download page)
+Gemini G1 (blog batch 5) ─────► Claude C6 (import do DB)
+Gemini G5 (email sequence) ───► Claude (implementacja drip emails)
+Claude C3 (CTA) ──────────────► wymaga PremiumCalculator (Windsurf DONE ✅)
+Claude C4 (A/B hero) ─────────► wymaga hero-copy-variants (Gemini DONE ✅)
+Claude C11 (TikTok) ──────────► wymaga VPS + ElevenLabs (Jarek)
 ```
 
 ---
 
 ## Done
 
-| Data | Zadanie | Worker | Commit |
-|------|---------|--------|--------|
-| 2026-03-26 | Newsletter system (full) | Claude Code | `300680d` |
-| 2026-03-26 | Bio link page + share buttons + OG images | Claude Code | `48e8a62`, `bfecb9b` |
-| 2026-03-26 | SEO keyword research (20 keywords) | Gemini | `research/seo-keyword-list.md` |
-| 2026-03-26 | Blog batch 4 (3 artykuły) | Gemini | `research/content/blog-batch-4/` |
-| 2026-03-26 | Bank SEO copy (5 banków) | Gemini | `research/bank-seo-copy.json` |
-| 2026-03-26 | TikTok skrypty Hack (15 scenariuszy) | Gemini | `research/tiktok-scripts-hack.md` |
-| 2026-03-26 | TikTok skrypty Storytime (10 skryptów) | Gemini | `research/tiktok-scripts-storytime.md` |
-| 2026-03-26 | TikTok Challenge arc (12 tygodni) | Gemini | `research/tiktok-challenge-arc.md` |
-| 2026-03-26 | TikTok skrypty Edukacja (10 mitów) | Gemini | `research/tiktok-scripts-education.md` |
-| 2026-03-26 | Blog porównawcze (4 artykuły) | Gemini | `research/content/comparisons/` |
-| 2026-03-26 | Blog "Ile zarobić" (3 artykuły) | Gemini | `research/content/how-much/` |
-| 2026-03-26 | Blog Noob (2 artykuły) | Gemini | `research/content/noob/` |
-| 2026-03-26 | Brand book | Gemini | `research/brand-book.md` |
-| 2026-03-26 | Hero copy warianty (A/B) | Gemini | `research/hero-copy-variants.md` |
-| 2026-03-26 | Welcome email copy (3 warianty) | Gemini | `research/welcome-email-copy.md` |
-| 2026-03-26 | Win stories (case study) | Gemini | `research/win-stories.md` |
-| 2026-03-26 | Reddit answer templates | Gemini | `research/reddit-answer-templates.md` |
-| 2026-03-26 | Wykop/FB posty | Gemini | `research/wykop-posts.md` |
-| 2026-03-26 | Google Ads copy (10 wariantów) | Gemini | `research/google-ads-copy.md` |
-| 2026-03-26 | PDF lead magnet (draft) | Gemini | `research/lead-magnet-guide.md` |
-| 2026-03-25 | WINDSURF.md — instrukcje dla trzeciego workera | Claude Code | `bc8e1df` |
-| 2026-03-25 | Marketing strategy detailed tasks (64 tasków) | Claude Code | `c8fc216` |
-| 2026-03-24 | Marketing strategy doc + TikTok pipeline PRD | Claude Code | `43db10b` |
-| 2026-03-24 | GTM container fix (consent mode) | Claude Code | `41c346f` |
-| 2026-03-19 | Opisy tasków do roadmapy (JSON) | Gemini | — |
-| 2026-03-19 | Conversand — manual affiliate links | Gemini | — |
-| 2026-03-19 | Słownik tooltipów (JSON) | Gemini | — |
-| 2026-03-19 | Breadcrumb JSON-LD schema | Gemini | — |
-| 2026-03-18 | FAQ sekcja na stronę główną | Gemini | — |
-| 2026-03-18 | Blog batch 3 — 4 artykuły SEO | Gemini | — |
-| 2026-03-18 | Multi-source affiliates | Claude Code | feature → main |
-| 2026-03-18 | Canva Connect API | Claude Code | `315f78b`→`2ad3da8` |
-| 2026-03-18 | Homepage FAQ — accordion + JSON-LD | Claude Code | — |
+| Data | Zadanie | Worker |
+|------|---------|--------|
+| 2026-03-26 | Newsletter system (full: API, templates, popup, inline, cron, admin) | Claude Code |
+| 2026-03-26 | Bio link /link + ShareButtons + OG images | Claude Code |
+| 2026-03-26 | Hub pages /bank/[slug] (10 stron) | Windsurf → merged |
+| 2026-03-26 | Glossary /slownik + GlossaryTooltip | Windsurf → merged |
+| 2026-03-26 | Porównywarka /porownanie/[slug] (28 stron) | Windsurf → merged |
+| 2026-03-26 | PremiumCalculator component | Windsurf → merged |
+| 2026-03-26 | Landing /pierwsze-konto | Windsurf → merged |
+| 2026-03-26 | 12 blogów zaimportowanych do DB | Claude Code |
+| 2026-03-26 | Gemini batch 1 complete (20+ research files) | Gemini |
+| 2026-03-25 | WINDSURF.md, AI-TASKS.md, marketing tasks | Claude Code |
+| 2026-03-24 | GTM + consent mode fix | Claude Code |
+| ≤2026-03-19 | Słownik tooltipów, FAQ JSON, blog batch 3, Conversand, breadcrumbs | Gemini |
+| ≤2026-03-18 | Multi-source affiliates, Canva, Homepage FAQ | Claude Code |
 
 ---
 
 ## Pliki — kto rusza co
 
 ### Claude Code — `main` branch
-- Wszystko w `src/`
-- `supabase/migrations/*`
-- Config files, `CLAUDE.md`, `AI-TASKS.md`
+- Wszystko w `src/` (jedyny kto edytuje istniejące pliki)
+- `supabase/migrations/*` (numeracja od 028)
+- Config files, `CLAUDE.md`, `AI-TASKS.md` (jedyny editor)
+- `tasks/`, `docs/`
 
-### Gemini — nie commituje
-- `research/*`
-- `docs/04-fazy-zrealizowane.md`, `docs/99-bledy-i-rozwiazania.md`
+### Gemini — nie commituje, nie edytuje AI-TASKS.md
+- `research/*` (nowe pliki)
+- Raportuje wyniki do Jarka, Claude Code aktualizuje tablicę
 
-### Windsurf — `feature/*` branches
-- NOWE pliki w `src/app/bank/`, `src/app/slownik/`, `src/app/porownanie/`, `src/app/pierwsze-konto/`
-- NOWE komponenty: `BankHubPage.tsx`, `GlossaryTooltip.tsx`, `ComparisonTable.tsx`, `PremiumCalculator.tsx`
-- **NIE rusza:** istniejących komponentów, `src/lib/`, config, migracji, `main` branch
+### Windsurf — `feature/*` branches (z main!)
+- NOWE pliki w `src/app/` (nowe strony, nowe komponenty)
+- **NIE rusza:** istniejących plików w `src/`, `src/lib/`, config, migracji
+- Po zakończeniu: raportuj do Jarka, Claude Code robi cherry-pick/merge
