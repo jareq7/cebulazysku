@@ -9,6 +9,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { ArrowLeft, Clock, User } from "lucide-react";
 import { TrackBlogRead } from "@/components/TrackBlogRead";
 import { ShareButtons } from "@/components/ShareButtons";
+import { NewsletterInline } from "@/components/NewsletterInline";
 
 export const revalidate = 300;
 
@@ -245,6 +246,7 @@ export default async function BlogPostPage({
             itemId={post.slug}
           />
         </div>
+        <NewsletterInline />
         <Link href="/blog">
           <Button variant="outline" className="gap-2">
             <ArrowLeft className="h-4 w-4" />

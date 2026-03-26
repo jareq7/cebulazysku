@@ -3,7 +3,7 @@
 > **Domena:** cebulazysku.pl  
 > **Repozytorium:** https://github.com/jareq7/cebulazysku  
 > **Deploy:** Vercel (automatyczny z brancha `main`)  
-> **Ostatnia aktualizacja:** 25 marca 2026 r.
+> **Ostatnia aktualizacja:** 26 marca 2026 r.
 
 ---
 
@@ -57,6 +57,7 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 42 | [Multi-Source Affiliates](./42-multi-source-affiliates.md) | Conversand CPA, bank name matching, affiliate routing, admin panel |
 | 43 | [Homepage FAQ](./43-homepage-faq.md) | 15 pytań accordion + FAQPage JSON-LD schema |
 | 44 | [UI Components Upgrade](./44-ui-components-upgrade.md) | Toast, DeadlineAlert, Skeleton, Sheet navbar, 7 shadcn komponentów |
+| 45 | [Newsletter](./45-newsletter.md) | Double opt-in, popup/inline, digest, alerty, admin panel |
 
 ---
 
@@ -95,6 +96,7 @@ Wyniki analiz przeprowadzonych przez Gemini CLI w obszarze optymalizacji i rozwo
 | Homepage FAQ | [prd-homepage-faq.md](../tasks/prd-homepage-faq.md) | [tasks-homepage-faq.md](../tasks/tasks-homepage-faq.md) | ✅ Done |
 | UI Components Upgrade | [prd-ui-components-upgrade.md](../tasks/prd-ui-components-upgrade.md) | [tasks-ui-components-upgrade.md](../tasks/tasks-ui-components-upgrade.md) | 🔄 In Progress |
 | TikTok Video Pipeline | [prd-tiktok-pipeline.md](../tasks/prd-tiktok-pipeline.md) | — | 📋 PRD Ready |
+| Newsletter | [prd-newsletter.md](../tasks/prd-newsletter.md) | [tasks-newsletter.md](../tasks/tasks-newsletter.md) | ✅ Done |
 | Marketing Strategy | [strategia-marketingowa.md](./strategia-marketingowa.md) | [tasks-marketing-strategy-detailed.md](../tasks/tasks-marketing-strategy-detailed.md) | 📋 Planned |
 
 ---

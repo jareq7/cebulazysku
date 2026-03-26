@@ -3,6 +3,8 @@ import { createAdminClient } from "@/lib/supabase/admin";
 import { fetchLeadStarOffers, generateSlug, generateOfferId } from "@/lib/leadstar";
 import { parseLeadstarConditions } from "@/lib/parse-leadstar-conditions";
 import { verifyConditionsWithAI } from "@/lib/verify-conditions-ai";
+import { sendEmail } from "@/lib/resend";
+import { newsletterNewOfferEmail } from "@/lib/email-templates";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -27,8 +29,10 @@ export async function runSync() {
   let created = 0;
   let updated = 0;
   let deactivated = 0;
+  let alertsSent = 0;
   const errors: string[] = [];
   const activeLeadstarIds: string[] = [];
+  const newOfferSlugs: string[] = [];
 
   for (const ls of leadstarOffers) {
     try {
@@ -162,6 +166,7 @@ export async function runSync() {
         const { error } = await supabase.from("offers").insert(insertData);
         if (error) throw error;
         created++;
+        newOfferSlugs.push(slug);
       }
     } catch (err) {
       const msg = `Error processing ${ls.institution} ${ls.product}: ${err instanceof Error ? err.message : String(err)}`;
@@ -194,6 +199,48 @@ export async function runSync() {
     errors.push(`Deactivation error: ${err instanceof Error ? err.message : String(err)}`);
   }
 
+  // --- NEWSLETTER NEW OFFER ALERTS ---
+  if (newOfferSlugs.length > 0) {
+    try {
+      // Fetch the newly created offers that have reward > 0 (e.g. set by enrichment already)
+      const { data: newOffers } = await supabase
+        .from("offers")
+        .select("slug, bank_name, offer_name, reward")
+        .in("slug", newOfferSlugs)
+        .gt("reward", 0);
+
+      if (newOffers && newOffers.length > 0) {
+        const { data: subscribers } = await supabase
+          .from("newsletter_subscribers")
+          .select("email, name, unsubscribe_token")
+          .eq("status", "active");
+
+        if (subscribers && subscribers.length > 0) {
+          for (const offer of newOffers) {
+            for (const sub of subscribers) {
+              try {
+                const { subject, html } = newsletterNewOfferEmail({
+                  name: sub.name || sub.email.split("@")[0],
+                  bankName: offer.bank_name,
+                  reward: offer.reward,
+                  offerSlug: offer.slug,
+                  offerName: offer.offer_name,
+                  unsubscribeToken: sub.unsubscribe_token,
+                });
+                await sendEmail({ to: sub.email, subject, html });
+                alertsSent++;
+              } catch {
+                // Don't break sync for email failures
+              }
+            }
+          }
+        }
+      }
+    } catch (err) {
+      errors.push(`Newsletter alert error: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
   const duration = Date.now() - start;
   await supabase.from("sync_log").insert({
     offers_found: leadstarOffers.length,
@@ -210,6 +257,7 @@ export async function runSync() {
     created,
     updated,
     deactivated,
+    alerts_sent: alertsSent,
     errors: errors.length,
     duration_ms: duration,
   };

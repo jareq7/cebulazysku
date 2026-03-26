@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendEmail } from "@/lib/resend";
-import { deadlineReminderEmail, weeklySummaryEmail } from "@/lib/email-templates";
+import { deadlineReminderEmail, weeklySummaryEmail, newsletterDigestEmail } from "@/lib/email-templates";
+import { fetchOffersFromDB } from "@/lib/offers";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -24,7 +25,7 @@ export async function GET(request: NextRequest) {
   const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
   const isMonday = new Date().getDay() === 1;
 
-  const stats = { deadline_sent: 0, weekly_sent: 0, skipped: 0, errors: 0 };
+  const stats = { deadline_sent: 0, weekly_sent: 0, newsletter_sent: 0, skipped: 0, errors: 0 };
 
   try {
     // --- DEADLINE REMINDERS ---
@@ -236,6 +237,68 @@ export async function GET(request: NextRequest) {
               sent_date: today,
             });
             stats.weekly_sent++;
+          } else {
+            stats.errors++;
+          }
+        }
+      }
+    }
+
+    // --- NEWSLETTER DIGEST (only on Mondays) ---
+    if (isMonday) {
+      const { data: subscribers } = await supabase
+        .from("newsletter_subscribers")
+        .select("id, email, name, unsubscribe_token")
+        .eq("status", "active");
+
+      if (subscribers && subscribers.length > 0) {
+        const offers = await fetchOffersFromDB();
+        const topOffers = offers
+          .sort((a, b) => b.reward - a.reward)
+          .slice(0, 8)
+          .map((o) => ({ bankName: o.bankName, reward: o.reward, slug: o.slug }));
+
+        // Count new offers from last 7 days
+        const weekAgo = new Date();
+        weekAgo.setDate(weekAgo.getDate() - 7);
+        const { count: newOffersCount } = await supabase
+          .from("offers")
+          .select("id", { count: "exact", head: true })
+          .eq("is_active", true)
+          .gte("created_at", weekAgo.toISOString());
+
+        // Check dedup for newsletter digest
+        const subscriberEmails = subscribers.map((s) => s.email);
+        const { data: nlSent } = await supabase
+          .from("email_sends")
+          .select("email")
+          .in("email", subscriberEmails)
+          .eq("type", "newsletter_digest")
+          .gte("sent_at", today + "T00:00:00Z");
+
+        const nlSentSet = new Set((nlSent || []).map((s) => s.email));
+
+        for (const sub of subscribers) {
+          if (nlSentSet.has(sub.email)) { stats.skipped++; continue; }
+
+          const { subject, html } = newsletterDigestEmail({
+            name: sub.name || sub.email.split("@")[0],
+            offers: topOffers,
+            newOffersCount: newOffersCount || 0,
+            unsubscribeToken: sub.unsubscribe_token,
+          });
+
+          const result = await sendEmail({ to: sub.email, subject, html });
+          if (result.success) {
+            await supabase.from("email_sends").insert({
+              user_id: null,
+              type: "newsletter_digest",
+              offer_id: null,
+              email: sub.email,
+              sent_at: new Date().toISOString(),
+              sent_date: today,
+            });
+            stats.newsletter_sent++;
           } else {
             stats.errors++;
           }

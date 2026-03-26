@@ -101,6 +101,203 @@ export interface WeeklySummaryEmailData {
   offers: { bankName: string; offerName: string; reward: number; slug: string }[];
 }
 
+function newsletterLayout(content: string, previewText: string, unsubscribeToken?: string): string {
+  const unsubLink = unsubscribeToken
+    ? `${BASE_URL}/api/newsletter/unsubscribe?token=${unsubscribeToken}`
+    : `${BASE_URL}`;
+  return `<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${previewText}</title>
+  <style>
+    body { margin: 0; padding: 0; background: #f4f4f5; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .wrapper { max-width: 560px; margin: 32px auto; background: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+    .header { background: linear-gradient(135deg, #059669 0%, #10b981 100%); padding: 28px 32px; text-align: center; }
+    .header h1 { margin: 0; color: white; font-size: 22px; font-weight: 700; letter-spacing: -0.3px; }
+    .header p { margin: 6px 0 0; color: rgba(255,255,255,0.85); font-size: 13px; }
+    .body { padding: 32px; }
+    .body p { margin: 0 0 16px; color: #374151; font-size: 15px; line-height: 1.6; }
+    .highlight { background: #ecfdf5; border-left: 3px solid #10b981; border-radius: 0 8px 8px 0; padding: 14px 18px; margin: 20px 0; }
+    .highlight strong { color: #065f46; font-size: 16px; }
+    .btn { display: inline-block; background: #059669; color: white !important; text-decoration: none; padding: 12px 28px; border-radius: 8px; font-weight: 600; font-size: 15px; margin: 8px 0; }
+    .reward { font-size: 32px; font-weight: 800; color: #059669; }
+    .footer { padding: 20px 32px; border-top: 1px solid #f0f0f0; text-align: center; }
+    .footer p { margin: 0; color: #9ca3af; font-size: 12px; line-height: 1.7; }
+    .footer a { color: #6b7280; text-decoration: underline; }
+    .tag { display: inline-block; background: #fef3c7; color: #92400e; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .list { list-style: none; padding: 0; margin: 0; }
+    .list li { padding: 10px 0; border-bottom: 1px solid #f3f4f6; color: #374151; font-size: 14px; display: flex; justify-content: space-between; align-items: center; }
+    .list li:last-child { border-bottom: none; }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="header">
+      <h1>🧅 CebulaZysku</h1>
+      <p>Obieramy premie bankowe warstwa po warstwie</p>
+    </div>
+    <div class="body">
+      ${content}
+    </div>
+    <div class="footer">
+      <p>
+        Wysłano przez <a href="${BASE_URL}">cebulazysku.pl</a><br/>
+        <a href="${unsubLink}">Wypisz się z newslettera</a>
+      </p>
+    </div>
+  </div>
+</body>
+</html>`;
+}
+
+// ---------- Newsletter email templates ----------
+
+export interface NewsletterConfirmEmailData {
+  email: string;
+  confirmUrl: string;
+}
+
+export function newsletterConfirmEmail(data: NewsletterConfirmEmailData): { subject: string; html: string } {
+  const { email, confirmUrl } = data;
+
+  const subject = "🧅 Potwierdź subskrypcję CebulaZysku";
+
+  const content = `
+    <p>Hej <strong>${email}</strong>! 👋</p>
+    <p>Ktoś (mamy nadzieję, że Ty!) zapisał ten adres do newslettera CebulaZysku.</p>
+    <p>Kliknij przycisk poniżej, żeby potwierdzić subskrypcję i zacząć otrzymywać powiadomienia o najlepszych premiach bankowych.</p>
+    <p style="text-align: center; margin-top: 24px;">
+      <a href="${confirmUrl}" class="btn">Potwierdzam subskrypcję →</a>
+    </p>
+    <p style="color: #9ca3af; font-size: 13px; margin-top: 24px;">
+      Jeśli to nie Ty — po prostu zignoruj tego maila. Link wygasa automatycznie.
+    </p>
+  `;
+
+  return { subject, html: newsletterLayout(content, subject) };
+}
+
+export interface NewsletterWelcomeEmailData {
+  name: string;
+  topOffer: { bankName: string; reward: number; slug: string } | null;
+  unsubscribeToken?: string;
+}
+
+export function newsletterWelcomeEmail(data: NewsletterWelcomeEmailData): { subject: string; html: string } {
+  const { name, topOffer, unsubscribeToken } = data;
+
+  const subject = "🧅 Witaj w CebulaZysku! Oto Twoja pierwsza cebulka";
+
+  const offerBlock = topOffer
+    ? `
+    <div class="highlight">
+      <span class="tag">TOP OFERTA</span><br/><br/>
+      <strong>${topOffer.bankName}</strong><br/>
+      <span class="reward">${topOffer.reward} zł</span>
+    </div>
+    <p style="text-align: center;">
+      <a href="${BASE_URL}/oferta/${topOffer.slug}" class="btn">Sprawdź ofertę →</a>
+    </p>`
+    : `
+    <p style="text-align: center;">
+      <a href="${BASE_URL}/ranking" class="btn">Zobacz ranking ofert →</a>
+    </p>`;
+
+  const content = `
+    <p>Hej <strong>${name}</strong>! 👋</p>
+    <p>Cieszę się, że dołączasz do grona cebularzy! Od teraz będziesz na bieżąco z najlepszymi premiami bankowymi w Polsce.</p>
+    <p><strong>Co otrzymasz:</strong></p>
+    <p>✅ Powiadomienia o nowych ofertach<br/>
+    ✅ Tygodniowe zestawienia najlepszych premii<br/>
+    ✅ Alerty, gdy pojawi się coś naprawdę wartego uwagi</p>
+    ${offerBlock}
+    <p style="color: #9ca3af; font-size: 13px; margin-top: 24px;">
+      Każda cebulka do obrania to pieniądze, które banki chcą Ci dać. Nie przepuść żadnej 🧅
+    </p>
+  `;
+
+  return { subject, html: newsletterLayout(content, subject, unsubscribeToken) };
+}
+
+export interface NewsletterDigestEmailData {
+  name: string;
+  offers: { bankName: string; reward: number; slug: string }[];
+  newOffersCount: number;
+  unsubscribeToken: string;
+}
+
+export function newsletterDigestEmail(data: NewsletterDigestEmailData): { subject: string; html: string } {
+  const { name, offers, newOffersCount, unsubscribeToken } = data;
+
+  const subject = `🧅 Tygodniowy przegląd cebulowy — ${offers.length} ofert do obrania`;
+
+  const offerRows = offers
+    .slice(0, 8)
+    .map(
+      (o) => `
+      <li>
+        <span><a href="${BASE_URL}/oferta/${o.slug}" style="color: #374151; text-decoration: none;">${o.bankName}</a></span>
+        <strong style="color: #059669; white-space: nowrap; margin-left: 12px;">${o.reward} zł</strong>
+      </li>`
+    )
+    .join("");
+
+  const newBadge = newOffersCount > 0
+    ? `<p>🆕 W tym tygodniu pojawiło się <strong>${newOffersCount} ${newOffersCount === 1 ? "nowa oferta" : "nowe oferty/nowych ofert"}</strong>!</p>`
+    : "";
+
+  const content = `
+    <p>Hej <strong>${name}</strong>! 👋</p>
+    <p>Oto Twój cotygodniowy przegląd najlepszych premii bankowych.</p>
+    ${newBadge}
+    <p style="font-weight: 600; margin-bottom: 8px;">TOP oferty do obrania:</p>
+    <ul class="list">${offerRows}</ul>
+    <p style="text-align: center; margin-top: 24px;">
+      <a href="${BASE_URL}/ranking" class="btn">Zobacz pełny ranking →</a>
+    </p>
+    <p style="color: #9ca3af; font-size: 13px; margin-top: 24px;">
+      Nie przegap żadnej warstwy — im więcej obierzesz, tym więcej zarobisz 🧅
+    </p>
+  `;
+
+  return { subject, html: newsletterLayout(content, subject, unsubscribeToken) };
+}
+
+export interface NewsletterNewOfferEmailData {
+  name: string;
+  bankName: string;
+  reward: number;
+  offerSlug: string;
+  offerName: string;
+  unsubscribeToken: string;
+}
+
+export function newsletterNewOfferEmail(data: NewsletterNewOfferEmailData): { subject: string; html: string } {
+  const { name, bankName, reward, offerSlug, offerName, unsubscribeToken } = data;
+
+  const subject = `🆕 Nowa oferta: ${reward} zł premii w ${bankName}!`;
+
+  const content = `
+    <p>Hej <strong>${name}</strong>! 👋</p>
+    <p>Właśnie pojawiła się nowa oferta, która może Cię zainteresować:</p>
+    <div class="highlight">
+      <span class="tag">NOWA OFERTA</span><br/><br/>
+      <strong>${offerName}</strong><br/>
+      <span class="reward">${reward} zł</span>
+    </div>
+    <p style="text-align: center;">
+      <a href="${BASE_URL}/oferta/${offerSlug}" class="btn">Sprawdź szczegóły →</a>
+    </p>
+    <p style="color: #9ca3af; font-size: 13px; margin-top: 24px;">
+      Okazje szybko się kończą — lepiej obrać cebulkę, zanim zniknie z półki 🧅
+    </p>
+  `;
+
+  return { subject, html: newsletterLayout(content, subject, unsubscribeToken) };
+}
+
 export function weeklySummaryEmail(data: WeeklySummaryEmailData): { subject: string; html: string } {
   const { userName, trackedCount, totalReward, offers } = data;
 

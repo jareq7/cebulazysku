@@ -21,6 +21,7 @@ export default function RegisterPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [consent, setConsent] = useState(false);
+  const [newsletter, setNewsletter] = useState(true);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +40,14 @@ export default function RegisterPage() {
     setLoading(true);
     const success = await register(name, email, password);
     if (success) {
+      // Subscribe to newsletter if checked
+      if (newsletter) {
+        fetch("/api/newsletter/subscribe", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, name, source: "registration" }),
+        }).catch(() => {}); // fire-and-forget
+      }
       router.push("/onboarding");
     } else {
       setError("Konto z tym adresem email już istnieje.");
@@ -115,6 +124,17 @@ export default function RegisterPage() {
                 <Link href="/polityka-prywatnosci" className="text-emerald-600 underline" target="_blank">
                   Politykę prywatności
                 </Link>
+              </Label>
+            </div>
+            <div className="flex items-start gap-2">
+              <Checkbox
+                id="newsletter"
+                checked={newsletter}
+                onCheckedChange={(checked) => setNewsletter(checked === true)}
+                className="mt-0.5"
+              />
+              <Label htmlFor="newsletter" className="text-xs text-muted-foreground leading-relaxed font-normal cursor-pointer">
+                Chcę otrzymywać newsletter z najlepszymi premiami bankowych
               </Label>
             </div>
           </CardContent>

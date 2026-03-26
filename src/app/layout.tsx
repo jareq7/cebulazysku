@@ -9,6 +9,7 @@ import { ServiceWorkerRegister } from "@/components/ServiceWorkerRegister";
 import { InstallPrompt } from "@/components/InstallPrompt";
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { NewsletterPopup } from "@/components/NewsletterPopup";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -83,6 +84,7 @@ export default function RootLayout({
               <main id="main-content" className="flex-1">{children}</main>
               <Footer />
             </div>
+            <NewsletterPopup />
             <Toaster richColors position="bottom-right" />
           </TooltipProvider>
         </Providers>

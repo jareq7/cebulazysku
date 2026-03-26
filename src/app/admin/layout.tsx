@@ -24,6 +24,7 @@ import {
   Zap,
   Map,
   Globe,
+  Mail,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -38,6 +39,7 @@ const NAV_ITEMS = [
   { href: "/admin/sync", label: "Sync logi", icon: RefreshCw },
   { href: "/admin/wiadomosci", label: "Wiadomości", icon: MessageSquare },
   { href: "/admin/push", label: "Push", icon: Bell },
+  { href: "/admin/newsletter", label: "Newsletter", icon: Mail },
   { href: "/admin/conversand", label: "Conversand", icon: Globe },
   { href: "/admin/zasoby", label: "Zasoby AI", icon: Zap },
   { href: "/admin/roadmap", label: "Roadmapa", icon: Map },
