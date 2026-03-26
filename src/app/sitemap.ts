@@ -52,6 +52,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  // Comparison pages — all unique bank pairs
+  const bankList = Array.from(bankSlugs).sort();
+  const comparisonPages: MetadataRoute.Sitemap = [];
+  for (let i = 0; i < bankList.length; i++) {
+    for (let j = i + 1; j < bankList.length; j++) {
+      comparisonPages.push({
+        url: `${baseUrl}/porownanie/${bankList[i]}-vs-${bankList[j]}`,
+        lastModified: new Date(),
+        changeFrequency: "weekly" as const,
+        priority: 0.6,
+      });
+    }
+  }
+
   return [
     {
       url: baseUrl,
@@ -117,5 +131,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...noRewardPages,
     ...blogPages,
     ...bankHubPages,
+    ...comparisonPages,
   ];
 }
