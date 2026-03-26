@@ -1,11 +1,10 @@
-// @author Windsurf (claude-sonnet-4-20250514) | 2026-03-25
+// @author Windsurf (claude-sonnet-4-20250514) | 2026-03-26
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { fetchOffersFromDB, fetchExpiredOffersFromDB } from "@/lib/offers";
 import type { BankOffer } from "@/data/banks";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { JsonLd } from "@/components/JsonLd";
 import { OfferCard } from "@/components/OfferCard";
@@ -42,12 +41,14 @@ function bankNameToSlug(name: string): string {
     .replace(/^-|-$/g, "");
 }
 
-function slugToBankDisplayName(slug: string, offers: BankOffer[]): string | null {
-  const match = offers.find((o) => bankNameToSlug(o.bankName) === slug);
-  return match ? match.bankName : null;
+interface BankData {
+  slug: string;
+  name: string;
+  offers: BankOffer[];
+  expiredOffers: BankOffer[];
 }
 
-async function getAllBanks(): Promise<{ slug: string; name: string; offers: BankOffer[]; expiredOffers: BankOffer[] }[]> {
+async function getAllBanks(): Promise<BankData[]> {
   const [active, expired] = await Promise.all([
     fetchOffersFromDB(),
     fetchExpiredOffersFromDB(),
@@ -93,7 +94,6 @@ export async function generateMetadata({
   const bank = banks.find((b) => b.slug === slug);
   if (!bank) return {};
 
-  const totalReward = bank.offers.reduce((sum, o) => sum + o.reward, 0);
   const maxReward = bank.offers.length > 0 ? Math.max(...bank.offers.map((o) => o.reward)) : 0;
 
   const title = `Premie bankowe ${bank.name} 2026 — aktualne oferty i warunki`;
@@ -135,7 +135,7 @@ export default async function BankHubPage({
   const bankLogo = offers[0]?.bankLogo || expiredOffers[0]?.bankLogo || "";
   const bankColor = offers[0]?.bankColor || expiredOffers[0]?.bankColor || "#6B7280";
 
-  // JSON-LD: Organization + BreadcrumbList
+  // JSON-LD: Organization
   const organizationLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -144,6 +144,7 @@ export default async function BankHubPage({
     ...(bankLogo && bankLogo.startsWith("http") ? { logo: bankLogo } : {}),
   };
 
+  // JSON-LD: BreadcrumbList
   const breadcrumbLd = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",

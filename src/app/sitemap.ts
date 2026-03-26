@@ -1,3 +1,4 @@
+// @author Windsurf (claude-sonnet-4-20250514) | 2026-03-26 — added bank hub pages to sitemap
 import { MetadataRoute } from "next";
 import { fetchOffersFromDB, fetchNoRewardOffers } from "@/lib/offers";
 import { blogPosts } from "@/data/blog";
@@ -28,6 +29,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: new Date(post.publishedAt),
     changeFrequency: "monthly" as const,
     priority: 0.6,
+  }));
+
+  // Bank hub pages — distinct bank slugs
+  const bankSlugs = new Set<string>();
+  for (const o of [...bankOffers, ...noRewardOffers]) {
+    bankSlugs.add(
+      o.bankName
+        .toLowerCase()
+        .replace(/\s+s\.a\.?$/i, "")
+        .replace(/bank\s+/gi, "")
+        .replace(/ś/g, "s").replace(/ł/g, "l").replace(/ó/g, "o")
+        .replace(/ż/g, "z").replace(/ź/g, "z").replace(/ą/g, "a")
+        .replace(/ę/g, "e").replace(/ć/g, "c").replace(/ń/g, "n")
+        .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "")
+    );
+  }
+  const bankHubPages = Array.from(bankSlugs).map((slug) => ({
+    url: `${baseUrl}/bank/${slug}`,
+    lastModified: new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.7,
   }));
 
   return [
@@ -88,5 +110,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...offerPages,
     ...noRewardPages,
     ...blogPages,
+    ...bankHubPages,
   ];
 }
