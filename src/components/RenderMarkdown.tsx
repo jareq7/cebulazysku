@@ -1,14 +1,27 @@
 // @author Gemini CLI (gemini-3-pro-preview) | 2026-03-14 — initial version
 // @author Claude Code (claude-opus-4-6) | 2026-03-14 — extracted to component, theme colors, heading support
+// @author Claude Code (claude-opus-4-6) | 2026-03-26 — internal linking integration
+
+import Link from "next/link";
+import { autoLinkContent } from "@/lib/internal-links";
 
 function parseInlineStyles(text: string) {
-  const parts = text.split(/(\*\*.*?\*\*)/g);
+  // Split on markdown links [text](/url) and bold **text**
+  const parts = text.split(/(\[.*?\]\(.*?\)|\*\*.*?\*\*)/g);
   return parts.map((part, i) => {
     if (part.startsWith("**") && part.endsWith("**")) {
       return (
         <strong key={i} className="font-bold text-foreground">
           {part.slice(2, -2)}
         </strong>
+      );
+    }
+    const linkMatch = part.match(/^\[(.*?)\]\((.*?)\)$/);
+    if (linkMatch) {
+      return (
+        <Link key={i} href={linkMatch[2]} className="text-primary underline underline-offset-2 hover:text-primary/80">
+          {linkMatch[1]}
+        </Link>
       );
     }
     return part;
@@ -18,7 +31,8 @@ function parseInlineStyles(text: string) {
 export function RenderMarkdown({ text }: { text: string }) {
   if (!text) return null;
 
-  const blocks = text.split(/\n\n+/);
+  const linked = autoLinkContent(text);
+  const blocks = linked.split(/\n\n+/);
 
   return (
     <div className="space-y-4">

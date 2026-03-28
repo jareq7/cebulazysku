@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import { Users, Target, Shield, Heart, ArrowRight } from "lucide-react";
+import { Users, Target, Shield, Heart, ArrowRight, Zap, Bell, BookOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -82,6 +82,50 @@ export default function AboutPage() {
               </CardContent>
             </Card>
           ))}
+        </div>
+      </section>
+
+      {/* Persona — Dla kogo jest CebulaZysku? */}
+      <section className="mb-12">
+        <h2 className="text-xl font-bold mb-4">Dla kogo jest CebulaZysku?</h2>
+        <div className="rounded-2xl bg-gradient-to-br from-emerald-50 to-green-50 dark:from-emerald-950/30 dark:to-green-950/20 border border-emerald-200 dark:border-emerald-800/40 p-6 space-y-4">
+          <p className="text-muted-foreground leading-relaxed">
+            Jeśli regularnie szukasz sposobów, żeby Twoje pieniądze pracowały ciężej
+            niż Ty — jesteś w dobrym miejscu. Nazywamy się <strong>Cebularzami</strong>,
+            bo obieramy zyski warstwa po warstwie.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-4">
+            <div className="flex items-start gap-3">
+              <Zap className="h-5 w-5 text-emerald-600 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-semibold text-sm">Zapominasz o warunkach?</p>
+                <p className="text-xs text-muted-foreground">
+                  Nasz Tracker przypomni Ci o każdej płatności i terminie.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <BookOpen className="h-5 w-5 text-emerald-600 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-semibold text-sm">Regulaminy Cię przerażają?</p>
+                <p className="text-xs text-muted-foreground">
+                  Rozbijamy warunki na proste kroki — zero prawniczego żargonu.
+                </p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Bell className="h-5 w-5 text-emerald-600 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-semibold text-sm">Przegapiasz deadline'y?</p>
+                <p className="text-xs text-muted-foreground">
+                  Powiadomienia email i push, żebyś nie stracił premii.
+                </p>
+              </div>
+            </div>
+          </div>
+          <p className="text-sm text-emerald-700 dark:text-emerald-400 font-medium mt-2">
+            Sprytny Cebularz nie traci pieniędzy — on je obiera.
+          </p>
         </div>
       </section>
 

@@ -32,6 +32,13 @@ export const AnalyticsEvents = {
   NEWSLETTER_SIGNUP: "newsletter_signup",
   PUSH_SUBSCRIBE: "push_subscribe",
   COOKIE_CONSENT: "cookie_consent",
+
+  // Custom — CTA & A/B
+  CTA_CLICK: "cta_click",
+  HERO_VARIANT_VIEW: "hero_variant_view",
+  HERO_CTA_CLICK: "hero_cta_click",
+  CALCULATOR_INTERACTION: "calculator_interaction",
+  CALCULATOR_RESULT: "calculator_result",
 } as const;
 
 export type AnalyticsEvent = (typeof AnalyticsEvents)[keyof typeof AnalyticsEvents];

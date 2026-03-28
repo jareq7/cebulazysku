@@ -22,6 +22,8 @@ import { TrackViewItem } from "@/components/TrackViewItem";
 import { ExpiredOfferBanner } from "@/components/ExpiredOfferBanner";
 import { DeadlineAlert } from "@/components/DeadlineAlert";
 import { ShareButtons } from "@/components/ShareButtons";
+import { OfferFAQ } from "@/components/OfferFAQ";
+import { StickyCTA } from "@/components/StickyCTA";
 import { Button } from "@/components/ui/button";
 import {
   Clock,
@@ -29,6 +31,7 @@ import {
   XCircle,
   Plus,
   Minus,
+  Shield,
 } from "lucide-react";
 
 export async function generateStaticParams() {
@@ -418,24 +421,7 @@ export default async function OfferDetailPage({
           )}
 
           {/* FAQ */}
-          {offer.faq.length > 0 && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Najczęściej zadawane pytania</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {offer.faq.map((item, i) => (
-                  <div key={i}>
-                    <h4 className="font-semibold">{item.question}</h4>
-                    <p className="mt-1 text-sm text-muted-foreground leading-relaxed">
-                      {item.answer}
-                    </p>
-                    {i < offer.faq.length - 1 && <Separator className="mt-4" />}
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          )}
+          <OfferFAQ faq={offer.faq} />
           {/* Share */}
           <div>
             <h3 className="text-sm font-medium text-muted-foreground mb-2">Udostępnij ofertę</h3>
@@ -452,7 +438,7 @@ export default async function OfferDetailPage({
         {/* Sidebar */}
         <div className="space-y-4">
           <Card className="sticky top-20">
-            <CardContent className="pt-6">
+            <CardContent className="pt-6 space-y-4">
               {offer.status === "active" && offer.hasUserReward ? (
                 <OfferTrackingActions
                   offerId={offer.id}
@@ -491,10 +477,34 @@ export default async function OfferDetailPage({
                   </Link>
                 </div>
               )}
+              {/* Trust signals */}
+              {offer.status === "active" && (
+                <div className="flex flex-col gap-1.5 text-xs text-muted-foreground pt-2 border-t">
+                  <span className="flex items-center gap-1.5">
+                    <CheckCircle className="h-3.5 w-3.5 text-emerald-500" /> Bez zobowiązań
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Clock className="h-3.5 w-3.5 text-emerald-500" /> Założenie konta trwa 5 min
+                  </span>
+                  <span className="flex items-center gap-1.5">
+                    <Shield className="h-3.5 w-3.5 text-emerald-500" /> Depozyt chroniony przez BFG
+                  </span>
+                </div>
+              )}
             </CardContent>
           </Card>
         </div>
       </div>
+
+      {/* Sticky CTA on mobile */}
+      {offer.status === "active" && (
+        <StickyCTA
+          bankName={offer.bankName}
+          reward={offer.reward}
+          affiliateUrl={bestAffiliateUrl}
+          hasUserReward={offer.hasUserReward}
+        />
+      )}
 
       {/* Zobacz też */}
       {await (async () => {

@@ -16,6 +16,9 @@ import {
 import { DisclaimerBanner } from "@/components/DisclaimerBanner";
 import { JsonLd } from "@/components/JsonLd";
 import { HomepageFaq } from "@/components/HomepageFaq";
+import { PremiumCalculator } from "@/components/PremiumCalculator";
+import { HeroABTest } from "@/components/HeroABTest";
+import { Testimonials } from "@/components/Testimonials";
 import { homepageFaq } from "@/data/faq";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -82,36 +85,7 @@ export default async function Home() {
       <section className="relative overflow-hidden bg-gradient-to-br from-emerald-50 via-green-50 to-lime-50 dark:from-background dark:via-background dark:to-background">
         <div className="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%2240%22%20height%3D%2240%22%20viewBox%3D%220%200%2040%2040%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Ccircle%20cx%3D%2220%22%20cy%3D%2220%22%20r%3D%228%22%20fill%3D%22%231B5E20%22%20fill-opacity%3D%220.04%22%2F%3E%3C%2Fsvg%3E')] opacity-50" />
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
-          <div className="text-center">
-            <Badge variant="secondary" className="mb-6 gap-1.5 px-4 py-1.5 text-sm">
-              <Sparkles className="h-4 w-4 text-emerald-600" />
-              🧅 {bankOffers.length} ofert do ołupienia
-            </Badge>
-            <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
-              Obierz premie bankowe{" "}
-              <span className="bg-gradient-to-r from-emerald-700 to-green-500 bg-clip-text text-transparent">
-                warstwa po warstwie
-              </span>
-            </h1>
-            <p className="mx-auto mt-6 max-w-2xl text-lg text-muted-foreground leading-relaxed">
-              Jak cebula — każda warstwa to kolejny zysk. Porównuj promocje, śledź
-              warunki i zbieraj premie. Aktualnie do obrania nawet{" "}
-              <strong className="text-emerald-600 font-bold">{totalEarnings} zł</strong>!
-            </p>
-            <div className="mt-8 flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
-              <Link href="/#oferty">
-                <Button size="lg" className="gap-2 text-base px-8">
-                  Sprawdź oferty
-                  <ArrowRight className="h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/jak-to-dziala">
-                <Button variant="outline" size="lg" className="text-base px-8">
-                  Jak to działa?
-                </Button>
-              </Link>
-            </div>
-          </div>
+          <HeroABTest offerCount={bankOffers.length} totalEarnings={totalEarnings} />
 
           {/* Stats */}
           <div className="mt-16 grid grid-cols-2 gap-4 sm:grid-cols-4 sm:gap-8">
@@ -221,6 +195,13 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* Premium Calculator */}
+      <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+        <div className="max-w-xl mx-auto">
+          <PremiumCalculator offers={bankOffers} />
+        </div>
+      </section>
+
       {/* Trust section */}
       <section className="bg-muted/30 py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -261,6 +242,11 @@ export default async function Home() {
             ))}
           </div>
         </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Testimonials />
       </section>
 
       {/* FAQ */}

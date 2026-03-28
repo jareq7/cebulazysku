@@ -10,6 +10,8 @@ import { ArrowLeft, Clock, User } from "lucide-react";
 import { TrackBlogRead } from "@/components/TrackBlogRead";
 import { ShareButtons } from "@/components/ShareButtons";
 import { NewsletterInline } from "@/components/NewsletterInline";
+import { autoLinkContent } from "@/lib/internal-links";
+import { RenderMarkdown } from "@/components/RenderMarkdown";
 
 export const revalidate = 300;
 
@@ -204,34 +206,8 @@ export default async function BlogPostPage({
           </div>
         </header>
 
-        <div className="prose prose-gray max-w-none text-muted-foreground leading-relaxed space-y-4">
-          {post.content.split("\n\n").map((paragraph, i) => {
-            if (paragraph.startsWith("## ")) {
-              return (
-                <h2 key={i} className="text-xl font-bold text-foreground mt-8 mb-3">
-                  {paragraph.replace("## ", "")}
-                </h2>
-              );
-            }
-            if (paragraph.startsWith("### ")) {
-              return (
-                <h3 key={i} className="text-lg font-semibold text-foreground mt-6 mb-2">
-                  {paragraph.replace("### ", "")}
-                </h3>
-              );
-            }
-            if (paragraph.startsWith("- ")) {
-              const items = paragraph.split("\n").filter((l) => l.startsWith("- "));
-              return (
-                <ul key={i} className="list-disc pl-6 space-y-1">
-                  {items.map((item, j) => (
-                    <li key={j}>{item.replace("- ", "")}</li>
-                  ))}
-                </ul>
-              );
-            }
-            return <p key={i}>{paragraph}</p>;
-          })}
+        <div className="prose prose-gray max-w-none text-muted-foreground leading-relaxed">
+          <RenderMarkdown text={post.content} />
         </div>
       </article>
 
