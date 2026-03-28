@@ -12,8 +12,8 @@
 | Worker | Model | IDE | Status |
 |--------|-------|-----|--------|
 | Claude Code | claude-opus-4-6 | VS Code | ✅ Aktywny — lead dev/PM |
-| Gemini CLI | gemini-3.1-pro-preview | Terminal | ✅ Batch 2+3 DONE — czeka na nowy batch |
-| Windsurf | claude-opus-4-6 | Windsurf IDE | ✅ W1-W5 DONE — czeka na nowe taski |
+| Gemini CLI | gemini-3.1-pro-preview | Terminal | 📋 Batch 4 gotowy (G9-G13) |
+| Windsurf | claude-opus-4-6 | Windsurf IDE | 📋 Batch 2 gotowy (W6-W10, W6/W8 czekają na Gemini) |
 
 ---
 
@@ -104,6 +104,36 @@
 - [x] Share referral link via WhatsApp/copy
 - [x] Gamification: progress bar do nagrody (5 referrals = Super Cebularz)
 
+### 🟢 Sprint 4 — Retencja & Email Drip (Faza 5 roadmapy)
+
+**C14. Import blog batch 5 do DB** (~30 min)
+- [ ] Import 5 artykułów z `research/content/blog-batch-5/` do Supabase (via admin API)
+- [ ] Sprawdź czy treści nie opisują nieistniejących feature'ów
+- [ ] Tagowanie: przypisz tagi do każdego artykułu
+
+**C15. Drip email sequence — 3 maile onboardingowe** (~2h)
+- [ ] Treść z `research/email-onboarding-sequence.md` (Gemini G5)
+- [ ] Nowa tabela/kolumna: `onboarding_step` w `newsletter_subscribers` (migracja 029)
+- [ ] Cron `/api/cron/email-onboarding` — dzień 1/3/7 po rejestracji
+- [ ] Szablony email w `email-templates.ts` (3 warianty)
+- [ ] Deduplikacja: nie wysyłaj jeśli już wysłano ten krok
+
+**C16. Streak break push notification** (~1h)
+- [ ] Cron: sprawdź kto stracił streak (ostatnia aktywność >24h)
+- [ ] Push notification "Wróć! Tracisz swój streak 🔥"
+- [ ] Email fallback dla userów bez push
+- [ ] Max 1 notification per streak break (nie spamuj)
+
+**C17. Email "Poleć znajomemu"** (~30 min)
+- [ ] Szablon email z referral kodem + linkiem
+- [ ] Trigger: 7 dni po rejestracji (w ramach drip sequence)
+- [ ] CTA "Wyślij zaproszenie" z WhatsApp deeplink
+
+**C18. Pepper.pl post generator w adminie** (~1h)
+- [ ] Nowa sekcja w admin: "Marketing Tools"
+- [ ] Auto-generuj post na Pepper.pl per oferta (szablon + dane z DB)
+- [ ] Copy to clipboard, UTM tracking link
+
 ---
 
 ## Backlog — Gemini (priorytet od góry)
@@ -137,6 +167,37 @@
 **G8. Analiza keyword gaps vs konkurencja** ✅ DONE
 - [x] Output: `research/keyword-gap-analysis.md` (56 linii, 3 konkurentów, gaps + rekomendacje)
 
+### 🟢 Batch 4 — Content & TikTok Prep
+
+**G9. Blog batch 6 — keyword gaps** (5 artykułów)
+- [ ] Bazuj na `research/keyword-gap-analysis.md` — wybierz 5 keywords z gaps
+- [ ] 1500-2500 słów, H2/H3, FAQ, internal links do /bank/[slug] i /slownik
+- [ ] Nie opisuj feature'ów których strona nie ma!
+- [ ] Output: `research/content/blog-batch-6/`
+
+**G10. TikTok skrypty — 10 scenariuszy** (prep dla C11)
+- [ ] Input: aktualne oferty z cebulazysku.pl (Jarek da listę)
+- [ ] 10 skryptów, max 140 słów każdy
+- [ ] Warianty hooków: pytanie/szok/kontrowersja/historia
+- [ ] Cebulowy humor, dynamiczny ton, CTA
+- [ ] Output: `research/tiktok-scripts-batch1.md`
+
+**G11. Pepper.pl szablony postów** (10 szablonów)
+- [ ] Zbadaj format popularnych deali na Pepper.pl
+- [ ] 10 szablonów do ofert bankowych (tytuł, opis, instrukcja)
+- [ ] Output: `research/pepper-post-templates.md`
+
+**G12. Porównania banków — content do hub pages**
+- [ ] Dla 6 największych banków: mBank, PKO, Santander, ING, Alior, BNP
+- [ ] Per bank: krótki opis (2-3 zdania), plusy/minusy, „dla kogo", historia promocji
+- [ ] Output: `research/bank-hub-descriptions.md`
+
+**G13. FAQ — najczęstsze pytania użytkowników**
+- [ ] 20 najczęstszych pytań o promocje bankowe (z perspektywy usera)
+- [ ] Odpowiedzi SEO-friendly, 3-5 zdań każda
+- [ ] Do użycia: strona /faq, JSON-LD, snippet optimization
+- [ ] Output: `research/user-faq-expanded.md`
+
 ---
 
 ## Backlog — Windsurf (feature branches)
@@ -165,16 +226,48 @@
 - [x] ArchiveFilters.tsx (309 linii) — search, bank pills, reward range (≤200, 201-400, >400 zł)
 - [x] Statystyki: łącznie ofert, banków, suma premii, najwyższa
 
+### 🟢 Batch 2
+
+**W6. Strona /faq** — branch `feature/faq-page`
+- [ ] Strona `/faq` z pytaniami pogrupowanymi po kategorii
+- [ ] JSON-LD FAQPage schema (cała strona)
+- [ ] Accordion UI (shadcn Accordion), search/filter
+- [ ] Bazuj na danych z `research/user-faq-expanded.md` (Gemini G13)
+- [ ] **Czeka na:** Gemini G13
+
+**W7. Strona /jak-zarabiac — poradnik krok po kroku** — branch `feature/how-to-earn`
+- [ ] Landing `/jak-zarabiac` — 5 kroków ilustrowanych (wybierz bank → otwórz konto → spełnij warunki → zgarnij premię → powtórz)
+- [ ] Ilustracje/ikony per krok, CTA do rankingu
+- [ ] SEO: "jak zarabiać na promocjach bankowych"
+- [ ] JSON-LD HowTo schema
+
+**W8. Hub pages upgrade — opisy banków** — branch `feature/hub-upgrade`
+- [ ] Dodaj opisy banków z `research/bank-hub-descriptions.md` (Gemini G12) do `/bank/[slug]`
+- [ ] Sekcja "O banku", plusy/minusy, "dla kogo"
+- [ ] **Czeka na:** Gemini G12
+
+**W9. Monthly leaderboard** — branch `feature/leaderboard`
+- [ ] Komponent `Leaderboard.tsx` — top 10 userów po obranych premiach
+- [ ] Na dashboardzie pod achievements
+- [ ] Anonimizacja: "Cebularz #1", "Cebularz #2" (chyba że user ustawi nick)
+
+**W10. Strona /kalkulator** — branch `feature/calculator-page`
+- [ ] Dedykowana strona z PremiumCalculator (reuse z homepage)
+- [ ] Rozszerzone opcje: ile kont, jak długo, trudność
+- [ ] SEO: "kalkulator premii bankowych"
+- [ ] Wynik: "W 6 miesięcy możesz zarobić X zł" + lista ofert
+
 ---
 
 ## Zależności
 
 ```
-✅ Gemini G7 → Windsurf W1 (oba DONE)
-✅ Gemini G4 → Windsurf W2 (oba DONE)
-Gemini G1 (blog batch 5 DONE) ─────► Claude: import do DB (TODO)
-Gemini G5 (email sequence DONE) ───► Claude: implementacja drip emails (TODO)
+Gemini G1 (blog batch 5 DONE) ─────► Claude C14 (import do DB)
+Gemini G5 (email sequence DONE) ───► Claude C15 (drip emails)
+Gemini G12 (bank descriptions) ────► Windsurf W8 (hub upgrade)
+Gemini G13 (user FAQ) ─────────────► Windsurf W6 (/faq page)
 Claude C11 (TikTok) ──────────────► wymaga VPS + ElevenLabs (Jarek)
+Gemini G10 (TikTok scripts) ──────► Claude C11 (scenariusze do renderowania)
 ```
 
 ---
