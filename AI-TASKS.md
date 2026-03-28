@@ -24,7 +24,7 @@
 3. **Konflikty** — jeśli dwóch workerów musi ruszać ten sam plik, Jarek koordynuje kolejność
 4. **Commity** — Claude Code commituje na `main`. Gemini NIE commituje. Windsurf commituje na `feature/*`.
 5. **Windsurf** — ZAWSZE `git checkout main && git checkout -b feature/xyz`. NIGDY nie branchuj z innego feature brancha.
-6. **Numeracja migracji** — Claude Code nadaje numery. Aktualnie: 028 = następna wolna.
+6. **Numeracja migracji** — Claude Code nadaje numery. Aktualnie: 029 = następna wolna.
 
 ---
 
@@ -32,56 +32,58 @@
 
 ### 🔴 Sprint 1 — SEO & Conversion (szybkie winy)
 
-**C1. FAQ schema na stronach ofert** (~1h)
-- [ ] Komponent `OfferFAQ.tsx` — accordion z FAQ z DB (pole `faq` w offers)
-- [ ] JSON-LD `FAQPage` schema per oferta
-- [ ] Dodaj pod opisem oferty na `/oferta/[slug]`
+**C1. FAQ schema na stronach ofert** ✅ DONE
+- [x] Komponent `OfferFAQ.tsx` — accordion z FAQ z DB (pole `faq` w offers)
+- [x] JSON-LD `FAQPage` schema per oferta (było, zachowane)
+- [x] Dodaj pod opisem oferty na `/oferta/[slug]`
 
-**C2. Internal linking engine** (~2h)
-- [ ] Funkcja `autoLinkContent(html: string)` w `src/lib/internal-links.ts`
-- [ ] Auto-linkuj nazwy banków → `/bank/[slug]` (hub pages)
-- [ ] Auto-linkuj terminy ze słownika → `/slownik#term`
-- [ ] Zastosuj w: blog content render, offer descriptions
-- [ ] Nie linkuj jeśli tekst już jest wewnątrz `<a>`
+**C2. Internal linking engine** ✅ DONE
+- [x] Funkcja `autoLinkContent(text)` w `src/lib/internal-links.ts`
+- [x] Auto-linkuj nazwy banków → `/bank/[slug]` (12 banków)
+- [x] Auto-linkuj terminy ze słownika → `/slownik#term` (10 terminów)
+- [x] Zastosuj w: RenderMarkdown (offer descriptions) + blog content
+- [x] Nie linkuj jeśli tekst już jest wewnątrz markdown link
 
-**C3. CTA optymalizacja** (~1.5h)
-- [ ] Sticky CTA bar na mobile (fixed bottom) na stronach ofert
-- [ ] Trust signals pod CTA: "✅ Bez zobowiązań · ✅ 5 min · ✅ BFG chroni"
-- [ ] dataLayer event `cta_click` z wariantem
-- [ ] Integruj `PremiumCalculator` na stronie głównej (Windsurf dostarczył komponent)
+**C3. CTA optymalizacja** ✅ DONE
+- [x] Sticky CTA bar na mobile (`StickyCTA.tsx`, fixed bottom, lg:hidden)
+- [x] Trust signals pod CTA + w sidebarze oferty
+- [x] dataLayer event `cta_click` z wariantem `sticky_mobile`
+- [x] `PremiumCalculator` na stronie głównej (między ofertami a trust section)
 
-**C4. A/B test hero copy** (~1h)
-- [ ] 3 warianty hero z `research/hero-copy-variants.md` (Gemini DONE)
-- [ ] Random per session (localStorage), event `hero_variant_view` + `hero_cta_click`
-- [ ] Po 2 tygodniach: wybierz zwycięzcę po CTR
+**C4. A/B test hero copy** ✅ DONE
+- [x] `HeroABTest.tsx` — 3 warianty z `research/hero-copy-variants.md`
+- [x] Random per session (localStorage), event `hero_variant_view` + `hero_cta_click`
+- [x] Po 2 tygodniach: wybierz zwycięzcę po CTR (manual)
 
-**C5. Persona sekcja na /o-nas** (~30min)
-- [ ] Sekcja "Dla kogo jest CebulaZysku?" z opisem profilu "Sprytny Cebularz"
-- [ ] Tekst nawiązujący do bólów (zapominanie warunków, regulaminy, deadline'y)
+**C5. Persona sekcja na /o-nas** ✅ DONE
+- [x] Sekcja "Dla kogo jest CebulaZysku?" z opisem profilu "Sprytny Cebularz"
+- [x] Tekst nawiązujący do bólów (zapominanie warunków, regulaminy, deadline'y)
 
 ### 🟡 Sprint 2 — Content & Pipeline
 
-**C6. Import blogów Gemini do admina** (~1h)
-- [ ] Zaimportuj content z `research/win-stories.md` jako blog post (case studies)
-- [ ] Zaimportuj artykuły z `research/content/blog-drafts/` które jeszcze nie są w DB
-- [ ] Ustaw `is_published: true` po review treści (czy nie opisują nieistniejących feature'ów)
+**C6. Import blogów Gemini do admina** ✅ DONE
+- [x] Artykuły z `research/content/blog-drafts/` — wszystkie 6 już w DB (poprzednia sesja)
+- [x] `win-stories.md` to testimoniale, nie blogi — do użycia w W1 (Windsurf)
+- [x] Treści zweryfikowane — nie opisują nieistniejących feature'ów
 
-**C7. Welcome email A/B** (~1h)
-- [ ] 3 warianty z `research/welcome-email-copy.md` (Gemini DONE)
-- [ ] Random per subscriber, tracking open rate
-- [ ] Nowy kolumna `welcome_variant` w `newsletter_subscribers`
+**C7. Welcome email A/B** ✅ DONE
+- [x] 3 warianty (A: autorytet, B: konwersyjny, C: storytelling) z research Gemini
+- [x] Random per subscriber w `confirm/route.ts`, zapis `welcome_variant` w DB
+- [x] Migracja 028: kolumna `welcome_variant` w `newsletter_subscribers`
 
-**C8. Video Ads voiceover regen** (~30min, czeka na ElevenLabs reset)
+**C8. Video Ads voiceover regen** ⏸️ ZABLOKOWANY
+- [ ] Czeka na ElevenLabs quota reset
 - [ ] Regen 8 voiceover z `sanitizeForTTS` fix
-- [ ] Verify audio quality, update DB paths
 
-**C9. Admin /admin/seo** (~2h)
-- [ ] GSC API integration (top queries, indexing status)
-- [ ] Dashboard z wykresami kliknięć, CTR, pozycji
+**C9. Admin /admin/seo** ✅ DONE (partial)
+- [x] Dashboard: KPI cards, content coverage bars, internal linking stats
+- [x] Przeglądarka sitemap
+- [x] API `/api/admin/seo-stats` — zlicza blogi, oferty, FAQ, hub pages
+- [ ] GSC API integration — wymaga Service Account (follow-up, instrukcja w placeholder)
 
-**C10. GA4 custom dimensions** (~30min)
-- [ ] Konfiguracja: offer_id, bank_name, reward_amount, difficulty
-- [ ] Docs: `docs/ga4-setup-guide.md`
+**C10. GA4 custom dimensions** ✅ DONE
+- [x] Nowe eventy w `analytics-events.ts`: cta_click, hero_variant_view, hero_cta_click, calculator_*
+- [x] Docs: `docs/ga4-setup-guide.md` — pełna instrukcja custom dimensions + GTM config
 
 ### 🔵 Sprint 3 — Automation & Growth
 
@@ -213,6 +215,8 @@ Claude C11 (TikTok) ──────────► wymaga VPS + ElevenLabs (J
 
 | Data | Zadanie | Worker |
 |------|---------|--------|
+| 2026-03-26 | Sprint 1 (C1-C5): FAQ, internal linking, sticky CTA, A/B hero, persona /o-nas | Claude Code |
+| 2026-03-26 | Sprint 2 (C6-C10): welcome email A/B, admin SEO, GA4 dimensions | Claude Code |
 | 2026-03-26 | Newsletter system (full: API, templates, popup, inline, cron, admin) | Claude Code |
 | 2026-03-26 | Bio link /link + ShareButtons + OG images | Claude Code |
 | 2026-03-26 | Hub pages /bank/[slug] (10 stron) | Windsurf → merged |

@@ -58,6 +58,8 @@ Dokumentacja podzielona jest na osobne pliki tematyczne, żeby łatwiej było j�
 | 43 | [Homepage FAQ](./43-homepage-faq.md) | 15 pytań accordion + FAQPage JSON-LD schema |
 | 44 | [UI Components Upgrade](./44-ui-components-upgrade.md) | Toast, DeadlineAlert, Skeleton, Sheet navbar, 7 shadcn komponentów |
 | 45 | [Newsletter](./45-newsletter.md) | Double opt-in, popup/inline, digest, alerty, admin panel |
+| 46 | [SEO & Conversion Sprint 1](./46-seo-conversion-sprint1.md) | FAQ accordion, internal linking, sticky CTA, A/B hero, persona |
+| 47 | [Content & Pipeline Sprint 2](./47-content-pipeline-sprint2.md) | Welcome email A/B, admin SEO, GA4 dimensions |
 
 ---
 

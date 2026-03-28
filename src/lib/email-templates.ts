@@ -179,16 +179,22 @@ export function newsletterConfirmEmail(data: NewsletterConfirmEmailData): { subj
   return { subject, html: newsletterLayout(content, subject) };
 }
 
+export type WelcomeVariant = "A" | "B" | "C";
+
 export interface NewsletterWelcomeEmailData {
   name: string;
   topOffer: { bankName: string; reward: number; slug: string } | null;
   unsubscribeToken?: string;
+  variant?: WelcomeVariant;
+}
+
+export function pickWelcomeVariant(): WelcomeVariant {
+  const variants: WelcomeVariant[] = ["A", "B", "C"];
+  return variants[Math.floor(Math.random() * variants.length)];
 }
 
 export function newsletterWelcomeEmail(data: NewsletterWelcomeEmailData): { subject: string; html: string } {
-  const { name, topOffer, unsubscribeToken } = data;
-
-  const subject = "🧅 Witaj w CebulaZysku! Oto Twoja pierwsza cebulka";
+  const { name, topOffer, unsubscribeToken, variant = "A" } = data;
 
   const offerBlock = topOffer
     ? `
@@ -205,19 +211,58 @@ export function newsletterWelcomeEmail(data: NewsletterWelcomeEmailData): { subj
       <a href="${BASE_URL}/ranking" class="btn">Zobacz ranking ofert →</a>
     </p>`;
 
+  if (variant === "A") {
+    // Wariant A: Zbudowanie autorytetu — profesjonalny, obalający obawy
+    const subject = "Potwierdzenie. Twój Tracker Zysków jest aktywny 🧅";
+    const content = `
+      <p>Cześć <strong>${name}</strong>!</p>
+      <p>Dzięki, że dołączyłeś do społeczności CebulaZysku. Wiemy, że na początku „sprzedaż premiowa" i rozdawanie gotówki przez banki wydaje się podejrzana.</p>
+      <p>Prawda jest prosta: banki robią to, bo liczą, że z nimi zostaniesz. Ale <strong>to Ty rozdajesz karty</strong>. Naszym zadaniem jest pomóc Ci wejść, odebrać premię i wyjść — bez płacenia ani grosza za ukryte opłaty.</p>
+      <p><strong>Co zrobić w ciągu 24 godzin:</strong></p>
+      <p>1️⃣ Zaloguj się na <a href="${BASE_URL}/dashboard">Dashboard</a> i dodaj ofertę do Trackera<br/>
+      2️⃣ Zobaczysz dokładną datę i warunek do spełnienia<br/>
+      3️⃣ My za parę dni przyślemy Ci maila z przypomnieniem</p>
+      ${offerBlock}
+      <p style="color: #9ca3af; font-size: 13px; margin-top: 24px;">
+        To legalne i wolne od podatku dochodowego 🧅
+      </p>
+    `;
+    return { subject, html: newsletterLayout(content, subject, unsubscribeToken) };
+  }
+
+  if (variant === "B") {
+    // Wariant B: Krótki i brutalny — konwersyjny, FOMO
+    const subject = "Twoje 500 zł już na Ciebie czeka 💸";
+    const content = `
+      <p>Siema <strong>${name}</strong>!</p>
+      <p>Dzięki za dołączenie. Nie będę przedłużał — obaj wiemy, po co tu jesteś. Chcesz przestać przepłacać i zacząć wykorzystywać budżety reklamowe wielkich banków.</p>
+      <p>W tym miesiącu w naszym rankingu wiszą promocje o łącznej wartości <strong>ponad 1500 zł</strong>. Najlepsze z nich znikają szybciej niż się spodziewasz — banki często limitują liczbę wniosków.</p>
+      <p><strong>Zacznij od najprostszej promocji (0 zł za konto, 0 zł za kartę):</strong></p>
+      ${offerBlock}
+      <p style="color: #9ca3af; font-size: 13px; margin-top: 24px;">
+        Będę podsyłał Ci tylko najważniejsze oferty. Żadnego spamu — tylko pieniądze do obrania 🧅
+      </p>
+    `;
+    return { subject, html: newsletterLayout(content, subject, unsubscribeToken) };
+  }
+
+  // Wariant C: Storytelling — "Oops" format, budowanie relacji
+  const subject = "Prawie straciłem pierwszą stówę (Nie rób tego błędu)";
   const content = `
-    <p>Hej <strong>${name}</strong>! 👋</p>
-    <p>Cieszę się, że dołączasz do grona cebularzy! Od teraz będziesz na bieżąco z najlepszymi premiami bankowymi w Polsce.</p>
-    <p><strong>Co otrzymasz:</strong></p>
-    <p>✅ Powiadomienia o nowych ofertach<br/>
-    ✅ Tygodniowe zestawienia najlepszych premii<br/>
-    ✅ Alerty, gdy pojawi się coś naprawdę wartego uwagi</p>
+    <p>Cześć <strong>${name}</strong>! Super, że jesteś z nami.</p>
+    <p>Chcę Ci od razu opowiedzieć jedną szybką historię.</p>
+    <p>Pamiętam, kiedy zakładałem swoje pierwsze konto promocyjne. Bank obiecał 300 zł za założenie karty i wykonanie pięciu płatności. Założyłem, wyklikałem i w piątek zapłaciłem „przelewem na telefon".</p>
+    <p>Wiesz co? <strong>Nie dostałem nagrody.</strong></p>
+    <p>Okazało się, że „przelew P2P" to nie to samo co płatność BLIK. Popełniłem błąd nowicjusza.</p>
+    <p>Zbudowaliśmy CebulaZysku właśnie po to, żebyś <strong>Ty</strong> nie tracił pieniędzy przez takie detale. Z naszym <a href="${BASE_URL}/dashboard">darmowym Trackerem</a> dokładnie wiesz:</p>
+    <p>✅ Kiedy płacić<br/>
+    ✅ Czym płacić<br/>
+    ✅ Kiedy bezpiecznie zamknąć konto, by uciec od opłat</p>
     ${offerBlock}
     <p style="color: #9ca3af; font-size: 13px; margin-top: 24px;">
-      Każda cebulka do obrania to pieniądze, które banki chcą Ci dać. Nie przepuść żadnej 🧅
+      Piona! 🧅
     </p>
   `;
-
   return { subject, html: newsletterLayout(content, subject, unsubscribeToken) };
 }
 

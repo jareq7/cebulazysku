@@ -24,11 +24,11 @@ import {
 export const metadata: Metadata = {
   title: "Darmowy Przewodnik Cebularza — pobierz PDF | CebulaZysku",
   description:
-    "Pobierz bezplatny Kodeks Cebularza 2026. Dowiedz sie krok po kroku jak zarabiac do 5000 zl rocznie na premiach bankowych. 10 stron praktycznej wiedzy.",
+    "Pobierz bezpłatny Kodeks Cebularza 2026. Dowiedz się krok po kroku jak zarabiać do 5000 zł rocznie na premiach bankowych. 10 stron praktycznej wiedzy.",
   openGraph: {
     title: "Darmowy Przewodnik Cebularza — CebulaZysku",
     description:
-      "Kodeks Cebularza 2026: jak zarabiac do 5000 zl rocznie na premiach bankowych. Pobierz PDF za darmo.",
+      "Kodeks Cebularza 2026: jak zarabiać do 5000 zł rocznie na premiach bankowych. Pobierz PDF za darmo.",
     type: "website",
     url: "https://cebulazysku.pl/przewodnik",
   },
@@ -39,28 +39,28 @@ export const metadata: Metadata = {
 
 const chapters = [
   {
-    title: "Haczyki — Prawda o budzetach reklamowych",
-    description: "Dlaczego banki daja Ci darmowe pieniadze i jak to wykorzystac.",
+    title: "Haczyki — Prawda o budżetach reklamowych",
+    description: "Dlaczego banki dają Ci darmowe pieniądze i jak to wykorzystać.",
   },
   {
-    title: "3 mity, ktore Cie powstrzymuja",
-    description: "BIK, podatki, bezpieczenstwo — obalamy popularne obawy.",
+    title: "3 mity, które Cię powstrzymują",
+    description: "BIK, podatki, bezpieczeństwo — obalamy popularne obawy.",
   },
   {
-    title: "Twoj plan na pierwsze 1000 zl",
-    description: "Krok po kroku: ktore 2 konta otworzyc jako pierwsze.",
+    title: "Twój plan na pierwsze 1000 zł",
+    description: "Krok po kroku: które 2 konta otworzyć jako pierwsze.",
   },
   {
-    title: "Rotacja bankowa — Kod Nieskonczonosci",
-    description: "Jak korzystac z karencji i zarabiac co rok od nowa.",
+    title: "Rotacja bankowa — Kod Nieskończoności",
+    description: "Jak korzystać z karencji i zarabiać co rok od nowa.",
   },
   {
-    title: "Tracker warunkow",
-    description: "Jak CebulaZysku pomaga pilnowac terminow i nie stracic premii.",
+    title: "Tracker warunków",
+    description: "Jak CebulaZysku pomaga pilnować terminów i nie stracić premii.",
   },
   {
     title: "Zaawansowane strategie",
-    description: "Konta firmowe, cashback, polaczenie z lokatami.",
+    description: "Konta firmowe, cashback, połączenie z lokatami.",
   },
 ];
 
@@ -172,11 +172,11 @@ export default function PrzewodnikPage() {
           </h2>
           <div className="space-y-2">
             {[
-              "Nigdy nie korzystales z promocji bankowych i nie wiesz od czego zaczac",
-              "Slyszales o premiach, ale boisz sie, ze to scam lub zepsuje Ci BIK",
-              "Chcesz dodatkowe pieniadze bez ryzyka i bez inwestowania",
-              "Juz cebulujesz, ale chcesz poznac zaawansowane strategie",
-              "Prowadzisz firme i chcesz zarabiac tez na kontach firmowych",
+              "Nigdy nie korzystałeś z promocji bankowych i nie wiesz od czego zacząć",
+              "Słyszałeś o premiach, ale boisz się, że to scam lub zepsuje Ci BIK",
+              "Chcesz dodatkowe pieniądze bez ryzyka i bez inwestowania",
+              "Już cebulujesz, ale chcesz poznać zaawansowane strategie",
+              "Prowadzisz firmę i chcesz zarabiać też na kontach firmowych",
             ].map((item) => (
               <div key={item} className="flex items-start gap-2">
                 <CheckCircle className="h-4 w-4 text-emerald-500 shrink-0 mt-0.5" />
@@ -195,7 +195,7 @@ export default function PrzewodnikPage() {
             href="/"
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            ← Wroc do aktualnych ofert
+            ← Wróć do aktualnych ofert
           </Link>
         </div>
       </div>

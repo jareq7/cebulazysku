@@ -27,7 +27,7 @@ export function LeadMagnetForm() {
 
       if (!res.ok) {
         setStatus("error");
-        setMessage(data.error || "Cos poszlo nie tak.");
+        setMessage(data.error || "Coś poszło nie tak.");
         return;
       }
 
@@ -35,7 +35,7 @@ export function LeadMagnetForm() {
       setMessage(data.message || "Zapisano!");
     } catch {
       setStatus("error");
-      setMessage("Blad polaczenia. Sprobuj ponownie.");
+      setMessage("Błąd połączenia. Spróbuj ponownie.");
     }
   };
 
@@ -56,7 +56,7 @@ export function LeadMagnetForm() {
           </Button>
         </a>
         <p className="text-xs text-muted-foreground mt-3">
-          Link do pobrania zostal tez wyslany na Twojego maila.
+          Link do pobrania został też wysłany na Twojego maila.
         </p>
       </div>
     );
@@ -70,7 +70,7 @@ export function LeadMagnetForm() {
           Pobierz darmowy Kodeks Cebularza 2026
         </h3>
         <p className="text-sm text-muted-foreground max-w-md mx-auto">
-          10-stronicowy przewodnik: jak zarabiac do 5000 zl rocznie na premiach
+          10-stronicowy przewodnik: jak zarabiać do 5000 zł rocznie na premiach
           bankowych. Krok po kroku, bez scamu.
         </p>
       </div>
@@ -105,7 +105,7 @@ export function LeadMagnetForm() {
       )}
 
       <p className="text-[11px] text-muted-foreground text-center mt-4">
-        Zero spamu. Mozesz sie wypisac w kazdej chwili.
+        Zero spamu. Możesz się wypisać w każdej chwili.
       </p>
     </div>
   );

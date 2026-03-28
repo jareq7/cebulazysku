@@ -2,7 +2,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { sendEmail } from "@/lib/resend";
-import { newsletterWelcomeEmail } from "@/lib/email-templates";
+import { newsletterWelcomeEmail, pickWelcomeVariant } from "@/lib/email-templates";
 import { fetchOffersFromDB } from "@/lib/offers";
 
 export const runtime = "nodejs";
@@ -32,12 +32,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL("/newsletter/potwierdzenie", request.url));
   }
 
-  // Activate
+  // Pick A/B variant and activate
+  const welcomeVariant = pickWelcomeVariant();
+
   await supabase
     .from("newsletter_subscribers")
     .update({
       status: "active",
       subscribed_at: new Date().toISOString(),
+      welcome_variant: welcomeVariant,
     })
     .eq("id", subscriber.id);
 
@@ -47,6 +50,7 @@ export async function GET(request: NextRequest) {
 
   const { subject, html } = newsletterWelcomeEmail({
     name: subscriber.name || subscriber.email.split("@")[0],
+    variant: welcomeVariant,
     topOffer: topOffer
       ? {
           bankName: topOffer.bankName,
