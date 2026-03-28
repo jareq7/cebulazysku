@@ -27,6 +27,9 @@ import {
   Share2,
   Copy,
   Check,
+  Gift,
+  MessageCircle,
+  Users,
 } from "lucide-react";
 import { ConditionTracker } from "@/components/ConditionTracker";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -42,6 +45,7 @@ export default function DashboardPage() {
   const { offers: bankOffers } = useOffers();
   const { userBanks, removeBank } = useUserBanks();
   const [referralCode, setReferralCode] = useState<string | null>(null);
+  const [referralCount, setReferralCount] = useState(0);
   const [copied, setCopied] = useState(false);
 
   // Auto-check and award achievements
@@ -52,7 +56,7 @@ export default function DashboardPage() {
     if (!user) return;
     fetch("/api/referral")
       .then((r) => r.json())
-      .then((d) => { if (d.code) setReferralCode(d.code); })
+      .then((d) => { if (d.code) { setReferralCode(d.code); setReferralCount(d.referralCount ?? 0); } })
       .catch(() => {});
   }, [user]);
 
@@ -172,6 +176,80 @@ export default function DashboardPage() {
 
       {/* Streak */}
       <StreakBadge />
+
+      {/* Referral widget */}
+      {referralCode && (() => {
+        const referralUrl = `${typeof window !== "undefined" ? window.location.origin : "https://cebulazysku.pl"}/zaproszenie/${referralCode}`;
+        const REFERRAL_GOAL = 5;
+        const progress = Math.min(referralCount / REFERRAL_GOAL * 100, 100);
+        const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(`Dołącz do CebulaZysku i zarabiaj na promocjach bankowych! 🧅 ${referralUrl}`)}`;
+
+        return (
+          <Card className="mb-8 border-emerald-200 dark:border-emerald-800 bg-gradient-to-r from-emerald-50/50 to-transparent dark:from-emerald-950/20">
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-4">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-emerald-100 dark:bg-emerald-900/40">
+                  <Gift className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3 className="font-bold text-lg mb-1">Zaproś znajomych — zdobądź nagrody!</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Zaproś <strong>{REFERRAL_GOAL} osób</strong>, aby odblokować ekskluzywną odznakę <strong>Super Cebularza</strong> i bonus!
+                  </p>
+
+                  {/* Progress bar */}
+                  <div className="mb-4">
+                    <div className="flex items-center justify-between text-sm mb-1.5">
+                      <span className="flex items-center gap-1.5 text-muted-foreground">
+                        <Users className="h-3.5 w-3.5" />
+                        {referralCount} / {REFERRAL_GOAL} zaproszonych
+                      </span>
+                      {referralCount >= REFERRAL_GOAL && (
+                        <Badge className="bg-emerald-600 text-white text-xs">Cel osiągnięty!</Badge>
+                      )}
+                    </div>
+                    <Progress value={progress} className="h-2.5" />
+                  </div>
+
+                  {/* Link + share buttons */}
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      readOnly
+                      value={referralUrl}
+                      className="flex-1 rounded-lg border bg-muted px-3 py-1.5 text-sm font-mono text-muted-foreground min-w-0"
+                    />
+                    <div className="flex gap-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        className="shrink-0 gap-1.5"
+                        onClick={() => {
+                          navigator.clipboard.writeText(referralUrl);
+                          setCopied(true);
+                          setTimeout(() => setCopied(false), 2000);
+                        }}
+                      >
+                        {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
+                        {copied ? "Skopiowano!" : "Kopiuj"}
+                      </Button>
+                      <Button
+                        size="sm"
+                        className="shrink-0 gap-1.5 bg-[#25D366] hover:bg-[#20bd5a] text-white"
+                        asChild
+                      >
+                        <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
+                          <MessageCircle className="h-3.5 w-3.5" />
+                          WhatsApp
+                        </a>
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })()}
 
       {/* Tracked offers */}
       {trackedOfferDetails.length === 0 ? (
@@ -315,46 +393,7 @@ export default function DashboardPage() {
         </Card>
       </div>
 
-      {/* Referral */}
-      {referralCode && (
-        <div className="mt-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2 text-base">
-                <Share2 className="h-4 w-4" />
-                Zaproś znajomych
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              <p className="text-sm text-muted-foreground">
-                Podziel się linkiem — gdy znajomy założy konto przez Twoje zaproszenie, oboje zdobędziecie odznakę <strong>Ambasadora</strong>.
-              </p>
-              <div className="flex gap-2">
-                <input
-                  readOnly
-                  value={`${typeof window !== "undefined" ? window.location.origin : "https://cebulazysku.pl"}/zaproszenie/${referralCode}`}
-                  className="flex-1 rounded-lg border bg-muted px-3 py-1.5 text-sm font-mono text-muted-foreground"
-                />
-                <Button
-                  size="sm"
-                  variant="outline"
-                  className="shrink-0 gap-1.5"
-                  onClick={() => {
-                    navigator.clipboard.writeText(
-                      `${window.location.origin}/zaproszenie/${referralCode}`
-                    );
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 2000);
-                  }}
-                >
-                  {copied ? <Check className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
-                  {copied ? "Skopiowano!" : "Kopiuj"}
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      )}
+      {/* Referral — moved to after StreakBadge for visibility */}
 
       {/* Achievements */}
       <div className="mt-8">

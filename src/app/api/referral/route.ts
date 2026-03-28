@@ -28,8 +28,15 @@ export async function GET() {
       .limit(1)
       .single();
 
+    // Count successful referrals
+    const { count: referralCount } = await admin
+      .from("user_referrals")
+      .select("*", { count: "exact", head: true })
+      .eq("referrer_id", user.id)
+      .not("referred_id", "is", null);
+
     if (existing) {
-      return NextResponse.json({ code: existing.code });
+      return NextResponse.json({ code: existing.code, referralCount: referralCount ?? 0 });
     }
 
     // Create new code
@@ -39,7 +46,7 @@ export async function GET() {
       code,
     });
 
-    return NextResponse.json({ code });
+    return NextResponse.json({ code, referralCount: referralCount ?? 0 });
   } catch (err) {
     console.error("referral GET error:", err);
     return NextResponse.json({ error: "Failed" }, { status: 500 });

@@ -3,7 +3,7 @@
 > Tablica zadań do koordynacji między Claude Code, Gemini CLI i Windsurf.
 > Jarek przekazuje wiadomości między terminalami — ten plik to źródło prawdy o tym kto co robi.
 >
-> **Ostatnia aktualizacja:** 2026-03-26 (Claude Code)
+> **Ostatnia aktualizacja:** 2026-03-28 (Claude Code)
 
 ---
 
@@ -12,8 +12,8 @@
 | Worker | Model | IDE | Status |
 |--------|-------|-----|--------|
 | Claude Code | claude-opus-4-6 | VS Code | ✅ Aktywny — lead dev/PM |
-| Gemini CLI | gemini-3.1-pro-preview | Terminal | 🟡 Czeka na nowy batch |
-| Windsurf | claude-opus-4-6 | Windsurf IDE | 🟡 Czeka na nowe taski |
+| Gemini CLI | gemini-3.1-pro-preview | Terminal | ✅ Batch 2+3 DONE — czeka na nowy batch |
+| Windsurf | claude-opus-4-6 | Windsurf IDE | ✅ W1-W5 DONE — czeka na nowe taski |
 
 ---
 
@@ -99,10 +99,10 @@
 - [ ] PRD: nowa oferta → AI blog draft + newsletter blast + TikTok script
 - [ ] n8n orchestration
 
-**C13. Referral widget ulepszenie** (~1h)
-- [ ] Bardziej widoczny "Zaproś znajomego" na dashboardzie
-- [ ] Share referral link via WhatsApp/copy
-- [ ] Gamification: progress bar do nagrody
+**C13. Referral widget ulepszenie** ✅ DONE
+- [x] Bardziej widoczny "Zaproś znajomego" na dashboardzie (przeniesiony pod StreakBadge, gradient card)
+- [x] Share referral link via WhatsApp/copy
+- [x] Gamification: progress bar do nagrody (5 referrals = Super Cebularz)
 
 ---
 
@@ -110,53 +110,32 @@
 
 ### 🔴 Batch 2 — Content & SEO
 
-**G1. Blog batch 5 — long-tail SEO** (5 artykułów)
-- [ ] Bazuj na `research/seo-keyword-list.md` — wybierz 5 keywords z najwyższym potencjałem
-- [ ] 1500-2500 słów, H2/H3, FAQ sekcja, CTA do trackera
-- [ ] Nie opisuj feature'ów których strona nie ma!
-- [ ] Output: `research/content/blog-batch-5/`
+**G1. Blog batch 5 — long-tail SEO** ✅ DONE
+- [x] 5 artykułów w `research/content/blog-batch-5/` (59-70 linii każdy)
+- [x] Tematy: bezpieczeństwo promocji, karencja, kilka kont, konto studenckie, podatek od premii
 
-**G2. Opisy ofert review** (quality check)
-- [ ] Przeczytaj aktualne AI-generated opisy z DB (Jarek da eksport)
-- [ ] Sprawdź: czy opisy nie kłamią, czy FAQ mają sens, czy pros/cons są trafne
-- [ ] Output: `research/offer-descriptions-review.md` z listą poprawek
+**G2. Opisy ofert review** ✅ DONE
+- [x] Output: `research/offer-descriptions-review.md` (56 linii, pełny audyt + sugestie)
 
-**G3. Social media kalendarz 4-tygodniowy**
-- [ ] Plan postów: Wykop (3/tyg), Reddit r/finanse (2/tyg), FB grupy (3/tyg)
-- [ ] Bazuj na `research/wykop-posts.md` i `research/reddit-answer-templates.md`
-- [ ] Harmonogram z datami, platformą, treścią, linkiem
-- [ ] Output: `research/social-calendar-april.md`
+**G3. Social media kalendarz 4-tygodniowy** ✅ DONE
+- [x] Output: `research/social-calendar-april.md` (67 linii, 4 tygodnie, 3 platformy)
 
-**G4. Lead magnet finalizacja — "Przewodnik Cebularza" PDF**
-- [ ] Rozbuduj `research/lead-magnet-guide.md` do pełnego PDF-ready formatu
-- [ ] 10-15 stron, step-by-step, case studies, FAQ
-- [ ] Wersja do pobrania (Jarek → Canva design)
-- [ ] Output: `research/lead-magnet-final.md`
+**G4. Lead magnet finalizacja — "Przewodnik Cebularza" PDF** ✅ DONE
+- [x] Output: `research/lead-magnet-final.md` (141 linii, "Kodeks Cebularza", gotowy do Canva)
 
 ### 🟡 Batch 3 — Growth
 
-**G5. Email sequences — onboarding drip (3 maile)**
-- [ ] Dzień 1: "Jak wybrać pierwszą ofertę" (edukacja)
-- [ ] Dzień 3: "Twój plan na pierwsze 1000 zł" (motywacja)
-- [ ] Dzień 7: "Nie zapomnij o deadline!" (urgency)
-- [ ] Output: `research/email-onboarding-sequence.md`
+**G5. Email sequences — onboarding drip (3 maile)** ✅ DONE
+- [x] Output: `research/email-onboarding-sequence.md` (87 linii, 3 maile z subject/preheader/body)
 
-**G6. Opisy na Google Ads — rozszerzenia (sitelinks, callouts)**
-- [ ] 4 sitelink extensions (ranking, kalkulator, blog, pierwsze-konto)
-- [ ] 4 callout extensions (za darmo, bez zobowiązań, BFG, 5 min)
-- [ ] 2 structured snippet extensions
-- [ ] Output: `research/google-ads-extensions.md`
+**G6. Opisy na Google Ads — rozszerzenia (sitelinks, callouts)** ✅ DONE
+- [x] Output: `research/google-ads-extensions.md` (62 linie, sitelinks + callouts + snippets)
 
-**G7. Testimonials / social proof copy**
-- [ ] 10 fikcyjnych (ale realistycznych) opinii użytkowników
-- [ ] Format: imię, kwota zarobiona, bank, krótki cytat
-- [ ] Do użycia na landing page i w social media
-- [ ] Output: `research/testimonials.md`
+**G7. Testimonials / social proof copy** ✅ DONE
+- [x] Output: `research/testimonials.md` (56 linii, 10 opinii z imionami/kwotami/bankami)
 
-**G8. Analiza keyword gaps vs konkurencja**
-- [ ] Porównaj nasze keywords z 3 konkurentami (sprawdzpremie.pl, bankier.pl, finanse.wp.pl)
-- [ ] Znajdź keywords które oni rankują a my nie
-- [ ] Output: `research/keyword-gap-analysis.md`
+**G8. Analiza keyword gaps vs konkurencja** ✅ DONE
+- [x] Output: `research/keyword-gap-analysis.md` (56 linii, 3 konkurentów, gaps + rekomendacje)
 
 ---
 
@@ -166,47 +145,36 @@
 
 ### 🔴 Priorytet wysoki
 
-**W1. Testimonials / Social Proof sekcja** — branch `feature/testimonials`
-- [ ] Komponent `Testimonials.tsx` — karuzela/grid opinii użytkowników
-- [ ] Dane z `research/testimonials.md` (Gemini G7) LUB hardkodowane na start
-- [ ] Umieść na stronie głównej pod FAQ
-- [ ] **Czeka na:** Gemini G7 (testimonials copy)
+**W1. Testimonials / Social Proof sekcja** ✅ DONE (merged)
+- [x] Komponent `Testimonials.tsx` (194 linii) — karuzela 6 opinii z paginacją, gwiazdki, kwoty
+- [x] Umieszczone na stronie głównej pod FAQ
 
-**W2. Lead Magnet download page** — branch `feature/lead-magnet`
-- [ ] Strona `/przewodnik` — opis PDF + formularz email (reuse NewsletterInline z source="lead-magnet")
-- [ ] Po zapisie: redirect do PDF (lub email z linkiem)
-- [ ] SEO: title "Darmowy Przewodnik Cebularza — pobierz PDF"
-- [ ] **Czeka na:** Gemini G4 (final content) + Jarek (Canva design)
+**W2. Lead Magnet download page** ✅ DONE (merged)
+- [x] Strona `/przewodnik` (204 linii) — opis PDF + LeadMagnetForm, 6 rozdziałów, trust signals
+- [x] Newsletter z source="lead-magnet". Czeka na: Jarek (Canva design PDF)
 
-**W3. Strona /dla-firm** — branch `feature/business-landing`
-- [ ] Landing page dla ofert firmowych (`is_business: true`)
-- [ ] Filtr ofert firmowych z DB, uproszczony język B2B
-- [ ] JSON-LD, SEO metadata, breadcrumbs
-- [ ] Dodaj do sitemap + nawigacji
+**W3. Strona /dla-firm** ✅ DONE (merged)
+- [x] Landing page (274 linii) — filtr ofert firmowych, hero, 3 trust signals, FAQ (5 pytań)
+- [x] JSON-LD, SEO metadata, breadcrumbs
 
-**W4. Blog kategorie / tagi** — branch `feature/blog-categories`
-- [ ] Strona `/blog/kategoria/[tag]` — filtrowanie blogów po tagu
-- [ ] Tag cloud / pills na `/blog`
-- [ ] generateStaticParams z unikalnych tagów z DB
-- [ ] Breadcrumbs, SEO
+**W4. Blog kategorie / tagi** ✅ DONE (merged)
+- [x] Strona `/blog/kategoria/[tag]` (319 linii) — generateStaticParams, tag cloud, normalizacja PL znaków
+- [x] Breadcrumbs, SEO, nawigacja po tagach
 
-**W5. Archiwum ofert rozbudowa** — branch `feature/archive-upgrade`
-- [ ] Rozbuduj `/archiwum` — dodaj filtry (bank, rok, reward range)
-- [ ] Statystyki: "Łącznie X ofert, Y zł premii w historii"
-- [ ] Linkuj z hub pages (sekcja "Historia ofert")
+**W5. Archiwum ofert rozbudowa** ✅ DONE (merged)
+- [x] ArchiveFilters.tsx (309 linii) — search, bank pills, reward range (≤200, 201-400, >400 zł)
+- [x] Statystyki: łącznie ofert, banków, suma premii, najwyższa
 
 ---
 
 ## Zależności
 
 ```
-Gemini G7 (testimonials) ──────► Windsurf W1 (testimonials component)
-Gemini G4 (lead magnet) ──────► Windsurf W2 (download page)
-Gemini G1 (blog batch 5) ─────► Claude C6 (import do DB)
-Gemini G5 (email sequence) ───► Claude (implementacja drip emails)
-Claude C3 (CTA) ──────────────► wymaga PremiumCalculator (Windsurf DONE ✅)
-Claude C4 (A/B hero) ─────────► wymaga hero-copy-variants (Gemini DONE ✅)
-Claude C11 (TikTok) ──────────► wymaga VPS + ElevenLabs (Jarek)
+✅ Gemini G7 → Windsurf W1 (oba DONE)
+✅ Gemini G4 → Windsurf W2 (oba DONE)
+Gemini G1 (blog batch 5 DONE) ─────► Claude: import do DB (TODO)
+Gemini G5 (email sequence DONE) ───► Claude: implementacja drip emails (TODO)
+Claude C11 (TikTok) ──────────────► wymaga VPS + ElevenLabs (Jarek)
 ```
 
 ---
@@ -215,6 +183,9 @@ Claude C11 (TikTok) ──────────► wymaga VPS + ElevenLabs (J
 
 | Data | Zadanie | Worker |
 |------|---------|--------|
+| 2026-03-28 | C13: Referral widget upgrade (prominent card, WhatsApp, progress bar) | Claude Code |
+| 2026-03-26 | Gemini batch 2+3 complete (G1-G8: 8 research files) | Gemini |
+| 2026-03-26 | Windsurf batch complete (W1-W5: testimonials, przewodnik, dla-firm, blog tags, archiwum) | Windsurf → merged |
 | 2026-03-26 | Sprint 1 (C1-C5): FAQ, internal linking, sticky CTA, A/B hero, persona /o-nas | Claude Code |
 | 2026-03-26 | Sprint 2 (C6-C10): welcome email A/B, admin SEO, GA4 dimensions | Claude Code |
 | 2026-03-26 | Newsletter system (full: API, templates, popup, inline, cron, admin) | Claude Code |
