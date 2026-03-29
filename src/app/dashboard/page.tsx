@@ -35,6 +35,7 @@ import { ConditionTracker } from "@/components/ConditionTracker";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StreakBadge } from "@/components/StreakBadge";
 import { AchievementsList } from "@/components/AchievementsList";
+import { Leaderboard } from "@/components/Leaderboard";
 import { PushNotificationToggle } from "@/components/PushNotificationToggle";
 import { useAchievementChecker } from "@/hooks/useAchievementChecker";
 
@@ -398,6 +399,11 @@ export default function DashboardPage() {
       {/* Achievements */}
       <div className="mt-8">
         <AchievementsList />
+      </div>
+
+      {/* Leaderboard */}
+      <div className="mt-8">
+        <Leaderboard />
       </div>
     </div>
   );
