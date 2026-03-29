@@ -26,6 +26,7 @@ import {
   Globe,
   Mail,
   Search,
+  Megaphone,
 } from "lucide-react";
 
 const NAV_ITEMS = [
@@ -44,6 +45,7 @@ const NAV_ITEMS = [
   { href: "/admin/conversand", label: "Conversand", icon: Globe },
   { href: "/admin/seo", label: "SEO", icon: Search },
   { href: "/admin/zasoby", label: "Zasoby AI", icon: Zap },
+  { href: "/admin/marketing", label: "Marketing", icon: Megaphone },
   { href: "/admin/roadmap", label: "Roadmapa", icon: Map },
 ];
 

@@ -383,3 +383,120 @@ export function weeklySummaryEmail(data: WeeklySummaryEmailData): { subject: str
 
   return { subject, html: layout(content, subject) };
 }
+
+// ---------- Onboarding drip email templates ----------
+// @author Claude Code (claude-opus-4-6) | 2026-03-29
+
+export interface OnboardingEmailData {
+  name: string;
+  unsubscribeToken: string;
+}
+
+export function onboardingEmail1(data: OnboardingEmailData): { subject: string; html: string } {
+  const { name, unsubscribeToken } = data;
+  const subject = "Twoja pierwsza premia czeka. Od czego zacząć?";
+
+  const content = `
+    <p>Cześć <strong>${name}</strong>!</p>
+    <p>Cieszymy się, że dołączyłeś do społeczności CebulaZysku.pl. Skoro tu jesteś, to znaczy, że chcesz przestać płacić bankom i zacząć na nich zarabiać.</p>
+    <p>Wiem, że na początku liczba ofert może przytłaczać. Spokojnie, od tego masz nas.</p>
+    <div class="highlight">
+      <strong>Nasza rekomendacja na start:</strong><br/>
+      Zacznij od ofert oznaczonych jako <strong>„Łatwe"</strong>. To promocje, w których warunki ograniczają się do założenia konta i wykonania kilku płatności kartą za codzienne zakupy.
+    </div>
+    <p><strong>Krok po kroku:</strong></p>
+    <p>1️⃣ Wejdź do <a href="${BASE_URL}">Rankingu Ofert</a><br/>
+    2️⃣ Wybierz bank, w którym nie miałeś konta przez ostatnie 2 lata<br/>
+    3️⃣ Kliknij „Złóż wniosek" i załóż konto (trwa to 15 minut)</p>
+    <p><strong>Najważniejszy krok:</strong> dodaj promocję do naszego <a href="${BASE_URL}/dashboard">Trackera</a> zaraz po założeniu konta. My przypomnimy Ci o terminach, a Ty po prostu odbierzesz kasę.</p>
+    <p style="text-align: center; margin-top: 24px;">
+      <a href="${BASE_URL}" class="btn">Zobacz ranking ofert →</a>
+    </p>
+    <p style="color: #9ca3af; font-size: 13px; margin-top: 24px;">
+      Powodzenia w pierwszym „skoku"! 🧅
+    </p>
+  `;
+
+  return { subject, html: newsletterLayout(content, subject, unsubscribeToken) };
+}
+
+export function onboardingEmail2(data: OnboardingEmailData): { subject: string; html: string } {
+  const { name, unsubscribeToken } = data;
+  const subject = "Jak wycisnąć 1000 zł w 30 dni?";
+
+  const content = `
+    <p>Siema <strong>${name}</strong>!</p>
+    <p>Jak idzie? Pierwszy wniosek o konto już wysłany? Jeśli tak, to pora wejść na wyższy poziom.</p>
+    <p>Czy wiesz, że średnio nasi użytkownicy wyciągają z banków około <strong>1000 zł w ciągu pierwszego miesiąca</strong>? To nie jest magia, to czysta strategia.</p>
+    <div class="highlight">
+      <strong>Plan jest prosty:</strong><br/><br/>
+      1️⃣ <strong>Szybki strzał:</strong> Zakładasz konto z premią 300 zł<br/>
+      2️⃣ <strong>Mnożnik zysku:</strong> Otwierasz konto z cashbackiem 10% i płacisz nim za paliwo i zakupy<br/>
+      3️⃣ <strong>Bonus rodzinny:</strong> Polecasz bank partnerowi/partnerce i zgarniasz bonus za polecenie
+    </div>
+    <p>W ten sposób, nie inwestując ani grosza, budujesz kapitał np. na wakacje lub nowy gadżet.</p>
+    <p>Nie czekaj, najlepsze promocje mają limity wniosków i znikają szybciej niż darmowe próbki w markecie.</p>
+    <p style="text-align: center; margin-top: 24px;">
+      <a href="${BASE_URL}" class="btn">Sprawdź Top #1 w Rankingu →</a>
+    </p>
+    <p style="color: #9ca3af; font-size: 13px; margin-top: 24px;">
+      Zarabiamy! 🧅💸
+    </p>
+  `;
+
+  return { subject, html: newsletterLayout(content, subject, unsubscribeToken) };
+}
+
+export function onboardingEmail3(data: OnboardingEmailData): { subject: string; html: string } {
+  const { name, unsubscribeToken } = data;
+  const subject = "Nie pozwól bankowi wygrać!";
+
+  const content = `
+    <p>Cześć <strong>${name}</strong>!</p>
+    <p>Mija tydzień, od kiedy jesteś z nami. To krytyczny moment.</p>
+    <p>Wiesz, na czym banki zarabiają najwięcej? Na ludziach, którzy <strong>zapominają</strong>. Otwierają darmowe konto, ale nie robią wymaganych 5 płatności kartą. Efekt? Bank nie wypłaca premii i jeszcze pobiera 15 zł opłaty za kartę.</p>
+    <div class="highlight">
+      <strong>Nie bądź tym gościem.</strong><br/><br/>
+      Jeśli założyłeś już konto, upewnij się, że:<br/>
+      ✅ Przynajmniej raz zalogowałeś się do aplikacji mobilnej<br/>
+      ✅ Wykonałeś testową płatność kartą (nawet za 1 zł)<br/>
+      ✅ <strong>Dodałeś ofertę do Trackera na CebulaZysku.pl</strong>
+    </div>
+    <p>Nasz <a href="${BASE_URL}/dashboard">Tracker</a> wyśle Ci powiadomienie, jeśli będziesz zbliżać się do końca miesiąca bez odhaczonych warunków. To Twoja polisa ubezpieczeniowa na 100% zysku.</p>
+    <p>Masz pytania? Odpisz na tego maila, chętnie pomożemy!</p>
+    <p style="text-align: center; margin-top: 24px;">
+      <a href="${BASE_URL}/dashboard" class="btn">Sprawdź swój Tracker →</a>
+    </p>
+    <p style="color: #9ca3af; font-size: 13px; margin-top: 24px;">
+      Piona! 🧅
+    </p>
+  `;
+
+  return { subject, html: newsletterLayout(content, subject, unsubscribeToken) };
+}
+
+export function onboardingEmail4Referral(data: OnboardingEmailData): { subject: string; html: string } {
+  const { name, unsubscribeToken } = data;
+  const subject = "Zarabiaj podwójnie — poleć CebulaZysku znajomemu!";
+
+  const content = `
+    <p>Hej <strong>${name}</strong>!</p>
+    <p>Masz już za sobą pierwszy tydzień jako Cebularz. Pora na kolejny ruch — tym razem bez żadnego wysiłku.</p>
+    <div class="highlight">
+      <strong>Zaproś znajomego i obaj zyskacie!</strong><br/><br/>
+      Wystarczy, że wyślesz swojemu znajomemu link polecający z dashboardu. Gdy się zarejestruje, obaj dostaniecie badge <strong>„Super Cebularz"</strong> — a Ty zbliżysz się do nagrody za 5 poleceń.
+    </div>
+    <p><strong>Jak to zrobić?</strong></p>
+    <p>1️⃣ Wejdź na <a href="${BASE_URL}/dashboard">swój Dashboard</a><br/>
+    2️⃣ Skopiuj link polecający lub wyślij go przez WhatsApp<br/>
+    3️⃣ Gotowe!</p>
+    <p style="text-align: center; margin-top: 24px;">
+      <a href="${BASE_URL}/dashboard" class="btn">Wyślij zaproszenie →</a>
+    </p>
+    <p style="color: #9ca3af; font-size: 13px; margin-top: 24px;">
+      Im więcej Cebularzy, tym więcej obranych warstw! 🧅🤝
+    </p>
+  `;
+
+  return { subject, html: newsletterLayout(content, subject, unsubscribeToken) };
+}

@@ -41,6 +41,8 @@ export async function GET(request: NextRequest) {
       status: "active",
       subscribed_at: new Date().toISOString(),
       welcome_variant: welcomeVariant,
+      onboarding_step: 0,
+      onboarding_started_at: new Date().toISOString(),
     })
     .eq("id", subscriber.id);
 

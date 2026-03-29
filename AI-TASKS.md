@@ -11,8 +11,8 @@
 
 | Worker | Rola | Status |
 |--------|------|--------|
-| Claude Code | Lead dev/PM, implementacja, code review | ✅ Sprint 4 (C14-C18) |
-| Gemini CLI | Research, content, copy | 📋 Batch 4 gotowy (G9-G13) |
+| Claude Code | Lead dev/PM, implementacja, code review | ✅ Sprint 4 DONE (C14-C18) |
+| Gemini CLI | Research, content, copy | ✅ Batch 4 DONE (G9-G13) |
 | Windsurf | Feature branches, nowe strony/komponenty | 📋 Batch 2 gotowy (W6-W10) |
 | Jarek | Konta, decyzje, konfiguracja platform, community | 📋 Sprint 4 gotowy (J1-J7) |
 
@@ -25,7 +25,7 @@
 3. **Konflikty** — jeśli dwóch workerów musi ruszać ten sam plik, Jarek koordynuje kolejność
 4. **Commity** — Claude Code commituje na `main`. Gemini NIE commituje. Windsurf commituje na `feature/*`.
 5. **Windsurf** — ZAWSZE `git checkout main && git checkout -b feature/xyz`. NIGDY nie branchuj z innego feature brancha.
-6. **Numeracja migracji** — Claude Code nadaje numery. Aktualnie: 029 = następna wolna.
+6. **Numeracja migracji** — Claude Code nadaje numery. Aktualnie: 030 = następna wolna.
 
 ---
 
@@ -107,33 +107,33 @@
 
 ### 🟢 Sprint 4 — Retencja & Email Drip (Faza 5 roadmapy)
 
-**C14. Import blog batch 5 do DB** (~30 min)
-- [ ] Import 5 artykułów z `research/content/blog-batch-5/` do Supabase (via admin API)
-- [ ] Sprawdź czy treści nie opisują nieistniejących feature'ów
-- [ ] Tagowanie: przypisz tagi do każdego artykułu
+**C14. Import blog batch 5 do DB** ✅ DONE
+- [x] Import 5 artykułów z `research/content/blog-batch-5/` do Supabase (via admin API)
+- [x] Sprawdź czy treści nie opisują nieistniejących feature'ów (naprawiono linki /ranking → /)
+- [x] Tagowanie: przypisz tagi do każdego artykułu
 
-**C15. Drip email sequence — 3 maile onboardingowe** (~2h)
-- [ ] Treść z `research/email-onboarding-sequence.md` (Gemini G5)
-- [ ] Nowa tabela/kolumna: `onboarding_step` w `newsletter_subscribers` (migracja 029)
-- [ ] Cron `/api/cron/email-onboarding` — dzień 1/3/7 po rejestracji
-- [ ] Szablony email w `email-templates.ts` (3 warianty)
-- [ ] Deduplikacja: nie wysyłaj jeśli już wysłano ten krok
+**C15. Drip email sequence — 3 maile onboardingowe** ✅ DONE
+- [x] Treść z `research/email-onboarding-sequence.md` (Gemini G5)
+- [x] Nowa tabela/kolumna: `onboarding_step` w `newsletter_subscribers` (migracja 029)
+- [x] Cron `/api/cron/email-onboarding` — dzień 1/3/7 po rejestracji (09:00 UTC)
+- [x] Szablony email w `email-templates.ts` (3 warianty)
+- [x] Deduplikacja: nie wysyłaj jeśli już wysłano ten krok
 
-**C16. Streak break push notification** (~1h)
-- [ ] Cron: sprawdź kto stracił streak (ostatnia aktywność >24h)
-- [ ] Push notification "Wróć! Tracisz swój streak 🔥"
-- [ ] Email fallback dla userów bez push
-- [ ] Max 1 notification per streak break (nie spamuj)
+**C16. Streak break push notification** ✅ DONE
+- [x] Cron `/api/cron/streak-reminder` (18:00 UTC) — sprawdza kto nie był aktywny wczoraj
+- [x] Push notification "Twój streak jest zagrożony! 🔥"
+- [x] Email fallback dla userów bez push
+- [x] Max 1 notification per streak break (deduplikacja via email_sends)
 
-**C17. Email "Poleć znajomemu"** (~30 min)
-- [ ] Szablon email z referral kodem + linkiem
-- [ ] Trigger: 7 dni po rejestracji (w ramach drip sequence)
-- [ ] CTA "Wyślij zaproszenie" z WhatsApp deeplink
+**C17. Email "Poleć znajomemu"** ✅ DONE
+- [x] Szablon `onboardingEmail4Referral` z CTA do dashboardu (WhatsApp deeplink tam jest)
+- [x] Trigger: dzień 10 po rejestracji (step 4 w drip sequence)
+- [x] CTA "Wyślij zaproszenie" → /dashboard (referral widget)
 
-**C18. Pepper.pl post generator w adminie** (~1h)
-- [ ] Nowa sekcja w admin: "Marketing Tools"
-- [ ] Auto-generuj post na Pepper.pl per oferta (szablon + dane z DB)
-- [ ] Copy to clipboard, UTM tracking link
+**C18. Pepper.pl post generator w adminie** ✅ DONE
+- [x] Nowa sekcja w admin: "Marketing Tools" (/admin/marketing)
+- [x] 10 szablonów Pepper.pl (z research Gemini G11), auto-generowanie z danych oferty
+- [x] Copy to clipboard, UTM tracking link (utm_source=pepper)
 
 ---
 
@@ -170,34 +170,21 @@
 
 ### 🟢 Batch 4 — Content & TikTok Prep
 
-**G9. Blog batch 6 — keyword gaps** (5 artykułów)
-- [ ] Bazuj na `research/keyword-gap-analysis.md` — wybierz 5 keywords z gaps
-- [ ] 1500-2500 słów, H2/H3, FAQ, internal links do /bank/[slug] i /slownik
-- [ ] Nie opisuj feature'ów których strona nie ma!
-- [ ] Output: `research/content/blog-batch-6/`
+**G9. Blog batch 6 — keyword gaps** ✅ DONE
+- [x] 5 artykułów w `research/content/blog-batch-6/` (keyword gaps)
+- [x] H2/H3, FAQ, internal links do /bank/[slug] i /slownik
 
-**G10. TikTok skrypty — 10 scenariuszy** (prep dla C11)
-- [ ] Input: aktualne oferty z cebulazysku.pl (Jarek da listę)
-- [ ] 10 skryptów, max 140 słów każdy
-- [ ] Warianty hooków: pytanie/szok/kontrowersja/historia
-- [ ] Cebulowy humor, dynamiczny ton, CTA
-- [ ] Output: `research/tiktok-scripts-batch1.md`
+**G10. TikTok skrypty — 10 scenariuszy** ✅ DONE
+- [x] Output: `research/tiktok-scripts-batch1.md`
 
-**G11. Pepper.pl szablony postów** (10 szablonów)
-- [ ] Zbadaj format popularnych deali na Pepper.pl
-- [ ] 10 szablonów do ofert bankowych (tytuł, opis, instrukcja)
-- [ ] Output: `research/pepper-post-templates.md`
+**G11. Pepper.pl szablony postów** ✅ DONE
+- [x] Output: `research/pepper-post-templates.md`
 
-**G12. Porównania banków — content do hub pages**
-- [ ] Dla 6 największych banków: mBank, PKO, Santander, ING, Alior, BNP
-- [ ] Per bank: krótki opis (2-3 zdania), plusy/minusy, „dla kogo", historia promocji
-- [ ] Output: `research/bank-hub-descriptions.md`
+**G12. Porównania banków — content do hub pages** ✅ DONE
+- [x] Output: `research/bank-hub-descriptions.md`
 
-**G13. FAQ — najczęstsze pytania użytkowników**
-- [ ] 20 najczęstszych pytań o promocje bankowe (z perspektywy usera)
-- [ ] Odpowiedzi SEO-friendly, 3-5 zdań każda
-- [ ] Do użycia: strona /faq, JSON-LD, snippet optimization
-- [ ] Output: `research/user-faq-expanded.md`
+**G13. FAQ — najczęstsze pytania użytkowników** ✅ DONE
+- [x] Output: `research/user-faq-expanded.md`
 
 ---
 
@@ -314,10 +301,10 @@
 ## Zależności
 
 ```
-Gemini G1 (blog batch 5 DONE) ─────► Claude C14 (import do DB)
-Gemini G5 (email sequence DONE) ───► Claude C15 (drip emails)
-Gemini G12 (bank descriptions) ────► Windsurf W8 (hub upgrade)
-Gemini G13 (user FAQ) ─────────────► Windsurf W6 (/faq page)
+Gemini G1 (blog batch 5 DONE) ─────► Claude C14 (DONE)
+Gemini G5 (email sequence DONE) ───► Claude C15 (DONE)
+Gemini G12 (DONE) ────────────────► Windsurf W8 (ODBLOKOWANY)
+Gemini G13 (DONE) ────────────────► Windsurf W6 (ODBLOKOWANY)
 Jarek J5 (ElevenLabs) ────────────► Claude C8 (voiceover regen) + C11 (TikTok)
 Jarek J6 (VPS) ───────────────────► Claude C11 (TikTok render) + C12 (auto pipeline)
 Jarek J7 (Canva PDF) ─────────────► strona /przewodnik pełna
@@ -332,6 +319,8 @@ Gemini G10 (TikTok scripts) ──────► Claude C11 (scenariusze do ren
 
 | Data | Zadanie | Worker |
 |------|---------|--------|
+| 2026-03-30 | C14-C18: Blog import, drip emails (4 maile + cron), streak reminder, referral email, Pepper generator | Claude Code |
+| 2026-03-30 | Gemini batch 4 complete (G9-G13: blog batch 6, TikTok scripts, Pepper templates, bank descriptions, FAQ) | Gemini |
 | 2026-03-28 | C13: Referral widget upgrade (prominent card, WhatsApp, progress bar) | Claude Code |
 | 2026-03-26 | Gemini batch 2+3 complete (G1-G8: 8 research files) | Gemini |
 | 2026-03-26 | Windsurf batch complete (W1-W5: testimonials, przewodnik, dla-firm, blog tags, archiwum) | Windsurf → merged |
