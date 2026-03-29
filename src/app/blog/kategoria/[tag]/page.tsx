@@ -1,9 +1,13 @@
 // @author Windsurf (claude-sonnet-4-20250514) | 2026-03-26
+// @author Windsurf (claude-sonnet-4-20250514) | 2026-03-29 — code review fixes: shared slugify, Button asChild, next/image, pluralize
 import { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getPublishedPosts } from "@/lib/blog";
 import { blogPosts as staticPosts } from "@/data/blog";
+import { polishSlugify } from "@/lib/slugify";
+import { pluralize } from "@/lib/pluralize";
 import { JsonLd } from "@/components/JsonLd";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,19 +35,7 @@ interface BlogPostView {
 }
 
 function tagToSlug(tag: string): string {
-  return tag
-    .toLowerCase()
-    .replace(/ś/g, "s")
-    .replace(/ł/g, "l")
-    .replace(/ó/g, "o")
-    .replace(/ż/g, "z")
-    .replace(/ź/g, "z")
-    .replace(/ą/g, "a")
-    .replace(/ę/g, "e")
-    .replace(/ć/g, "c")
-    .replace(/ń/g, "n")
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "");
+  return polishSlugify(tag);
 }
 
 async function getAllPosts(): Promise<BlogPostView[]> {
@@ -201,7 +193,7 @@ export default async function BlogCategoryPage({
             </h1>
           </div>
           <p className="text-muted-foreground">
-            {filtered.length} artykuł{filtered.length === 1 ? "" : filtered.length < 5 ? "y" : "ów"} z tagiem{" "}
+            {filtered.length} {pluralize(filtered.length, "artykuł", "artykuły", "artykułów")} z tagiem{" "}
             <Badge variant="secondary">{tagName}</Badge>
           </p>
         </div>
@@ -227,12 +219,12 @@ export default async function BlogCategoryPage({
             <p className="text-muted-foreground">
               Brak artykułów z tym tagiem.
             </p>
-            <Link href="/blog" className="mt-4 inline-block">
-              <Button variant="outline" className="gap-2">
+            <Button variant="outline" className="gap-2 mt-4" asChild>
+              <Link href="/blog">
                 Wszystkie artykuły
                 <ArrowRight className="h-4 w-4" />
-              </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
         ) : (
           <div className="space-y-6">
@@ -243,7 +235,7 @@ export default async function BlogCategoryPage({
               >
                 {post.coverImageUrl && (
                   <Link href={`/blog/${post.slug}`}>
-                    <img
+                    <Image
                       src={post.coverImageUrl}
                       alt={post.title}
                       width={800}
@@ -291,12 +283,12 @@ export default async function BlogCategoryPage({
                         </Link>
                       ))}
                     </div>
-                    <Link href={`/blog/${post.slug}`}>
-                      <Button variant="ghost" size="sm" className="gap-1">
+                    <Button variant="ghost" size="sm" className="gap-1" asChild>
+                      <Link href={`/blog/${post.slug}`}>
                         Czytaj
                         <ArrowRight className="h-3 w-3" />
-                      </Button>
-                    </Link>
+                      </Link>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -306,12 +298,12 @@ export default async function BlogCategoryPage({
 
         {/* Back to blog */}
         <div className="text-center mt-12">
-          <Link href="/blog">
-            <Button variant="outline" className="gap-2">
+          <Button variant="outline" className="gap-2" asChild>
+            <Link href="/blog">
               Wszystkie artykuły
               <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </div>
       </div>
     </>

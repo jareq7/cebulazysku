@@ -1,9 +1,18 @@
 // @author Claude Code (claude-opus-4-6) | 2026-03-18 — initial version
 // @author Windsurf (claude-sonnet-4-20250514) | 2026-03-26 — added ArchiveFilters with search, bank filter, reward range, stats
+// @author Windsurf (claude-sonnet-4-20250514) | 2026-03-29 — code review fixes: OG metadata, shadcn Breadcrumb, Button asChild
 import { Metadata } from "next";
 import Link from "next/link";
 import { fetchExpiredOffersFromDB } from "@/lib/offers";
 import { Button } from "@/components/ui/button";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 import { JsonLd } from "@/components/JsonLd";
 import { ArchiveFilters } from "@/components/ArchiveFilters";
 import {
@@ -18,6 +27,13 @@ export const metadata: Metadata = {
   title: "Archiwum promocji bankowych – zakończone oferty | CebulaZysku",
   description:
     "Lista zakończonych promocji bankowych. Sprawdź archiwalne warunki ofert, regulaminy i daty wygaśnięcia. Bądź gotowy na powrót promocji po okresie karencji.",
+  openGraph: {
+    title: "Archiwum promocji bankowych – CebulaZysku",
+    description:
+      "Lista zakończonych promocji bankowych. Sprawdź archiwalne warunki ofert i daty wygaśnięcia.",
+    type: "website",
+    url: "https://cebulazysku.pl/archiwum",
+  },
   alternates: {
     canonical: "https://cebulazysku.pl/archiwum",
   },
@@ -50,13 +66,17 @@ export default async function ArchivePage() {
       <JsonLd data={breadcrumbJsonLd} />
 
       {/* Breadcrumb */}
-      <nav className="flex items-center gap-1.5 text-sm text-muted-foreground mb-8">
-        <Link href="/" className="hover:text-foreground transition-colors">
-          Strona główna
-        </Link>
-        <span>/</span>
-        <span className="text-foreground font-medium">Archiwum promocji</span>
-      </nav>
+      <Breadcrumb className="mb-8">
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Strona główna</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator />
+          <BreadcrumbItem>
+            <BreadcrumbPage>Archiwum promocji</BreadcrumbPage>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
 
       <div className="text-center mb-12">
         <div className="inline-flex items-center gap-2 rounded-full bg-muted px-4 py-1.5 text-sm font-medium mb-4">
@@ -97,12 +117,12 @@ export default async function ArchivePage() {
 
       <div className="mt-16 text-center">
         <h2 className="text-2xl font-bold mb-4">Szukasz aktualnych zysków?</h2>
-        <Link href="/ranking">
-          <Button size="lg" className="gap-2 px-8">
+        <Button size="lg" className="gap-2 px-8" asChild>
+          <Link href="/ranking">
             Zobacz aktualny ranking
             <ArrowRight className="h-5 w-5" />
-          </Button>
-        </Link>
+          </Link>
+        </Button>
       </div>
     </div>
   );

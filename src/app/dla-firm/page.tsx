@@ -1,8 +1,9 @@
 // @author Windsurf (claude-sonnet-4-20250514) | 2026-03-26
+// @author Windsurf (claude-sonnet-4-20250514) | 2026-03-29 — code review fixes: Button asChild, FAQ JSON-LD, pluralize
 import { Metadata } from "next";
 import Link from "next/link";
 import { fetchOffersFromDB } from "@/lib/offers";
-import type { BankOffer } from "@/data/banks";
+import { pluralize } from "@/lib/pluralize";
 import { JsonLd } from "@/components/JsonLd";
 import { OfferCard } from "@/components/OfferCard";
 import { Card, CardContent } from "@/components/ui/card";
@@ -21,7 +22,6 @@ import {
   ShieldCheck,
   Clock,
   TrendingUp,
-  CheckCircle,
   HelpCircle,
 } from "lucide-react";
 
@@ -57,6 +57,44 @@ export default async function DlaFirmPage() {
 
   const totalBusinessReward = businessOffers.reduce((sum, o) => sum + o.reward, 0);
 
+  // FAQ data for JSON-LD and rendering
+  const faqItems = [
+    {
+      q: "Czy mogę mieć konto firmowe i osobiste w tym samym banku?",
+      a: "Tak! To dwa oddzielne produkty. Możesz korzystać z promocji na oba jednocześnie. Niektóre banki dają nawet dodatkowy bonus za posiadanie obu kont.",
+    },
+    {
+      q: "Czy potrzebuję NIP żeby otworzyć konto firmowe?",
+      a: "Tak, konto firmowe wymaga numeru NIP. Jeśli prowadzisz jednoosobową działalność gospodarczą (JDG), wystarczy Twój osobisty NIP. Spółki potrzebują NIP spółki.",
+    },
+    {
+      q: "Jak długo trwa otwarcie konta firmowego online?",
+      a: "Zwykle 10-15 minut. Potrzebujesz dowodu osobistego, NIP i wpisu do CEIDG/KRS. Większość banków pozwala otworzyć konto bez wizyty w oddziale.",
+    },
+    {
+      q: "Czy premia na konto firmowe jest opodatkowana?",
+      a: 'Premie do 2000 zł w ramach "sprzedaży premiowej" są zwolnione z PIT. Jeśli premia wpływa na konto firmowe, może być traktowana jako przychód z działalności — skonsultuj to z księgowym.',
+    },
+    {
+      q: "Czy po premii mogę zamknąć konto firmowe?",
+      a: "Tak, ale sprawdź regulamin — niektóre banki wymagają utrzymania konta przez określony czas (np. 3-6 miesięcy). Po tym okresie zamknięcie jest bezpłatne.",
+    },
+  ];
+
+  // JSON-LD: FAQPage
+  const faqLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map(({ q, a }) => ({
+      "@type": "Question",
+      name: q,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: a,
+      },
+    })),
+  };
+
   // JSON-LD: BreadcrumbList
   const breadcrumbLd = {
     "@context": "https://schema.org",
@@ -80,6 +118,7 @@ export default async function DlaFirmPage() {
   return (
     <>
       <JsonLd data={breadcrumbLd} />
+      <JsonLd data={faqLd} />
 
       <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8">
         {/* Breadcrumbs */}
@@ -109,7 +148,7 @@ export default async function DlaFirmPage() {
           </p>
           {businessOffers.length > 0 && (
             <p className="mt-3 text-sm text-muted-foreground">
-              🧅 {businessOffers.length} ofert{businessOffers.length === 1 ? "a" : businessOffers.length < 5 ? "y" : ""} firmow{businessOffers.length === 1 ? "a" : businessOffers.length < 5 ? "e" : "ych"}, łącznie do{" "}
+              🧅 {businessOffers.length} {pluralize(businessOffers.length, "oferta firmowa", "oferty firmowe", "ofert firmowych")}, łącznie do{" "}
               <span className="font-bold text-emerald-600">{totalBusinessReward} zł</span>{" "}
               premii
             </p>
@@ -173,12 +212,12 @@ export default async function DlaFirmPage() {
                   Aktualnie nie mamy promocji na konta firmowe. Banki regularnie
                   uruchamiają nowe oferty — wróć tu za kilka dni lub sprawdź oferty osobiste poniżej.
                 </p>
-                <Link href="/">
-                  <Button variant="outline" className="gap-2">
+                <Button variant="outline" className="gap-2" asChild>
+                  <Link href="/">
                     Zobacz oferty osobiste
                     <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </CardContent>
             </Card>
           )}
@@ -200,12 +239,12 @@ export default async function DlaFirmPage() {
               ))}
             </div>
             <div className="text-center mt-4">
-              <Link href="/">
-                <Button variant="outline" className="gap-2">
+              <Button variant="outline" className="gap-2" asChild>
+                <Link href="/">
                   Wszystkie oferty osobiste
                   <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </div>
           </section>
         )}
@@ -217,28 +256,7 @@ export default async function DlaFirmPage() {
             Pytania o konta firmowe
           </h2>
           <div className="space-y-3">
-            {[
-              {
-                q: "Czy mogę mieć konto firmowe i osobiste w tym samym banku?",
-                a: "Tak! To dwa oddzielne produkty. Możesz korzystać z promocji na oba jednocześnie. Niektóre banki dają nawet dodatkowy bonus za posiadanie obu kont.",
-              },
-              {
-                q: "Czy potrzebuję NIP żeby otworzyć konto firmowe?",
-                a: "Tak, konto firmowe wymaga numeru NIP. Jeśli prowadzisz jednoosobową działalność gospodarczą (JDG), wystarczy Twój osobisty NIP. Spółki potrzebują NIP spółki.",
-              },
-              {
-                q: "Jak długo trwa otwarcie konta firmowego online?",
-                a: "Zwykle 10-15 minut. Potrzebujesz dowodu osobistego, NIP i wpisu do CEIDG/KRS. Większość banków pozwala otworzyć konto bez wizyty w oddziale.",
-              },
-              {
-                q: "Czy premia na konto firmowe jest opodatkowana?",
-                a: 'Premie do 2000 zł w ramach "sprzedaży premiowej" są zwolnione z PIT. Jeśli premia wpływa na konto firmowe, może być traktowana jako przychód z działalności — skonsultuj to z księgowym.',
-              },
-              {
-                q: "Czy po premii mogę zamknąć konto firmowe?",
-                a: "Tak, ale sprawdź regulamin — niektóre banki wymagają utrzymania konta przez określony czas (np. 3-6 miesięcy). Po tym okresie zamknięcie jest bezpłatne.",
-              },
-            ].map(({ q, a }) => (
+            {faqItems.map(({ q, a }) => (
               <Card key={q}>
                 <CardContent className="p-4 sm:p-5">
                   <h3 className="font-semibold text-sm mb-1.5">{q}</h3>
@@ -261,12 +279,12 @@ export default async function DlaFirmPage() {
             Załóż konto na CebulaZysku — dostaniesz powiadomienie gdy pojawi się
             nowa oferta na konto firmowe z premią!
           </p>
-          <Link href="/rejestracja">
-            <Button size="lg" className="gap-2">
+          <Button size="lg" className="gap-2" asChild>
+            <Link href="/rejestracja">
               Załóż konto — za darmo
               <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </section>
       </div>
     </>

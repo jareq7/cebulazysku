@@ -1,9 +1,12 @@
 // @author Windsurf (claude-sonnet-4-20250514) | 2026-03-26
+// @author Windsurf (claude-sonnet-4-20250514) | 2026-03-29 — code review fixes: shared slugify, Button asChild, a11y, next/image
 "use client";
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import type { BankOffer } from "@/data/banks";
+import { polishSlugify } from "@/lib/slugify";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -20,14 +23,7 @@ interface ArchiveFiltersProps {
 }
 
 function bankNameToSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .replace(/\s+s\.a\.?$/i, "")
-    .replace(/bank\s+/gi, "")
-    .replace(/ś/g, "s").replace(/ł/g, "l").replace(/ó/g, "o")
-    .replace(/ż/g, "z").replace(/ź/g, "z").replace(/ą/g, "a")
-    .replace(/ę/g, "e").replace(/ć/g, "c").replace(/ń/g, "n")
-    .replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+  return polishSlugify(name);
 }
 
 export function ArchiveFilters({ offers }: ArchiveFiltersProps) {
@@ -142,6 +138,7 @@ export function ArchiveFilters({ offers }: ArchiveFiltersProps) {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10"
+            aria-label="Szukaj ofert w archiwum"
           />
         </div>
         <div className="flex gap-2">
@@ -186,7 +183,7 @@ export function ArchiveFilters({ offers }: ArchiveFiltersProps) {
             className="text-xs gap-1.5"
           >
             {bank.logo && bank.logo.startsWith("http") ? (
-              <img
+              <Image
                 src={bank.logo}
                 alt=""
                 className="h-4 w-4 rounded object-contain"
@@ -246,12 +243,12 @@ export function ArchiveFilters({ offers }: ArchiveFiltersProps) {
           {filtered.map((offer) => (
             <Card
               key={offer.id}
-              className="opacity-75 grayscale hover:opacity-100 hover:grayscale-0 transition-all"
+              className="opacity-75 grayscale hover:opacity-100 hover:grayscale-0 focus-within:opacity-100 focus-within:grayscale-0 transition-all"
             >
               <CardContent className="py-4">
                 <div className="flex items-center gap-4">
                   {offer.bankLogo && offer.bankLogo.startsWith("http") ? (
-                    <img
+                    <Image
                       src={offer.bankLogo}
                       alt={`${offer.bankName} logo`}
                       className="h-10 w-10 rounded-xl object-contain bg-white p-1 shrink-0 opacity-50"
@@ -292,11 +289,11 @@ export function ArchiveFilters({ offers }: ArchiveFiltersProps) {
                       było do zdobycia
                     </p>
                   </div>
-                  <Link href={`/oferta/${offer.slug}`}>
-                    <Button size="sm" variant="ghost" className="gap-1">
+                  <Button size="sm" variant="ghost" className="gap-1" asChild>
+                    <Link href={`/oferta/${offer.slug}`}>
                       Szczegóły <ArrowRight className="h-4 w-4" />
-                    </Button>
-                  </Link>
+                    </Link>
+                  </Button>
                 </div>
               </CardContent>
             </Card>
