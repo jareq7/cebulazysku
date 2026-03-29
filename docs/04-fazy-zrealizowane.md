@@ -181,3 +181,28 @@
 - Audyt i optymalizacja promptów generatora opisów ofert (poprawa Tone of Voice).
 - Produkcja 5 artykułów Pillar Content pod frazy long-tail.
 - Analiza luki słów kluczowych względem sprawdzpremie.pl, bankier.pl i WP Finanse.
+
+
+### Faza: SEO & Conversion Sprint 1 (C1-C5) — 26 Marca 2026
+- **FAQ Schema:** Komponent OfferFAQ.tsx + JSON-LD FAQPage na stronach ofert.
+- **Internal Linking:** Auto-linkowanie banków → /bank/[slug] i terminów → /slownik w markdown.
+- **CTA:** StickyCTA na mobile, trust signals, GA4 tracking (cta_click).
+- **A/B Hero:** 3 warianty copy z localStorage persistence + GA4 events.
+- **Persona /o-nas:** Sekcja "Dla kogo jest CebulaZysku?" z profilem Sprytnego Cebularza.
+
+### Faza: Content & Pipeline Sprint 2 (C6-C10) — 26 Marca 2026
+- **Import blogów:** 12 artykułów Gemini zaimportowanych do Supabase.
+- **Welcome Email A/B:** 3 warianty (autorytet/konwersja/storytelling), tracking w DB.
+- **Admin SEO:** Dashboard z KPI, coverage, sitemap browser, /api/admin/seo-stats.
+- **GA4 Custom Dimensions:** Nowe eventy (calculator, hero variant, CTA).
+
+### Faza: Windsurf Batch 1 (W1-W5) — 26 Marca 2026
+- **Testimonials:** Karuzela 6 opinii z paginacją na stronie głównej.
+- **Lead Magnet /przewodnik:** Landing z formularzem, 6 rozdziałów, trust signals.
+- **Landing /dla-firm:** Oferty firmowe, filtrowanie, FAQ, JSON-LD.
+- **Blog kategorie:** /blog/kategoria/[tag] z tag cloud, generateStaticParams.
+- **Archiwum upgrade:** Filtry (bank, reward range), stats, search.
+
+### Faza: Referral Widget + Task Board Sync — 28 Marca 2026
+- **Referral upgrade (C13):** Prominent card z gradient, WhatsApp share, progress bar (5 referrals).
+- **AI-TASKS sync:** Weryfikacja i odznaczenie G1-G8 (Gemini) i W1-W5 (Windsurf) jako DONE.

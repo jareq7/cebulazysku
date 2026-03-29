@@ -1,19 +1,20 @@
 # AI Tasks Board
 
-> Tablica zadań do koordynacji między Claude Code, Gemini CLI i Windsurf.
-> Jarek przekazuje wiadomości między terminalami — ten plik to źródło prawdy o tym kto co robi.
+> Tablica zadań do koordynacji między Claude Code, Gemini CLI, Windsurf i Jarkiem.
+> Ten plik to źródło prawdy o tym kto co robi. Parsowany automatycznie przez `/admin/roadmap`.
 >
-> **Ostatnia aktualizacja:** 2026-03-28 (Claude Code)
+> **Ostatnia aktualizacja:** 2026-03-29 (Claude Code)
 
 ---
 
 ## Status workerów
 
-| Worker | Model | IDE | Status |
-|--------|-------|-----|--------|
-| Claude Code | claude-opus-4-6 | VS Code | ✅ Aktywny — lead dev/PM |
-| Gemini CLI | gemini-3.1-pro-preview | Terminal | 📋 Batch 4 gotowy (G9-G13) |
-| Windsurf | claude-opus-4-6 | Windsurf IDE | 📋 Batch 2 gotowy (W6-W10, W6/W8 czekają na Gemini) |
+| Worker | Rola | Status |
+|--------|------|--------|
+| Claude Code | Lead dev/PM, implementacja, code review | ✅ Sprint 4 (C14-C18) |
+| Gemini CLI | Research, content, copy | 📋 Batch 4 gotowy (G9-G13) |
+| Windsurf | Feature branches, nowe strony/komponenty | 📋 Batch 2 gotowy (W6-W10) |
+| Jarek | Konta, decyzje, konfiguracja platform, community | 📋 Sprint 4 gotowy (J1-J7) |
 
 ---
 
@@ -259,6 +260,57 @@
 
 ---
 
+## Backlog — Jarek (ręczna praca, konfiguracja platform)
+
+> Bez tych tasków nie odblokujemy ruchu na stronie. Priorytet od góry.
+
+### 🔴 Sprint 4 — Odblokowanie dystrybucji
+
+**J1. Google Search Console** (~15 min)
+- [ ] Zweryfikuj domenę cebulazysku.pl w GSC (DNS TXT lub HTML tag)
+- [ ] Submit sitemap: `cebulazysku.pl/sitemap.xml`
+- [ ] Sprawdź indexowanie: ile stron zaindexowanych, jakie errory
+- [ ] Podaj Claude dane do GSC API (Service Account JSON) → odblokuje C9 (admin SEO pełny)
+
+**J2. Social media — konta** (~1h łącznie)
+- [ ] Załóż Facebook Page "CebulaZysku.pl"
+- [ ] Załóż Instagram Professional (połącz z FB Page)
+- [ ] Załóż TikTok Business Account (tiktok.com/business)
+- [ ] Załóż kanał YouTube "CebulaZysku"
+- [ ] Na każdym profilu ustaw link w bio → cebulazysku.pl/link
+
+**J3. Import GTM container + weryfikacja GA4** (~10 min)
+- [ ] Zaimportuj GTM container (plik JSON w repo) do Google Tag Manager
+- [ ] Publish container
+- [ ] Wejdź na cebulazysku.pl, sprawdź GA4 Realtime — czy widać eventy
+
+**J4. Community seeding — start** (~15 min/dzień, ongoing)
+- [ ] Załóż konto na Reddit (r/polska, r/finanse)
+- [ ] Załóż konto na Wykop (mikroblog)
+- [ ] Dołącz do FB grup "Promocje bankowe", "Oszczędzanie"
+- [ ] Zacznij odpowiadać na pytania o premie — 80% wartość, 20% link do CebulaZysku
+- [ ] Zgłoś pierwszy deal na Pepper.pl (szablon: Claude C18)
+
+### 🟡 Później — Video Pipeline unblock
+
+**J5. ElevenLabs upgrade** (~5 min)
+- [ ] Upgrade plan do Creator ($22/mies) lub Pro ($99/mies)
+- [ ] Podaj Claude nowy API key jeśli się zmienił
+- [ ] **Odblokuje:** C8 (voiceover regen), C11 (TikTok pipeline)
+
+**J6. VPS (Hetzner)** (~15 min)
+- [ ] Zamów Hetzner CX22 (~€4/mies)
+- [ ] Podaj IP + SSH key Claude → setup Docker + n8n
+- [ ] **Odblokuje:** C11 (TikTok video render), C12 (auto content pipeline)
+
+**J7. Lead Magnet PDF — Canva design** (~1-2h)
+- [ ] Weź treść z `research/lead-magnet-final.md` (141 linii, gotowe)
+- [ ] Zaprojektuj PDF w Canva (10-15 stron, "Kodeks Cebularza 2026")
+- [ ] Upload do `/public/przewodnik-cebularza.pdf`
+- [ ] **Odblokuje:** pełna strona /przewodnik z downloadem
+
+---
+
 ## Zależności
 
 ```
@@ -266,7 +318,11 @@ Gemini G1 (blog batch 5 DONE) ─────► Claude C14 (import do DB)
 Gemini G5 (email sequence DONE) ───► Claude C15 (drip emails)
 Gemini G12 (bank descriptions) ────► Windsurf W8 (hub upgrade)
 Gemini G13 (user FAQ) ─────────────► Windsurf W6 (/faq page)
-Claude C11 (TikTok) ──────────────► wymaga VPS + ElevenLabs (Jarek)
+Jarek J5 (ElevenLabs) ────────────► Claude C8 (voiceover regen) + C11 (TikTok)
+Jarek J6 (VPS) ───────────────────► Claude C11 (TikTok render) + C12 (auto pipeline)
+Jarek J7 (Canva PDF) ─────────────► strona /przewodnik pełna
+Jarek J1 (GSC) ───────────────────► Claude C9 (admin SEO - GSC integration)
+Jarek J3 (GTM import) ────────────► GA4 data collection starts
 Gemini G10 (TikTok scripts) ──────► Claude C11 (scenariusze do renderowania)
 ```
 

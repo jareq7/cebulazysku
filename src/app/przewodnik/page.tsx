@@ -72,7 +72,7 @@ export default function PrzewodnikPage() {
       {
         "@type": "ListItem",
         position: 1,
-        name: "Strona glowna",
+        name: "Strona główna",
         item: "https://cebulazysku.pl",
       },
       {
@@ -93,7 +93,7 @@ export default function PrzewodnikPage() {
         <Breadcrumb className="mb-6">
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbLink href="/">Strona glowna</BreadcrumbLink>
+              <BreadcrumbLink href="/">Strona główna</BreadcrumbLink>
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
@@ -112,8 +112,8 @@ export default function PrzewodnikPage() {
             Kodeks Cebularza 2026
           </h1>
           <p className="text-lg text-muted-foreground max-w-xl mx-auto">
-            Jak przestac placic bankom i zmusic je, by wyplacily Ci{" "}
-            <span className="font-bold text-emerald-600">5000 zl</span> w jeden rok.
+            Jak przestać płacić bankom i zmusić je, by wypłaciły Ci{" "}
+            <span className="font-bold text-emerald-600">5000 zł</span> w jeden rok.
             Przewodnik krok po kroku.
           </p>
         </div>
@@ -122,9 +122,9 @@ export default function PrzewodnikPage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
           {[
             { icon: BookOpen, label: "10 stron", desc: "praktycznej wiedzy" },
-            { icon: Shield, label: "100% legalnie", desc: "sprzedaz premiowa" },
-            { icon: TrendingUp, label: "Do 5000 zl", desc: "rocznie z premii" },
-            { icon: Clock, label: "15 min/mies.", desc: "pracy wlasnej" },
+            { icon: Shield, label: "100% legalnie", desc: "sprzedaż premiowa" },
+            { icon: TrendingUp, label: "Do 5000 zł", desc: "rocznie z premii" },
+            { icon: Clock, label: "15 min/mies.", desc: "pracy własnej" },
           ].map(({ icon: Icon, label, desc }) => (
             <Card key={label}>
               <CardContent className="p-3 text-center">
@@ -145,7 +145,7 @@ export default function PrzewodnikPage() {
         <section className="mb-12">
           <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
             <BookOpen className="h-5 w-5 text-muted-foreground" />
-            Co znajdziesz w srodku?
+            Co znajdziesz w środku?
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {chapters.map((ch, i) => (

@@ -25,7 +25,7 @@ interface RoadmapItem {
   status: "planned" | "in_progress" | "done";
   priority: number;
   category: string | null;
-  worker: "claude" | "gemini" | null;
+  worker: "claude" | "gemini" | "windsurf" | "jarek" | null;
   source: "ai-tasks" | "manual";
   date: string | null;
 }
@@ -43,6 +43,8 @@ const CATEGORY_COLORS: Record<string, string> = {
 const WORKER_COLORS: Record<string, string> = {
   claude: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400",
   gemini: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400",
+  windsurf: "bg-teal-100 text-teal-700 dark:bg-teal-900/30 dark:text-teal-400",
+  jarek: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400",
 };
 
 const PRIORITY_LABELS: Record<number, { label: string; color: string }> = {
@@ -93,7 +95,7 @@ function RoadmapCard({ item }: { item: RoadmapItem }) {
               {item.worker && (
                 <Badge className={`text-[10px] px-1.5 py-0 gap-0.5 ${WORKER_COLORS[item.worker]}`}>
                   <Bot className="h-2.5 w-2.5" />
-                  {item.worker === "claude" ? "Claude" : "Gemini"}
+                  {item.worker === "claude" ? "Claude" : item.worker === "gemini" ? "Gemini" : item.worker === "windsurf" ? "Windsurf" : "Jarek"}
                 </Badge>
               )}
               {item.category && (

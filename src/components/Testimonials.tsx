@@ -98,8 +98,7 @@ export function Testimonials() {
           Co mówią nasi cebularze? 🧅
         </h2>
         <p className="text-muted-foreground max-w-lg mx-auto">
-          Prawdziwi użytkownicy, prawdziwe premie. Dołącz do społeczności
-          sprytnych cebularzy!
+          Przykładowe scenariusze — ile można zarobić na promocjach bankowych
         </p>
       </div>
 
@@ -110,7 +109,7 @@ export function Testimonials() {
             className="relative overflow-hidden hover:shadow-md transition-shadow"
           >
             <CardContent className="p-5">
-              <Quote className="h-8 w-8 text-emerald-200 dark:text-emerald-800 absolute top-3 right-3" />
+              <Quote aria-hidden="true" className="h-8 w-8 text-emerald-200 dark:text-emerald-800 absolute top-3 right-3" />
 
               {/* Stars */}
               <div className="flex gap-0.5 mb-3">

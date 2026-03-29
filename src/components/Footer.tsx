@@ -47,6 +47,16 @@ export function Footer() {
                   Dashboard
                 </Link>
               </li>
+              <li>
+                <Link href="/dla-firm" className="hover:text-foreground transition-colors">
+                  Dla firm
+                </Link>
+              </li>
+              <li>
+                <Link href="/archiwum" className="hover:text-foreground transition-colors">
+                  Archiwum
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -66,6 +76,16 @@ export function Footer() {
               <li>
                 <Link href="/blog" className="hover:text-foreground transition-colors">
                   Blog
+                </Link>
+              </li>
+              <li>
+                <Link href="/przewodnik" className="hover:text-foreground transition-colors">
+                  Przewodnik
+                </Link>
+              </li>
+              <li>
+                <Link href="/slownik" className="hover:text-foreground transition-colors">
+                  Słownik
                 </Link>
               </li>
             </ul>

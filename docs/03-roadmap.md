@@ -73,11 +73,20 @@
 | 6 | Rozszerzona gamifikacja (konfetti, status wypłaty, polecenia) | [33-gamifikacja-extended.md](./33-gamifikacja-extended.md) | ✅ Gotowe | — |
 | 7 | CebulaZysku v2 (Compliance, SEO, UX, Growth) | [tasks/prd-cebulazysku-v2.md](../tasks/prd-cebulazysku-v2.md) | ✅ Gotowe | — |
 | 8 | Video Ads (Remotion + ElevenLabs TTS) | [tasks/prd-video-ads.md](../tasks/prd-video-ads.md) | ⚠️ 80% (voiceover regen pending) | — |
-| 9 | Rozbudowa admin panelu (wykresy, logi AI) | [07-admin-panel.md](./07-admin-panel.md) | 🔲 Do zrobienia | Średni |
-| 10 | Aplikacje mobilne (iOS + Android) | [08-mobile.md](./08-mobile.md) | 🔲 Do zrobienia | Planowane |
-| 11 | White-label + multi-branża | [09-white-label.md](./09-white-label.md) | 🔲 Do zrobienia | Planowane |
+| 8b | SEO & Conversion Sprint | [46-seo-conversion-sprint1.md](./46-seo-conversion-sprint1.md) | ✅ Gotowe | — |
+| 8c | Content & Email Pipeline | [47-content-pipeline-sprint2.md](./47-content-pipeline-sprint2.md) | ✅ Gotowe | — |
+| 8d | Windsurf batch 1 (testimonials, przewodnik, dla-firm, blog tags, archiwum) | AI-TASKS.md W1-W5 | ✅ Gotowe | — |
+| 8e | Gemini batch 2+3 (8 research deliverables) | AI-TASKS.md G1-G8 | ✅ Gotowe | — |
+| 8f | Referral widget upgrade | AI-TASKS.md C13 | ✅ Gotowe | — |
+| 9 | **Sprint 4 — Retencja & Dystrybucja** | AI-TASKS.md C14-C18, G9-G13, W6-W10, J1-J7 | 🔄 W trakcie | Wysoki |
+| 10 | TikTok/IG/YT Video Pipeline | AI-TASKS.md C11 | ⏸️ Czeka na VPS + ElevenLabs (Jarek J5, J6) | Wysoki |
+| 11 | Autonomiczny Content Pipeline (n8n) | AI-TASKS.md C12 | 🔲 Wymaga PRD | Średni |
+| 12 | Rozbudowa admin panelu (wykresy, logi AI) | [07-admin-panel.md](./07-admin-panel.md) | 🔲 Do zrobienia | Średni |
+| 13 | Aplikacje mobilne (iOS + Android) | [08-mobile.md](./08-mobile.md) | 🔲 Do zrobienia | Planowane |
+| 14 | White-label + multi-branża | [09-white-label.md](./09-white-label.md) | 🔲 Do zrobienia | Planowane |
 
 > **Uwaga:** Fazy 1 (Supabase + auth) i 2 (XML parser) z oryginalnego planu zostały zrealizowane jako fazy 0b i 0d.
 > Fazy 5 (push), 6 (gamifikacja bazowa) i 7 (admin panel bazowy) też zrealizowane jako 0l, 0k, 0h.
 > V2 (compliance, SEO, UX, growth) i Video Ads zrealizowane w marcu 2026.
+> Sprint 4 (marzec 2026): retencja, drip emails, nowe strony, Jarek odblokuje dystrybucję.
 > Pozostałe fazy dotyczą rozszerzeń ponad to co jest obecnie zaimplementowane.
