@@ -13,7 +13,7 @@
 |--------|------|--------|
 | Claude Code | Lead dev/PM, implementacja, code review | ✅ Sprint 4 DONE (C14-C18) |
 | Gemini CLI | Research, content, copy | ✅ Batch 4 DONE (G9-G13) |
-| Windsurf | Feature branches, nowe strony/komponenty | 📋 Batch 2 gotowy (W6-W10) |
+| Windsurf | Feature branches, nowe strony/komponenty | ✅ W6-W8,W10 merged, ⏸️ W9 do poprawki |
 | Jarek | Konta, decyzje, konfiguracja platform, community | 📋 Sprint 4 gotowy (J1-J7) |
 
 ---
@@ -216,34 +216,28 @@
 
 ### 🟢 Batch 2
 
-**W6. Strona /faq** — branch `feature/faq-page`
-- [ ] Strona `/faq` z pytaniami pogrupowanymi po kategorii
-- [ ] JSON-LD FAQPage schema (cała strona)
-- [ ] Accordion UI (shadcn Accordion), search/filter
-- [ ] Bazuj na danych z `research/user-faq-expanded.md` (Gemini G13)
-- [ ] **Czeka na:** Gemini G13
+**W6. Strona /faq** ✅ DONE (merged)
+- [x] Strona `/faq` z 20 pytaniami, FAQPage JSON-LD, Accordion, search
+- [x] Bazuje na `research/user-faq-expanded.md` (Gemini G13)
 
-**W7. Strona /jak-zarabiac — poradnik krok po kroku** — branch `feature/how-to-earn`
-- [ ] Landing `/jak-zarabiac` — 5 kroków ilustrowanych (wybierz bank → otwórz konto → spełnij warunki → zgarnij premię → powtórz)
-- [ ] Ilustracje/ikony per krok, CTA do rankingu
-- [ ] SEO: "jak zarabiać na promocjach bankowych"
-- [ ] JSON-LD HowTo schema
+**W7. Strona /jak-zarabiac** ✅ DONE (merged)
+- [x] Landing `/jak-zarabiac` — 5 kroków, HowTo JSON-LD, `pluralize.ts`
+- [x] Dodano disclaimer Omnibus przy kwotach zarobków (Claude fix)
 
-**W8. Hub pages upgrade — opisy banków** — branch `feature/hub-upgrade`
-- [ ] Dodaj opisy banków z `research/bank-hub-descriptions.md` (Gemini G12) do `/bank/[slug]`
-- [ ] Sekcja "O banku", plusy/minusy, "dla kogo"
-- [ ] **Czeka na:** Gemini G12
+**W8. Hub pages upgrade — opisy banków** ✅ DONE (merged)
+- [x] Opisy 6 banków z Gemini G12, plusy/minusy, "dla kogo", historia
+- [x] Button asChild fix (proaktywnie), slug fix pko-polski→pekao (Claude)
 
-**W9. Monthly leaderboard** — branch `feature/leaderboard`
-- [ ] Komponent `Leaderboard.tsx` — top 10 userów po obranych premiach
-- [ ] Na dashboardzie pod achievements
-- [ ] Anonimizacja: "Cebularz #1", "Cebularz #2" (chyba że user ustawi nick)
+**W9. Monthly leaderboard** ⏸️ ZWRÓCONY DO POPRAWKI
+- [ ] Brak auth na API (GDPR risk) — dodaj session check
+- [ ] Dead code: query na `profiles` table (nie istnieje) — usuń
+- [ ] "Monthly" ale agreguje all-time — dodaj filtr lub zmień etykietę
+- [ ] Inline pluralizacja z bugiem — użyj `@/lib/pluralize`
+- [ ] Przenieś type z API route do `@/data/types.ts`
 
-**W10. Strona /kalkulator** — branch `feature/calculator-page`
-- [ ] Dedykowana strona z PremiumCalculator (reuse z homepage)
-- [ ] Rozszerzone opcje: ile kont, jak długo, trudność
-- [ ] SEO: "kalkulator premii bankowych"
-- [ ] Wynik: "W 6 miesięcy możesz zarobić X zł" + lista ofert
+**W10. Strona /kalkulator** ✅ DONE (merged)
+- [x] Kalkulator z filtrami (dochód, trudność, konta/mies), projekcja 3/6/12 mies
+- [x] Zamieniono `<img>` na next/image, usunięto role="button", dodano disclaimer (Claude fix)
 
 ---
 
@@ -319,6 +313,7 @@ Gemini G10 (TikTok scripts) ──────► Claude C11 (scenariusze do ren
 
 | Data | Zadanie | Worker |
 |------|---------|--------|
+| 2026-03-30 | W6-W8,W10 merged: /faq, /jak-zarabiac, hub descriptions, /kalkulator. W9 zwrócony. | Windsurf → merged |
 | 2026-03-30 | C14-C18: Blog import, drip emails (4 maile + cron), streak reminder, referral email, Pepper generator | Claude Code |
 | 2026-03-30 | Gemini batch 4 complete (G9-G13: blog batch 6, TikTok scripts, Pepper templates, bank descriptions, FAQ) | Gemini |
 | 2026-03-28 | C13: Referral widget upgrade (prominent card, WhatsApp, progress bar) | Claude Code |

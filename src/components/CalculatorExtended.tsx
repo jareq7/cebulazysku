@@ -3,6 +3,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import type { BankOffer } from "@/data/banks";
 import { getDifficultyLabel, getDifficultyColor } from "@/data/banks";
 import { Card, CardContent } from "@/components/ui/card";
@@ -202,13 +203,7 @@ export function CalculatorExtended({ offers }: CalculatorExtendedProps) {
       </Card>
 
       {/* Results */}
-      <div
-        className="cursor-pointer"
-        onClick={handleCalculate}
-        role="button"
-        tabIndex={0}
-        onKeyDown={(e) => e.key === "Enter" && handleCalculate()}
-      >
+      <div>
         <Card className="border-emerald-200 dark:border-emerald-800 overflow-hidden">
           <CardContent className="p-0">
             <div className="bg-gradient-to-r from-emerald-50 to-green-50 dark:from-emerald-950/30 dark:to-green-950/20 p-6 sm:p-8 text-center">
@@ -242,12 +237,10 @@ export function CalculatorExtended({ offers }: CalculatorExtendedProps) {
         </Card>
       </div>
 
-      {projected.extrapolated > 0 && (
-        <p className="text-xs text-muted-foreground text-center">
-          * Szacunek uwzględnia {projected.usableCount} aktualnych ofert + ekstrapolację na podstawie średniej premii.
-          Nowe oferty pojawiają się regularnie.
-        </p>
-      )}
+      <p className="text-xs text-muted-foreground text-center">
+        * Kwoty orientacyjne na podstawie aktualnych promocji ({projected.usableCount} ofert).{projected.extrapolated > 0 ? " Uwzględnia ekstrapolację na podstawie średniej premii." : ""}{" "}
+        Rzeczywiste zarobki zależą od spełnienia warunków.
+      </p>
 
       {/* Matching offers list */}
       {matchingOffers.length > 0 && (
@@ -267,7 +260,7 @@ export function CalculatorExtended({ offers }: CalculatorExtendedProps) {
                   #{i + 1}
                 </span>
                 {offer.bankLogo && offer.bankLogo.startsWith("http") ? (
-                  <img
+                  <Image
                     src={offer.bankLogo}
                     alt={offer.bankName}
                     className="h-8 w-8 rounded-lg object-contain bg-white p-0.5 shrink-0"

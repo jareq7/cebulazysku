@@ -385,6 +385,9 @@ export default async function JakZarabiacPage() {
               </CardContent>
             </Card>
           </div>
+          <p className="text-xs text-muted-foreground mt-3">
+            * Kwoty orientacyjne na podstawie historycznych promocji bankowych. Rzeczywiste zarobki zależą od aktualnych ofert i spełnienia warunków.
+          </p>
         </section>
 
         {/* CTA */}

@@ -27,7 +27,7 @@ export const bankDescriptions: Record<string, BankDescription> = {
     promoHistory:
       "mBank regularnie co 1-2 miesiące odświeża promocję eKonta osobistego. Średnia kwota premii oscyluje wokół 300-500 zł w gotówce. Okres karencji dla powracających klientów jest dość stały i zazwyczaj wynosi około roku do kilkunastu miesięcy od zamknięcia poprzedniego konta.",
   },
-  "pko-polski": {
+  "pekao": {
     description:
       "PKO BP to największy i najstarszy bank w Polsce, który w ostatnich latach przeszedł gigantyczną cyfrową transformację. Choć kojarzy się z tradycyjną bankowością i dużą liczbą placówek, jego aplikacja IKO to absolutny światowy top. Konto za Zero w PKO to świetna, stabilna opcja z ogromną siecią darmowych bankomatów w całym kraju.",
     pros: [

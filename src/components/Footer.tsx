@@ -53,6 +53,16 @@ export function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/jak-zarabiac" className="hover:text-foreground transition-colors">
+                  Jak zarabiać?
+                </Link>
+              </li>
+              <li>
+                <Link href="/kalkulator" className="hover:text-foreground transition-colors">
+                  Kalkulator
+                </Link>
+              </li>
+              <li>
                 <Link href="/archiwum" className="hover:text-foreground transition-colors">
                   Archiwum
                 </Link>
@@ -86,6 +96,11 @@ export function Footer() {
               <li>
                 <Link href="/slownik" className="hover:text-foreground transition-colors">
                   Słownik
+                </Link>
+              </li>
+              <li>
+                <Link href="/faq" className="hover:text-foreground transition-colors">
+                  FAQ
                 </Link>
               </li>
             </ul>
