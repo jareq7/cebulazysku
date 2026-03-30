@@ -1,9 +1,11 @@
 // @author Windsurf (claude-sonnet-4-20250514) | 2026-03-26
+// @author Windsurf (claude-sonnet-4-20250514) | 2026-03-30 — W8: added bank descriptions from Gemini G12, Button asChild fixes
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { fetchOffersFromDB, fetchExpiredOffersFromDB } from "@/lib/offers";
 import type { BankOffer } from "@/data/banks";
+import { bankDescriptions } from "@/data/bank-descriptions";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { JsonLd } from "@/components/JsonLd";
@@ -16,7 +18,17 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import { Building2, TrendingUp, Clock, ArrowRight } from "lucide-react";
+import {
+  Building2,
+  TrendingUp,
+  Clock,
+  ArrowRight,
+  ThumbsUp,
+  ThumbsDown,
+  Users,
+  History,
+  Info,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export const revalidate = 3600; // ISR — 1h
@@ -286,6 +298,87 @@ export default async function BankHubPage({
           </section>
         )}
 
+        {/* Bank description from Gemini G12 */}
+        {bankDescriptions[slug] && (() => {
+          const desc = bankDescriptions[slug];
+          return (
+            <section className="mb-12">
+              <Separator className="mb-8" />
+              <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <Info className="h-5 w-5 text-blue-500" />
+                O banku {name}
+              </h2>
+              <p className="text-muted-foreground leading-relaxed mb-6">
+                {desc.description}
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                {/* Pros */}
+                <Card className="border-emerald-200 dark:border-emerald-800/40">
+                  <CardContent className="p-5">
+                    <h3 className="font-semibold mb-3 flex items-center gap-2 text-emerald-600">
+                      <ThumbsUp className="h-4 w-4" />
+                      Plusy
+                    </h3>
+                    <ul className="space-y-2">
+                      {desc.pros.map((pro, i) => (
+                        <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                          <span className="text-emerald-500 mt-0.5">+</span>
+                          {pro}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+
+                {/* Cons */}
+                <Card className="border-red-200 dark:border-red-800/40">
+                  <CardContent className="p-5">
+                    <h3 className="font-semibold mb-3 flex items-center gap-2 text-red-500">
+                      <ThumbsDown className="h-4 w-4" />
+                      Minusy
+                    </h3>
+                    <ul className="space-y-2">
+                      {desc.cons.map((con, i) => (
+                        <li key={i} className="text-sm text-muted-foreground flex items-start gap-2">
+                          <span className="text-red-400 mt-0.5">-</span>
+                          {con}
+                        </li>
+                      ))}
+                    </ul>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Target audience */}
+              <Card className="mb-4">
+                <CardContent className="p-5">
+                  <h3 className="font-semibold mb-2 flex items-center gap-2">
+                    <Users className="h-4 w-4 text-blue-500" />
+                    Dla kogo?
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {desc.targetAudience}
+                  </p>
+                </CardContent>
+              </Card>
+
+              {/* Promo history */}
+              <Card>
+                <CardContent className="p-5">
+                  <h3 className="font-semibold mb-2 flex items-center gap-2">
+                    <History className="h-4 w-4 text-amber-500" />
+                    Historia promocji
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {desc.promoHistory}
+                  </p>
+                </CardContent>
+              </Card>
+            </section>
+          );
+        })()}
+
         {/* Poradniki placeholder */}
         <section className="mb-12">
           <Separator className="mb-8" />
@@ -297,12 +390,12 @@ export default async function BankHubPage({
               <p className="text-muted-foreground mb-3">
                 Wkrótce pojawią się tu poradniki krok po kroku jak ołupić {name} z premii 🧅
               </p>
-              <Link href="/blog">
-                <Button variant="outline" className="gap-2">
+              <Button variant="outline" className="gap-2" asChild>
+                <Link href="/blog">
                   Zobacz blog
                   <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
+                </Link>
+              </Button>
             </CardContent>
           </Card>
         </section>
@@ -315,12 +408,12 @@ export default async function BankHubPage({
           <p className="text-muted-foreground mb-4">
             Załóż darmowe konto i nigdy nie zapomnij o żadnym warunku!
           </p>
-          <Link href="/rejestracja">
-            <Button size="lg" className="gap-2">
+          <Button size="lg" className="gap-2" asChild>
+            <Link href="/rejestracja">
               Załóż konto — za darmo
               <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
+            </Link>
+          </Button>
         </section>
       </div>
     </>
